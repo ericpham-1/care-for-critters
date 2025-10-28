@@ -33,6 +33,17 @@ def index():
     conn.close()
     return jsonify(result)
 
+@app.route('/shelters')
+def get_shelters():
+    """Get ALL shelters"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT ShelterID, PhoneNumber, PostalCode FROM Shelter")
+    shelters = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(shelters)
+
 @app.route('/animals')
 def get_animals():
     """Get ALL animals"""
