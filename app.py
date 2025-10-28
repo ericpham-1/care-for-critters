@@ -2,28 +2,92 @@ from flask import Flask, jsonify
 import os
 from dotenv import load_dotenv
 import MySQLdb
+from MySQLdb.cursors import DictCursor
 
 load_dotenv()
 app = Flask(__name__)
 
-# -- SQL Configuration --
+# -- MySQL Configuration --
 app.config['MYSQL_HOST'] = os.getenv("DB_HOST")
 app.config['MYSQL_USER'] = os.getenv("DB_USER")
 app.config['MYSQL_PASSWORD'] = os.getenv("DB_PASSWORD")
 app.config['MYSQL_DB'] = os.getenv("DB_NAME")
 
-# Initialize MySQL
-mysql = MySQLdb.connect(host=app.config['MYSQL_HOST'],
-                        user=app.config['MYSQL_USER'],
-                        passwd=app.config['MYSQL_PASSWORD'],
-                        db=app.config['MYSQL_DB'])
+def get_db_connection():
+    """Create a new database connection for each request"""
+    return MySQLdb.connect(
+        host=app.config['MYSQL_HOST'],
+        user=app.config['MYSQL_USER'],
+        passwd=app.config['MYSQL_PASSWORD'],
+        db=app.config['MYSQL_DB'],
+        cursorclass=DictCursor
+    )
 
 @app.route('/')
 def index():
-    cursor = mysql.cursor()
-    cursor.execute("SELECT 'Hello, World!'")
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT 'Hello, World!' as message")
     result = cursor.fetchone()
-    return jsonify(result[0])
+    cursor.close()
+    conn.close()
+    return jsonify(result)
+
+@app.route('/animals')
+def get_animals():
+    """Get ALL animals"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT PetID, Name, Age, Description, Diet FROM Animal")
+    animals = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(animals)
+
+@app.route('/mammals')
+def get_mammals():
+    """Get only mammals"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT a.Name, a.Age, m.Species, m.Weight
+        FROM Animal a
+        JOIN Mammal m ON a.PetID = m.PetID
+    """)
+    mammals = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(mammals)
+
+@app.route('/fish')
+def get_fish():
+    """Get only fish"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT a.Name, a.Age, f.Species, f.WaterType
+        FROM Animal a
+        JOIN Fish f ON a.PetID = f.PetID
+    """)
+    fish = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(fish)
+
+@app.route('/exotic')
+def get_exotic():
+    """Get only exotic animals"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT a.Name, a.Age, e.Species, e.HabitatRequirements
+        FROM Animal a
+        JOIN Exotic e ON a.PetID = e.PetID
+    """)
+    exotic = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(exotic)
 
 if __name__ == '__main__':
     app.run(debug=True)
