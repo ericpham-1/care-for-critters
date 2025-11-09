@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body style="font-family: 'Fredoka', sans-serif; font-weight: 400; font-style: normal; margin: 0; padding: 0;">
+    <nav style="display: flex; justify-content: center; align-items: center; background-color: #b4dcd4; padding: 0; margin: 0;">
+        <ul style="list-style-type: none; display: inline-flex;">
+            <a href="/" style="margin-left: 20px; margin-right: 20px; text-decoration: none;" >Home</li>
+            <a href="adopt" style="margin-left: 20px; margin-right: 20px; text-decoration: none;">Adopt</li>
+            <a href="fundraisers" style="margin-left: 20px; margin-right: 20px; text-decoration: none;">Fundraisers</li>
+            <a href="donate" style="margin-left: 20px; margin-right: 20px; text-decoration: none;">Donate</li>
+        </ul>
+    </nav>
+    <div style="  display: grid; align-items: center; grid-auto-flow: column; height: 300px; justify-content: space-evenly;"> 
+        <div style="justify-items: center; align-items: center;">
+           <img src="{{url_for('static', filename='images/home_page_pet.jpg')}}" style="height: 200px;">
+        </div>
+        <div style="justify-items: center;">
+            <h2 style="font-size: x-large; font-weight: 400;">Find your new best friend!</h3>
+        </div>
+    </div>
+</body>
+</html>
