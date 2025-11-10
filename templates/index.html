@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
     <title>Document</title>
 </head>
-<body style="font-family: 'Fredoka', sans-serif; font-weight: 400; font-style: normal; margin: 0; padding: 0;">
+<body style="font-family: 'Fredoka', sans-serif; font-weight: 400; font-style: normal; margin: 0; padding: 0; color: black;">
     <nav style="display: flex; justify-content: center; align-items: center; background-color: #b4dcd4; padding: 0; margin: 0;">
         <ul style="list-style-type: none; display: inline-flex; gap: 30px;">
             <a href="/" style="text-decoration: none;" >Home</a>
@@ -17,6 +17,7 @@
             <a href="donate" style=" text-decoration: none;">Donate</a>
         </ul>
     </nav>
+    <!--Title section-->
     <div style="display: flex; align-items: center; height: 350px; text-decoration: none; justify-content: center; align-content: center;"> 
         <div style="justify-items: center; align-items: center;">
            <img src="{{url_for('static', filename='images/home_page_pet.jpg')}}" style="height: 300px;">
@@ -33,5 +34,67 @@
             </div>
         </div>
     </div>
+    <!-- Animals and Events section-->
+     <div style="display: flex; flex-direction: row; justify-content: center;">
+        <div style=" background-color: firebrick; width: 50%; padding-left: 50px; padding-right: 50px; padding-bottom: 50px;">
+            <div>
+                <h3 style="font-weight: 400;">Mammals</h3>
+                <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                    <div>
+                        card
+                    </div>
+                    <div>
+                        card
+                    </div>
+                    <div>
+                        card
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 style="font-weight: 400;"> Amphibians</h3>
+                                <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                    <div>
+                        card
+                    </div>
+                    <div>
+                        card
+                    </div>
+                    <div>
+                        card
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 style="font-weight: 400;">Reptiles</h3>
+                                <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                    <div>
+                        card
+                    </div>
+                    <div>
+                        card
+                    </div>
+                    <div>
+                        card
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="background-color: olivedrab; width: 50%; width: 50%; padding-left: 50px; padding-right: 50px;">
+            <h3 style="font-weight: 400;">Events</h3>
+        </div>
+     </div>
 </body>
+<footer style="background-color: #b4dcd4; align-content: center; display: flex; gap: 40%; justify-content: center;">
+    <div>
+        <p>LOGO</p>
+    </div>
+    <div style="line-height: 14px; align-content: center;">
+        <a href="/" style="font-size: small; text-decoration: none;">Home</a>
+        <br>
+        <a style="font-size: small;">About</a>
+        <br>
+        <a style="font-size: small;">Contact Us</a>
+    </div>
+</footer>
 </html>
