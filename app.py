@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 import os
 from dotenv import load_dotenv
 import MySQLdb
@@ -27,11 +27,23 @@ def get_db_connection():
 def index():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT 'Hello, World!' as message")
-    result = cursor.fetchone()
+    cursor.execute("SELECT EventName, EventLocation, EventDate FROM FUNDRAISER ORDER BY EventDate")
+    events = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(result)
+    return render_template('index.html', events=events)
+
+@app.route('/donate')
+def get_donation():
+    return render_template('donate.html')
+
+@app.route('/fundraisers')
+def get_fundraisers():
+    return render_template('fundraisers.html')
+
+@app.route('/adopt')
+def get_adoptions():
+    return render_template('adopt.html')
 
 @app.route('/shelters')
 def get_shelters():

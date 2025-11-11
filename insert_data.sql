@@ -4,7 +4,6 @@ INSERT INTO Shelter (ShelterID, PhoneNumber, BuildingNo, Street, City, Province,
 VALUES
     ('1', '1234567890', '143', 'Maple Street', 'Calgary', 'Alberta', 'A1B 3C4');
 
-
 INSERT INTO Animal (PetID, Name, Description, Age, Diet, ShelterID)
 VALUES 
     (2, 'Max', 'Friendly golden retriever', 4, 'Dog food', 1),
@@ -24,3 +23,10 @@ VALUES
 INSERT INTO Exotic (PetID, Species, HabitatRequirements, Weight)
 VALUES 
     (5, 'Bearded Dragon', 'Terrarium with heat lamp', 0.4);
+
+INSERT INTO Fundraiser (EventName, EventLocation, EventDate, Budget, ShelterLocation, AmountRaised)
+VALUES
+    ('Grand Opening Event', 'Central Park', '2025-12-1', 2000, 1, 5000);
+INSERT INTO Fundraiser (EventName, EventLocation, EventDate, Budget, ShelterLocation, AmountRaised)
+VALUES
+    ('FruFru\'s Birthday Bash', 'Main Street', '2026-3-21', 1000, 1, 10000);

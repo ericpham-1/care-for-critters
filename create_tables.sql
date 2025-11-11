@@ -157,3 +157,17 @@ CREATE TABLE SponsorShelter (
     FOREIGN KEY (SponsorID) REFERENCES Sponsor(SponsorID),
     FOREIGN KEY (ShelterID) REFERENCES Shelter(ShelterID)
 );
+
+-- =====================
+-- FUNDRAISER
+-- =====================
+CREATE TABLE FUNDRAISER (
+    EventName VARCHAR(100),
+    EventLocation VARCHAR(100),
+    EventDate DATE,
+    BUDGET INT,
+    ShelterLocation INT,
+    AmountRaised INT,
+    PRIMARY KEY (EventName, EventLocation, EventDate),
+    FOREIGN Key (ShelterLocation) REFERENCES Shelter(ShelterID)
+);
