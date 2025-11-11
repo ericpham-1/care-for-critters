@@ -36,65 +36,65 @@
     </div>
     <!-- Animals and Events section-->
      <div style="display: flex; flex-direction: row; justify-content: center;">
-        <div style=" width: 60%; padding-left: 50px; padding-right: 50px; padding-bottom: 50px;">
-            <div style="display: flex; flex-direction: column;">
-                <h3 style="font-weight: 400;">Mammals</h3>
-                <div style="display: flex; flex-direction: row; justify-content: space-between; height: 100px; margin: 20px;">
-                    <div style="height: 100%; width: 30%; align-content: center; background-color: orange;">
-                        card
+        <div style=" width: 65%; padding-left: 40px">
+            <div style="display: flex; flex-direction: column; ">
+                <h3 style="font-weight: 500; font-size: larger;">Mammals</h3>
+                <div style="display: inline-flex;  height: 200px; margin: 15px; padding: 10px; align-items: center; gap: 10px;">
+                    {% for mammal in mammals[:3] %}
+                    <div style="height: 100%; width: 30%; align-content: center; background-color: #e6eddc; border-radius: 20px; padding: 10px;">
+                        <img src="{{url_for('static', filename='images/home_page_pet.jpg')}}" style="width: 100%;">
+                        <div style="line-height: 1; margin-left: 10px;">
+                            <p>{{mammal.Name}}</p>
+                            <p>{{mammal.Species}}</p>
+                        </div>
                     </div>
-                    <div style="height: 100%; width: 30%; align-content: center;">
-                        card
-                    </div>
-                    <div style="height: 100%; width: 30%; align-content: center;">
-                        card
-                    </div>
+                    {% endfor %}
                 </div>
-                <div style="display: flex; justify-content: right;">
-                <a style="background-color: #0047ab;padding: 10px; border-radius: 20px; color: white; width: 50px;">See all</a>
-                </div>
-            </div>
-            <div style="display: flex; flex-direction: column;">
-                <h3 style="font-weight: 400;">Amphibians and Reptiles</h3>
-                <div style="display: flex; flex-direction: row; justify-content: space-between; height: 100px; margin: 20px;">
-                    <div style="height: 100%; width: 30%; align-content: center; background-color: orange;">
-                        card
-                    </div>
-                    <div style="height: 100%; width: 30%; align-content: center;">
-                        card
-                    </div>
-                    <div style="height: 100%; width: 30%; align-content: center;">
-                        card
-                    </div>
-                </div>
-                <div style="display: flex; justify-content: right;">
-                <a style="background-color: #0047ab;padding: 10px; border-radius: 20px; color: white; width: 50px;">See all</a>
+                <div style="display: flex; justify-content: right; padding: 10px;">
+                    <a style="background-color: #0047ab;padding: 10px; border-radius: 20px; color: white; width: 125px; text-align: center;">See all mammals</a>
                 </div>
             </div>
             <div style="display: flex; flex-direction: column;">
-                <h3 style="font-weight: 400;">Exotics </h3>
-                <div style="display: flex; flex-direction: row; justify-content: space-between; height: 100px; margin: 20px;">
-                    <div style="height: 100%; width: 30%; align-content: center; background-color: orange;">
-                        card
+                <h3 style="font-weight: 500; font-size: larger;">Exotics</h3>
+                <div style="display: inline-flex;  height: 200px; margin: 15px; padding: 10px; align-items: center; gap: 10px;">
+                    {% for exotic in exotics[:3] %}
+                    <div style="height: 100%; width: 30%; align-content: center; background-color: #e6eddc; border-radius: 20px; padding: 10px;">
+                        <img src="{{url_for('static', filename='images/home_page_pet.jpg')}}" style="width: 100%;">
+                        <div style="line-height: 1; margin-left: 10px;">
+                            <p>{{exotic.Name}}</p>
+                            <p>{{exotic.Species}}</p>
+                        </div>
                     </div>
-                    <div style="height: 100%; width: 30%; align-content: center;">
-                        card
-                    </div>
-                    <div style="height: 100%; width: 30%; align-content: center;">
-                        card
-                    </div>
+                    {% endfor %}
                 </div>
-                <div style="display: flex; justify-content: right;">
-                <a style="background-color: #0047ab;padding: 10px; border-radius: 20px; color: white; width: 50px;">See all</a>
+                <div style="display: flex; justify-content: right; padding: 10px;">
+                    <a style="background-color: #0047ab;padding: 10px; border-radius: 20px; color: white; width: 125px; text-align: center;">See all exotics</a>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; ">
+                <h3 style="font-weight: 500; font-size: larger;">Fish</h3>
+                <div style="display: inline-flex;  height: 200px; margin: 15px;  padding: 10px; align-items: center; gap: 10px;">
+                    {% for fish in fishies[:3] %}
+                    <div style="height: 100%; width: 30%; align-content: center; background-color: #e6eddc; border-radius: 20px; padding: 10px;">
+                        <img src="{{url_for('static', filename='images/home_page_pet.jpg')}}" style="width: 100%;">
+                        <div style="line-height: 1; margin-left: 10px;">
+                            <p>{{fish.Name}}</p>
+                            <p>{{fish.Species}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div style="display: flex; justify-content: right; padding: 10px;">
+                    <a style="background-color: #0047ab;padding: 10px; border-radius: 20px; color: white; width: 125px; text-align: center;">See all fish</a>
                 </div>
             </div>
         </div>
-        <div style="background-color: #e6eddc; width: 40%; padding-left: 50px; padding-right: 50px; margin: 100px; border-radius: 30px; padding-top: 30px;">
-            <h3 style="font-weight: 400;"> Upcoming Events</h3>
+        <div style="background-color: #e6eddc; width: 35%; padding-left: 50px; padding-right: 50px; margin: 100px; border-radius: 30px; padding-top: 30px;">
+            <h3 style="font-weight: 500; font-size: larger;"> Upcoming Events</h3>
             <div style="width: 100%; height: fit-content; display: flex; flex-direction: column; gap: 20px;">
                 {% for event in events %}
-                    <div style="background-color: #b4dcd4; line-height: 8px; border-radius: 20px; padding-left: 30px; padding-right: 30px; padding-top: 10px; padding-bottom: 10px;">
-                        <p style="font-weight: 500; font-size: large;">{{event.EventName}}</p>
+                    <div style="background-color: #b4dcd4; line-height: 1; border-radius: 20px; padding-left: 30px; padding-right: 30px; padding-top: 10px; padding-bottom: 10px; height: fit-content;">
+                        <p style="font-weight: 500; font-size: large; height: fit-content; display: flex;">{{event.EventName}}</p>
                         <p>{{event.EventDate}}</p>
                         <p>{{event.EventLocation}}</p>
                     </div>

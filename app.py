@@ -29,9 +29,24 @@ def index():
     cursor = conn.cursor()
     cursor.execute("SELECT EventName, EventLocation, EventDate FROM FUNDRAISER ORDER BY EventDate")
     events = cursor.fetchall()
+    cursor.execute("""        
+        SELECT a.Name, a.Age, m.Species
+        FROM Animal a
+        JOIN Mammal m ON a.PetID = m.PetID""")
+    mammals = cursor.fetchall()
+    cursor.execute("""        
+        SELECT a.Name, a.Age, m.Species
+        FROM Animal a
+        JOIN Exotic m ON a.PetID = m.PetID""")
+    exotics = cursor.fetchall()
+    cursor.execute("""        
+        SELECT a.Name, a.Age, m.Species
+        FROM Animal a
+        JOIN Fish m ON a.PetID = m.PetID""")
+    fishies = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('index.html', events=events)
+    return render_template('index.html', events=events, mammals=mammals, exotics=exotics, fishies=fishies)
 
 @app.route('/donate')
 def get_donation():

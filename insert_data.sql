@@ -9,12 +9,16 @@ VALUES
     (2, 'Max', 'Friendly golden retriever', 4, 'Dog food', 1),
     (3,'Whiskers', 'Playful tabby cat', 2, 'Cat food', 1),
     (4,'Nemo', 'Clownfish', 1, 'Fish flakes', 1),
-    (5,'Spike', 'Bearded dragon', 3, 'Insects and veggies', 1);
+    (5,'Spike', 'Bearded dragon', 3, 'Insects and veggies', 1),
+    (6,'James', 'Sugar Glider', 1, 'Fruits and veggies', 1),
+    (7,'Sir Ruffles','Ragdoll Cat', 3, 'Cat food', 1);
 
 INSERT INTO Mammal (PetID, Species, HealthRecords, Weight)
 VALUES 
     (2, 'Dog', 'All vaccinations up to date', 28.0),
-    (3, 'Cat', 'Healthy, neutered', 4.2);
+    (3, 'Cat', 'Healthy, neutered', 4.2)
+    (6, 'Sugar Glider', 'Healthy', 1.0),
+    (7, 'Ragdoll Cat', 'Vaccinations up to date', 20.0);
 
 INSERT INTO Fish (PetID, Species, WaterType)
 VALUES 
