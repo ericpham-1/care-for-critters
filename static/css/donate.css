@@ -111,6 +111,9 @@ select {
     padding: 10px 40px;
     font-size: 28px;
     cursor: pointer;
+    text-decoration: none;
+    color: inherit; 
+    display: inline-block;
 }
 
 .continue-btn {
