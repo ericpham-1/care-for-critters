@@ -19,11 +19,8 @@ CREATE TABLE Address (
 CREATE TABLE Shelter (
     ShelterID INT AUTO_INCREMENT PRIMARY KEY,
     PhoneNumber VARCHAR(15),
-    BuildingNo VARCHAR(10),
-    Street VARCHAR(100),
-    City VARCHAR(50),
-    Province VARCHAR(50),
-    PostalCode VARCHAR(10)
+    ShelterAddress Int
+    FOREIGN KEY (ShelterAddress) REFERENCES Address(AddressID)
 );
 
 -- =====================
@@ -36,8 +33,9 @@ CREATE TABLE Animal (
     Age INT,
     Diet VARCHAR(100),
     Photo VARCHAR(255),
-    ShelterID INT,
-    FOREIGN KEY (ShelterID) REFERENCES Shelter(ShelterID)
+    ShelterLocation INT,
+    AdoptionStatus VARCHAR(100),
+    FOREIGN KEY (ShelterLocation) REFERENCES Shelter(ShelterID)
 );
 
 -- =====================
@@ -143,13 +141,13 @@ CREATE TABLE Sponsor (
     SponsorID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(100),
     Email VARCHAR(100),
-    PhoneNumber VARCHAR(15)
-);
+    PhoneNumber VARCHAR(15),
+    );
 
 -- =====================
 -- RELATIONSHIPS
 -- =====================
-CREATE TABLE SponsorShelter (
+CREATE TABLE Donation (
     SponsorID INT,
     ShelterID INT,
     AmountDonated DECIMAL(10,2),
