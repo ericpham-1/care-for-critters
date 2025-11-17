@@ -6,30 +6,54 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
-    <title>Document</title>
-</head>
-<body style="font-family: 'Fredoka', sans-serif; font-weight: 400; font-style: normal; margin: 0; padding: 0;">
-    <nav style="display: flex; justify-content: center; align-items: center; background-color: #b4dcd4;">
-        <ul style="list-style-type: none; display: inline-flex; gap: 30px;">
-            <a href="/" style="text-decoration: none;" >Home</a>
-            <a href="adopt" style="text-decoration: none;">Adopt</a>
-            <a href="fundraisers" style=" text-decoration: none;">Fundraisers</a>
-            <a href="donate" style=" text-decoration: none;">Donate</a>
-        </ul>
-    </nav>
-    <p> HAHHAAH</p>
-</body>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/donate.css') }}">
 
-<footer style="background-color: #b4dcd4; align-content: center; display: flex; gap: 40%; justify-content: center;">
-    <div>
-        <p>LOGO</p>
+    <title>Donate</title>
+</head>
+<body>
+
+<div class="donation-overlay">
+
+    <div class="donation-box">
+         <div class="header">
+        <img src="{{ url_for('static', filename='images/C4C_Logo.png') }}" class="logo">
+        <div class="titles">
+            <h1>Care for Critters</h1>
+            <p>Wanting to donate? Please fill out the form<br>below</p>
+        </div>
     </div>
-    <div style="line-height: 14px; align-content: center;">
-        <a href="/" style="font-size: small; text-decoration: none;">Home</a>
-        <br>
-        <a style="font-size: small;">About</a>
-        <br>
-        <a style="font-size: small;">Contact Us</a>
+
+    <!--SELECT AMOUNT SECTION-->
+    <div class="section">
+        <h2>Choose donation amount</h2>
+
+        <div class="amount-grid">
+            <button class="amount-btn">$25</button>
+            <button class="amount-btn">$50</button>
+            <button class="amount-btn">$100</button>
+
+            <div class="other-amount">
+                <label>Other Amount:</label>
+                <input type="text">
+            </div>
+        </div>
     </div>
-</footer>
+
+    <!--SHELTER SECTION-->
+    <div class="section">
+        <h2>Choose a shelter to donate to: </h2>
+        <select>
+            <option value="">Shelter</option> <!--TODO: INSERT SQL QUERY STUFF HERE-->
+        </select>
+    </div>
+
+    <!--NAV BUTTONS-->
+    <div class="actions">
+        <button class="cancel-btn">Cancel</button>
+        <button class="continue-btn">Continue</button>
+    </div>
+    </div>
+   
+</div>
+</body>
 </html>

@@ -16,7 +16,7 @@ VALUES
 INSERT INTO Mammal (PetID, Species, HealthRecords, Weight)
 VALUES 
     (2, 'Dog', 'All vaccinations up to date', 28.0),
-    (3, 'Cat', 'Healthy, neutered', 4.2)
+    (3, 'Cat', 'Healthy, neutered', 4.2),
     (6, 'Sugar Glider', 'Healthy', 1.0),
     (7, 'Ragdoll Cat', 'Vaccinations up to date', 20.0);
 
