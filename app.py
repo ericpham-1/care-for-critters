@@ -60,6 +60,10 @@ def get_fundraisers():
 def get_adoptions():
     return render_template('adopt.html')
 
+@app.route('/login')
+def get_login():
+    return render_template('login.html')
+
 @app.route('/shelters')
 def get_shelters():
     """Get ALL shelters"""

@@ -9,7 +9,8 @@
     <title>Document</title>
 </head>
 <body style="font-family: 'Fredoka', sans-serif; font-weight: 400; font-style: normal; margin: 0; padding: 0; color: black;">
-    <nav style="display: flex; justify-content: center; align-items: center; background-color: #b4dcd4; padding: 0; margin: 0;">
+    <nav style="display: flex; align-items: center; background-color: #b4dcd4; padding: 10px; margin: 0; justify-content: center;">
+        <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;">
         <ul style="list-style-type: none; display: inline-flex; gap: 30px;">
             <a href="/" style="text-decoration: none;" >Home</a>
             <a href="adopt" style="text-decoration: none;">Adopt</a>
@@ -18,7 +19,7 @@
         </ul>
     </nav>
     <!--Title section-->
-    <div style="display: flex; align-items: center; height: 350px; text-decoration: none; justify-content: center; align-content: center;"> 
+    <div style="display: flex; align-items: center; height: 350px; text-decoration: none; justify-content: center; align-content: center; margin-bottom: 20px;"> 
         <div style="justify-items: center; align-items: center;">
            <img src="{{url_for('static', filename='images/home_page_pet.jpg')}}" style="height: 300px;">
         </div>
@@ -106,9 +107,9 @@
         </div>
      </div>
 </body>
-<footer style="background-color: #b4dcd4; align-content: center; display: flex; gap: 40%; justify-content: center;">
-    <div>
-        <p>LOGO</p>
+<footer style="background-color: #b4dcd4; align-content: center; display: flex; gap: 20%; justify-content: center; padding: 10px;">
+    <div style="align-content: center;">
+        <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;">
     </div>
     <div style="line-height: 14px; align-content: center;">
         <a href="/" style="font-size: small; text-decoration: none;">Home</a>
@@ -116,6 +117,9 @@
         <a style="font-size: small;">About</a>
         <br>
         <a style="font-size: small;">Contact Us</a>
+    </div>
+    <div style="align-content: center;">
+        <a href="login" style="font-size: small; text-decoration: none;">Supervisor Login</a>
     </div>
 </footer>
 </html>
