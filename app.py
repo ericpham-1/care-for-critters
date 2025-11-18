@@ -52,6 +52,14 @@ def index():
 def get_donation():
     return render_template('donate.html')
 
+@app.route("/donate/2")
+def donate_step2():
+    return render_template("donate2.html")
+
+@app.route("/donate/3")
+def donate_step3():
+    return render_template("donate3.html")
+
 @app.route('/fundraisers')
 def get_fundraisers():
     return render_template('fundraisers.html')
