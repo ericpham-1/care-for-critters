@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS 471_db;
-USE 471_db;
+-- CREATE DATABASE IF NOT EXISTS careforcritters;
+USE careforcritters;
 
 -- =====================
 -- ADDRESS 
@@ -17,9 +17,9 @@ CREATE TABLE Address (
 -- SHELTER
 -- =====================
 CREATE TABLE Shelter (
-    ShelterID INT AUTO_INCREMENT PRIMARY KEY,
+    ShelterName VARCHAR(100) PRIMARY KEY,
     PhoneNumber VARCHAR(15),
-    ShelterAddress Int
+    ShelterAddress INT,
     FOREIGN KEY (ShelterAddress) REFERENCES Address(AddressID)
 );
 
@@ -33,9 +33,9 @@ CREATE TABLE Animal (
     Age INT,
     Diet VARCHAR(100),
     Photo VARCHAR(255),
-    ShelterLocation INT,
+    ShelterLocation VARCHAR(100),
     AdoptionStatus VARCHAR(100),
-    FOREIGN KEY (ShelterLocation) REFERENCES Shelter(ShelterID)
+    FOREIGN KEY (ShelterLocation) REFERENCES Shelter(ShelterName)
 );
 
 -- =====================
@@ -73,9 +73,9 @@ CREATE TABLE Worker (
     Email VARCHAR(100),
     PhoneNumber VARCHAR(15),
     AddressID INT,
-    ShelterID INT,
+    ShelterName VARCHAR(100),
     FOREIGN KEY (AddressID) REFERENCES Address(AddressID),
-    FOREIGN KEY (ShelterID) REFERENCES Shelter(ShelterID)
+    FOREIGN KEY (ShelterName) REFERENCES Shelter(ShelterName)
 );
 
 -- =====================
@@ -141,7 +141,7 @@ CREATE TABLE Sponsor (
     SponsorID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(100),
     Email VARCHAR(100),
-    PhoneNumber VARCHAR(15),
+    PhoneNumber VARCHAR(15)
     );
 
 -- =====================
@@ -149,11 +149,11 @@ CREATE TABLE Sponsor (
 -- =====================
 CREATE TABLE Donation (
     SponsorID INT,
-    ShelterID INT,
+    ShelterName VARCHAR(100),
     AmountDonated DECIMAL(10,2),
-    PRIMARY KEY (SponsorID, ShelterID),
+    PRIMARY KEY (SponsorID, ShelterName),
     FOREIGN KEY (SponsorID) REFERENCES Sponsor(SponsorID),
-    FOREIGN KEY (ShelterID) REFERENCES Shelter(ShelterID)
+    FOREIGN KEY (ShelterName) REFERENCES Shelter(ShelterName)
 );
 
 -- =====================
@@ -164,8 +164,8 @@ CREATE TABLE FUNDRAISER (
     EventLocation VARCHAR(100),
     EventDate DATE,
     BUDGET INT,
-    ShelterLocation INT,
+    ShelterName VARCHAR(100),
     AmountRaised INT,
     PRIMARY KEY (EventName, EventLocation, EventDate),
-    FOREIGN Key (ShelterLocation) REFERENCES Shelter(ShelterID)
+    FOREIGN Key (ShelterName) REFERENCES Shelter(ShelterName)
 );
