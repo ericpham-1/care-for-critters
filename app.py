@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 import os
 from dotenv import load_dotenv
 import MySQLdb
@@ -49,12 +49,30 @@ def index():
     return render_template('index.html', events=events, mammals=mammals, exotics=exotics, fishies=fishies)
 
 @app.route('/donate')
-def get_donation():
-    return render_template('donate.html')
+def donate_step1():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('donate.html', shelters=shelters)
 
-@app.route("/donate/2")
+@app.route("/donate/2", methods=["POST"])
 def donate_step2():
-    return render_template("donate2.html")
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # read values from step1
+    amount = request.form.get("amount")
+    shelter = request.form.get("shelter")
+
+    # quick validation
+    if not amount or not shelter:
+        cursor.execute("SELECT ShelterName FROM Shelter")
+        shelters = cursor.fetchall()
+        return render_template("donate.html", shelters=shelters, error="Please choose amount and shelter")
+    else:
+        return render_template("donate2.html", amount=amount, shelter=shelter)
 
 @app.route("/donate/3")
 def donate_step3():
@@ -77,7 +95,7 @@ def get_shelters():
     """Get ALL shelters"""
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT ShelterID, PhoneNumber, PostalCode FROM Shelter")
+    cursor.execute("SELECT ShelterName, PhoneNumber, PostalCode FROM Shelter")
     shelters = cursor.fetchall()
     cursor.close()
     conn.close()

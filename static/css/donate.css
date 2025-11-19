@@ -1,3 +1,5 @@
+/*BASE TEMPLATE*/
+
 body {
     font-family: "Fredoka", sans-serif;
     background: white;
@@ -11,7 +13,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.45); 
+    background: rgba(0,0,0,0.45);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,14 +28,15 @@ body {
     padding: 40px;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    max-height: 90vh;       
+    max-height: 90vh;
     overflow-y: auto;
 }
+
 
 .header {
     display: flex;
     gap: 20px;
-    align-items: center
+    align-items: center;
 }
 
 .logo {
@@ -44,7 +47,7 @@ h1 {
     font-size: 48px;
     font-weight: 600;
     margin: 0;
-    color: #0047AB
+    color: #0047AB;
 }
 
 .header p {
@@ -54,6 +57,7 @@ h1 {
     line-height: 1.4;
 }
 
+/* Section Titles */
 .section {
     margin-top: 40px;
 }
@@ -64,98 +68,24 @@ h1 {
     font-size: 22px;
 }
 
-.amount-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 200px);
-    gap: 25px 40px;
-}
-
-.amount-btn {
-    border: 2px solid #333;
-    padding: 15px 0;
-    font-family: "Fredoka", sans-serif;
-    color:#0A2540;
-    font-size: 28px;
-    background: white;
-    cursor: pointer;
-}
-
-.amount-btn:hover {
-    opacity: 0.6;
-}
-
-.amount-btn:active {
-    border: 2px solid #0047AB;
-}
-
-.other-amount {
-    border: 2px solid #333;
-    padding: 15px;
-    font-family: "Fredoka", sans-serif;
-    color:#0A2540;
-    font-size: 22px;
-}
-
-.other-amount input {
-    border: none;
-    outline: none;
-    font-size: 22px;
-    width: 120px;
-}
-
-select {
-    padding: 12px;
-    font-size: 18px;
-    width: 240px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
-
-.actions {
-    display: flex;
-    margin-top: 60px;
-    width: 100%;
-}
-
-.actions-step1 {
-    gap: 80px;
-}
-
-.actions-step2 {
-    justify-content: center;
-}
-
-.cancel-btn {
+/* ==========================
+   SHARED BUTTON STYLES
+   ========================== */
+button,
+.cancel-btn,
+.continue-btn,
+.donate-btn {
     background: #F6F4F5;
     border: 6px solid #7CC8B8;
     padding: 10px 40px;
     font-size: 28px;
     cursor: pointer;
     text-decoration: none;
-    color: inherit; 
+    color: inherit;
     display: inline-block;
 }
 
-.continue-btn {
-    background: #F6F4F5;
-    border: 6px solid #7CC8B8;
-    padding: 10px 40px;
-    font-size: 28px;
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit; 
-    display: inline-block;
-}
-
-.form-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    width: 100%;
-    margin-top: 20px;
-}
-
-/* Chevron back button */
+/* Back button */
 .back-btn {
     font-size: 32px;
     cursor: pointer;
@@ -168,25 +98,108 @@ select {
     opacity: 0.6;
 }
 
+/* Layout helpers */
+.form-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+}
 
 .form-content {
     position: relative;
     padding-left: 40px;
 }
 
-.amount-grid label {
-    margin-top: 10px;
+/* =========================================================
+   DONATE STEP 1 (Amount Selection)
+   ========================================================= */
+.amount-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 200px);
+    gap: 25px 40px;
 }
 
-.donate-btn {
-    background: #F6F4F5;
-    border: 6px solid #7CC8B8;
-    padding: 10px 40px;
+.amount-btn {
+    border: 2px solid #333;
+    padding: 15px 0;
+    font-family: "Fredoka", sans-serif;
+    color: #0A2540;
     font-size: 28px;
+    background: white;
     cursor: pointer;
-    text-decoration: none;
-    color: inherit; 
-    display: inline-block;
-    text-align: center;
 }
 
+.amount-btn:hover {
+    opacity: 0.6;
+}
+
+
+.amount-btn.selected {
+  background-color: #0047AB;
+  color: white;
+  border-color: #0047AB;
+}
+
+/* “Other amount” input */
+.other-amount {
+    border: 2px solid #333;
+    padding: 15px;
+    color: #0A2540;
+    font-size: 22px;
+}
+
+.other-amount.selected {
+  border-color: #0047AB;
+  box-shadow: 0 0 5px #0047AB;
+}
+
+.other-amount.active input {
+    background-color: #0047AB;
+    color: white;
+    border-color: #0047AB;
+}
+
+.other-amount:hover {
+    opacity: 0.6;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Step 1 actions: Cancel + Continue buttons */
+.actions {
+    display: flex;
+    margin-top: 60px;
+    width: 100%;
+}
+
+.actions-step1 {
+    gap: 80px;
+}
+
+/* =========================================================
+   DONATE STEP 2 (Donor Info Form)
+   ========================================================= */
+select {
+    padding: 12px;
+    font-size: 18px;
+    width: 240px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* Step 2 actions: Centered single button */
+.actions-step2 {
+    justify-content: center;
+}
