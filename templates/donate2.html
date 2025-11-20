@@ -23,38 +23,46 @@
         </div>
     </div>
 
+    <!--Back Button-->
+    <div class="back-btn">
+        <a href="/donate">&#10094;</a>
+    </div>
+
     <!--Personal Information Form-->
-    <div class="form-row">
-        <div class="back-btn">
-            <a href="/donate">&#10094;</a>
-        </div>
+    <form id="step2Form" action="{{ url_for('donate_step3')}}" method="POST" novalidate>
+        <div class="form-row">
+            <div class="form-content">
+                <div class="section">
+                    <h2>Please enter your details</h2>
+                    <p>You are donating ${{ amount }} to {{ shelter }}</p>
 
-        <div class="form-content">
-            <div class="section">
-                <h2>Please enter your details</h2>
+                    <div class="amount-grid">
+                        <label>First Name:</label>
+                        <input name="first_name">
 
-                <div class="amount-grid">
-                    <label>First Name:</label>
-                    <input type="text">
+                        <label>Last Name:</label>
+                        <input name="last_name">
 
-                    <label>Last Name:</label>
-                    <input type="text">
+                        <label>Email:</label>
+                        <input name="email">
 
-                    <label>Email:</label>
-                    <input type="text">
-
-                    <label>Phone Number:</label>
-                    <input type="text">
+                        <label>Phone Number:</label>
+                        <input name="phone_number">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    
 
-    <!--NAV BUTTONS-->
-    <div class="actions actions-step2">
-        <a href="/donate/3" class="donate-btn">Donate</a>
-    </div>
+        <p id="error-message" class="error"></p>
+
+        <!--NAV BUTTONS-->
+        <div class="actions actions-step2">
+            <button type="submit" class="donate-btn">Donate</button>
+        </div>
+
+        <input type="hidden" name="amount" value="{{ amount }}">
+        <input type="hidden" name="shelter" value="{{ shelter }}">
+    </form>
 </div>
 </body>
 </html>

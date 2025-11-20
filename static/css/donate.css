@@ -112,6 +112,12 @@ button,
     padding-left: 40px;
 }
 
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
 /* =========================================================
    DONATE STEP 1 (Amount Selection)
    ========================================================= */
