@@ -111,7 +111,7 @@ def donate_step3():
             #Create new sponsor
             cursor.execute("""
                 INSERT INTO Sponsor (Fname, Lname, Email, PhoneNumber)
-                VALUES (%s, %s, %s)""",
+                VALUES (%s, %s, %s, %s)""",
                 (first_name, last_name, email, phone_number)
             )
             sponsor_id = cursor.lastrowid
