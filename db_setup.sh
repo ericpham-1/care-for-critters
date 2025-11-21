@@ -1,5 +1,5 @@
 DB_USER="root"
-DB_PASSWORD="password"
+DB_PASSWORD="YOURPASSWORD"
 DB_NAME="CareForCritters"
 TABLE_FILE="create_tables.sql"
 INSERT_DATA_FILE="insert_data.sql"
@@ -12,6 +12,7 @@ fi
 echo "Creating database $DB_NAME"
 mariadb -u"$DB_USER" -p"$DB_PASSWORD" -e "DROP DATABASE IF EXISTS $DB_NAME"
 mariadb -u"$DB_USER" -p"$DB_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
+mariadb -u"$DB_USER" -p"$DB_PASSWORD" -e "GRANT ALL PRIVILEGES ON careforcritters.* TO 'flaskuser'@'localhost'; FLUSH PRIVILEGES;"
 
 echo "Importing data"
 mariadb -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" < "$TABLE_FILE"
