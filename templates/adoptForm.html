@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/adoptForm.css') }}">
+
+    <title>Adopt</title>
+</head>
+
+<body>
+    <div class="Adoption-Form-Overlay">
+        <div class="Adoption-Box">
+            <img class="logo" src="/static/images/C4C_Logo.png" alt="Logo">
+
+            <!--Pet Info-->
+            <div class="pet-info">
+                <div class="pet-image">
+                    <img class="pet-photo" src="/static/images/pet_placeholder.png" alt="Pet Image"> 
+                </div>
+
+                <h2 class="pet-name">Name</h2>
+                <p class="pet-id">PetID:</p>
+                
+                <div class="pet-details">
+                    <p>Approx. Age:</p>
+                    <p>Other Info:</p>
+                    <p>Species/Breed</p>
+                    <p>Diet:</p>
+                </div>
+            </div>
+
+            <!--Personal Information Form-->
+            <form class="form-section" id="infoForm" method="POST" novalidate>
+                 <div class="header">
+                    <div class="titles">
+                        <h1>Adoption Application</h1>
+                        <p>Please fill out the form below: </p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <label>First Name</label>
+                    <input name="first_name">
+
+                    <label>Last Name</label>
+                    <input name="last_name">
+
+                    <label>Address</label>
+                    <input name="Address">
+
+                    <label>Phone Number: </label>
+                    <input name="phone_number">
+
+                    <label>Driver's License</label>
+                    <input name="license_number">
+
+                    <label>Email Address</label>
+                    <input name="email">
+                </div>
+
+                <!--NAV Buttons-->
+                <div class="actions">
+                    <a href="/" class="cancel-btn">Cancel</a>
+                    <button type="submit" class="continue-btn">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
