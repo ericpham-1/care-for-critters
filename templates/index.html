@@ -40,7 +40,7 @@
         <div style=" width: 65%; padding-left: 40px">
             <div style="display: flex; flex-direction: column; ">
                 <h3 style="font-weight: 500; font-size: larger;">Mammals</h3>
-                <div style="display: inline-flex;  height: 200px; margin: 15px; padding: 10px; align-items: center; gap: 10px;">
+                <div style="display: inline-flex;  height: 20%; margin: 15px; padding: 10px; align-items: center; gap: 10px;">
                     {% for mammal in mammals[:3] %}
                     <div style="height: 100%; width: 30%; align-content: center; background-color: #e6eddc; border-radius: 20px; padding: 10px;">
                         <img src="{{url_for('static', filename='images/home_page_pet.jpg')}}" style="width: 100%;">
@@ -57,7 +57,7 @@
             </div>
             <div style="display: flex; flex-direction: column;">
                 <h3 style="font-weight: 500; font-size: larger;">Exotics</h3>
-                <div style="display: inline-flex;  height: 200px; margin: 15px; padding: 10px; align-items: center; gap: 10px;">
+                <div style="display: inline-flex;  height: 20%; margin: 15px; padding: 10px; align-items: center; gap: 10px;">
                     {% for exotic in exotics[:3] %}
                     <div style="height: 100%; width: 30%; align-content: center; background-color: #e6eddc; border-radius: 20px; padding: 10px;">
                         <img src="{{url_for('static', filename='images/home_page_pet.jpg')}}" style="width: 100%;">
@@ -74,7 +74,7 @@
             </div>
             <div style="display: flex; flex-direction: column; ">
                 <h3 style="font-weight: 500; font-size: larger;">Fish</h3>
-                <div style="display: inline-flex;  height: 200px; margin: 15px;  padding: 10px; align-items: center; gap: 10px;">
+                <div style="display: inline-flex;  height: 20%; margin: 15px;  padding: 10px; align-items: center; gap: 10px;">
                     {% for fish in fishies[:3] %}
                     <div style="height: 100%; width: 30%; align-content: center; background-color: #e6eddc; border-radius: 20px; padding: 10px;">
                         <img src="{{url_for('static', filename='images/home_page_pet.jpg')}}" style="width: 100%;">
