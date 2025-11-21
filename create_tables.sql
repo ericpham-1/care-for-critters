@@ -148,10 +148,10 @@ CREATE TABLE Sponsor (
 -- RELATIONSHIPS
 -- =====================
 CREATE TABLE Donation (
+    DonationID INT AUTO_INCREMENT PRIMARY KEY,
     SponsorID INT,
     ShelterName VARCHAR(100),
     AmountDonated DECIMAL(10,2),
-    PRIMARY KEY (SponsorID, ShelterName),
     FOREIGN KEY (SponsorID) REFERENCES Sponsor(SponsorID),
     FOREIGN KEY (ShelterName) REFERENCES Shelter(ShelterName)
 );

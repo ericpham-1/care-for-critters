@@ -52,7 +52,9 @@ def index():
 def donate_step1():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT ShelterName FROM Shelter")
+    cursor.execute("" \
+    "SELECT ShelterName " \
+    "FROM Shelter")
     shelters = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -68,15 +70,91 @@ def donate_step2():
 
     # quick validation
     if not amount or not shelter:
-        cursor.execute("SELECT ShelterName FROM Shelter")
+        cursor.execute("" \
+        "SELECT ShelterName " \
+        "FROM Shelter")
         shelters = cursor.fetchall()
+        cursor.close()
+        conn.close()
         return render_template("donate.html", shelters=shelters, error="Please choose amount and shelter")
     else:
+        cursor.close()
+        conn.close()
         return render_template("donate2.html", amount=amount, shelter=shelter)
 
-@app.route("/donate/3")
+@app.route("/donate/3", methods=['GET', 'POST'])
 def donate_step3():
-    return render_template("donate3.html")
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        # Grab all form data from donate2.html
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get('email')
+        phone_number = request.form.get('phone_number')
+        amount = request.form.get('amount')
+        shelter = request.form.get('shelter')
+
+        # Check if sponsor exists
+        cursor.execute("""
+            SELECT SponsorID
+            FROM Sponsor
+            WHERE Email =  %s
+            """, (email,)
+        )
+        sponsor = cursor.fetchone()
+
+        if sponsor:
+            sponsor_id = sponsor['SponsorID']
+        else:
+            #Create new sponsor
+            cursor.execute("""
+                INSERT INTO Sponsor (Name, Email, PhoneNumber)
+                VALUES (%s, %s, %s)""",
+                (last_name, email, phone_number)
+            )
+            sponsor_id = cursor.lastrowid
+        
+        # New donation
+        cursor.execute("""
+            INSERT INTO Donation (SponsorID, ShelterName, AmountDonated)
+            VALUES (%s, %s, %s)""",
+            (sponsor_id, shelter, amount)
+        )
+
+        # Show new donor/donation
+        print(f"Inserted Donation: {cursor.lastrowid}")
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return render_template("donate3.html")
+    else:
+        cursor.close()
+        conn.close()
+        return render_template("donate1.html")
+    
+@app.route('/donations')
+def get_donations():
+    """Get ALL Donations"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Donation")
+    donations = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(donations)
+
+@app.route('/sponsors')
+def get_sponsors():
+    """Get ALL Sponsors"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Sponsor")
+    sponsors = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(sponsors)
 
 @app.route('/fundraisers')
 def get_fundraisers():
@@ -85,6 +163,11 @@ def get_fundraisers():
 @app.route('/adopt')
 def get_adoptions():
     return render_template('adopt.html')
+
+@app.route('/adoptForm')
+def adopt_form():
+    return render_template('adoptForm.html')
+
 
 @app.route('/login')
 def get_login():
