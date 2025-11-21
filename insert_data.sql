@@ -32,9 +32,9 @@ INSERT INTO Exotic (PetID, Species, HabitatRequirements, Weight)
 VALUES 
     (4, 'Bearded Dragon', 'Terrarium with heat lamp', 0.4);
 
-INSERT INTO SPONSOR(SponsorID, Name, Email, PhoneNumber)
+INSERT INTO SPONSOR(SponsorID, Fname, Lname, Email, PhoneNumber)
 VALUES
-    (1, 'Jimothy', 'e@ucalgary.ca', "1234567891");
+    (1, 'Jimothy', 'Socks', 'e@ucalgary.ca', "1234567891");
 
 INSERT INTO Donation(DonationID, SponsorID, ShelterName, AmountDonated)
 VALUES  

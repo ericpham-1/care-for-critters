@@ -139,7 +139,8 @@ CREATE TABLE Exotic (
 -- =====================
 CREATE TABLE Sponsor (
     SponsorID INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(100),
+    Fname VARCHAR(100),
+    Lname VARCHAR(100),
     Email VARCHAR(100),
     PhoneNumber VARCHAR(15)
     );
