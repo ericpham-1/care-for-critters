@@ -11,49 +11,63 @@
     <title>Donate</title>
 </head>
 <body>
+    <div class="donation-overlay">
 
-<div class="donation-overlay">
-
-    <div class="donation-box">
-         <div class="header">
-        <img src="{{ url_for('static', filename='images/C4C_Logo.png') }}" class="logo">
-        <div class="titles">
-            <h1>Care for Critters</h1>
-            <p>Wanting to donate? Please fill out the form<br>below</p>
-        </div>
-    </div>
-
-    <!--SELECT AMOUNT SECTION-->
-    <div class="section">
-        <h2>Choose donation amount</h2>
-
-        <div class="amount-grid">
-            <button class="amount-btn">$25</button>
-            <button class="amount-btn">$50</button>
-            <button class="amount-btn">$100</button>
-
-            <div class="other-amount">
-                <label>Other Amount:</label>
-                <input type="text">
+        <div class="donation-box">
+            <div class="header">
+                <img src="{{ url_for('static', filename='images/C4C_Logo.png') }}" class="logo">
+                <div class="titles">
+                    <h1>Care for Critters</h1>
+                    <p>Wanting to donate? Please fill out the form below</p>
+                </div>
             </div>
-        </div>
-    </div>
+        
 
-    <!--SHELTER SECTION-->
-    <div class="section">
-        <h2>Choose a shelter to donate to: </h2>
-        <select>
-            <option value="">Shelter</option> <!--TODO: INSERT SQL QUERY STUFF HERE-->
-        </select>
-    </div>
+            <!--SELECT AMOUNT SECTION-->
+            <form id="step1Form" action="{{ url_for('donate_step2')}}" method="POST" novalidate>
+                <div class="section">
+                    <h2>Choose donation amount</h2>
 
-    <!--NAV BUTTONS-->
-    <div class="actions">
-        <a href="/" class="cancel-btn">Cancel</a>
-        <button class="continue-btn">Continue</button>
+                    <div class="amount-grid">
+                        <button type="button" class="amount-btn" data-value="25" aria-pressed="false">$25</button>
+                        <button type="button" class="amount-btn" data-value="50" aria-pressed="false">$50</button>
+                        <button type="button" class="amount-btn" data-value="100" aria-pressed="false">$100</button>
+
+                        <div class="other-amount" data-value="other">
+                            <label for="otherAmount" class="sr-only">Other Amount:</label>
+                            <span class="other-label">Other Amount</span>
+                            <input id="otherAmount" name="custom_amount" type="number" min="1" placeholder="0.00" inputmode="decimal" />
+                        </div>
+                    </div>
+                </div>
+
+                    <!--SHELTER SECTION-->
+                <div class="section">
+                    <h2>Choose a shelter to donate to: </h2>
+                    <select name="shelter" required>
+                        <option value="" disabled selected>Select shelter</option> <!--TODO: INSERT SQL QUERY STUFF HERE-->
+                        {% for s in shelters %}
+                            <option value="{{ s.ShelterName }}">{{ s.ShelterName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- Hidden amount field that will be submitted -->
+                <input type="hidden" name="amount" id="donationAmount" value=""> 
+                
+                <!--ERROR MESSAGE-->
+                {% if error %}
+                    <div class="error" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+                <!--NAV BUTTONS-->
+                <div class="actions actions-step1">
+                    <a href="/" class="cancel-btn">Cancel</a>
+                    <button type="submit" class="continue-btn">Continue</button>
+                </div>
+            </form> 
+        </div>  
     </div>
-    </div>
-   
-</div>
+    <script src="{{ url_for('static', filename='js/donate.js') }}"></script>
 </body>
 </html>
