@@ -40,8 +40,10 @@ INSERT INTO Donation(DonationID, SponsorID, ShelterName, AmountDonated)
 VALUES  
     (1, 1, 'Maple Street Branch', 25.00);
 
+INSERT INTO Account (Username, Password, SupervisorID) 
+  VALUES ('admin', 'password123', 1);
+
 INSERT INTO Fundraiser (EventName, EventLocation, EventDate, Budget, ShelterName, AmountRaised)
 VALUES
     ('Grand Opening Event', 'Central Park', '2025-12-1', 2000,  'Maple Street Branch', 5000),
     ('FruFru\'s Birthday Bash', 'Main Street', '2026-3-21', 1000,  'Maple Street Branch', 10000);
-

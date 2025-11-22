@@ -30,7 +30,74 @@ def get_db_connection():
 
 
 
+# Decorator to protect routes that require login
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'logged_in' not in session:
+            return redirect(url_for('get_login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
+# ==================== LOGIN ROUTES ====================
+
+@app.route('/login', methods=['GET', 'POST'])
+def get_login():
+    """Handle supervisor login"""
+    # If already logged in, redirect to dashboard
+    if 'logged_in' in session:
+        return redirect(url_for('supervisor_dashboard'))
+    
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Check if account exists with matching username and password
+        cursor.execute("""
+            SELECT a.AccountID, a.SupervisorID, w.Name
+            FROM Account a
+            JOIN Supervisor s ON a.SupervisorID = s.WorkerID
+            JOIN Worker w ON s.WorkerID = w.WorkerID
+            WHERE a.Username = %s AND a.Password = %s
+        """, (username, password))
+        
+        account = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        
+        if account:
+            # Login successful - create session
+            session['logged_in'] = True
+            session['supervisor_id'] = account['SupervisorID']
+            session['supervisor_name'] = account['Name']
+            session['account_id'] = account['AccountID']
+            
+            return redirect(url_for('supervisor_dashboard'))
+        else:
+            # Login failed
+            return render_template('login.html', error='Invalid username or password')
+    
+    # GET request - show login form
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    """Handle supervisor logout"""
+    session.clear()
+    return redirect(url_for('index'))
+
+@app.route('/dashboard')
+@login_required
+def supervisor_dashboard():
+    """Protected supervisor dashboard - requires login"""
+    supervisor_name = session.get('supervisor_name', 'Supervisor')
+    return render_template('supervisor_dashboard.html', supervisor_name=supervisor_name)
+
+# ==================== YOUR EXISTING ROUTES ====================
+# (Keep all your existing routes below)
 
 
 
@@ -180,10 +247,6 @@ def get_adoptions():
 def adopt_form():
     return render_template('adoptForm.html')
 
-
-@app.route('/login')
-def get_login():
-    return render_template('login.html')
 
 @app.route('/shelters')
 def get_shelters():
