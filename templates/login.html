@@ -6,33 +6,202 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
-    <title>Document</title>
+    <title>Supervisor Login - Care for Critters</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 400;
+            background: linear-gradient(135deg, #b4dcd4 0%, #8cc9ba 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        nav {
+            display: flex;
+            align-items: center;
+            background-color: #b4dcd4;
+            padding: 10px;
+            justify-content: center;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            display: inline-flex;
+            gap: 30px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #fff;
+        }
+        
+        .login-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-box h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .login-box p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #8cc9ba;
+        }
+        
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #8cc9ba;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #7ab8a8;
+        }
+        
+        footer {
+            background-color: #b4dcd4;
+            display: flex;
+            gap: 20%;
+            justify-content: center;
+            padding: 10px;
+            align-items: center;
+        }
+        
+        footer a {
+            font-size: small;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        footer div {
+            line-height: 20px;
+        }
+    </style>
 </head>
-<body style="font-family: 'Fredoka', sans-serif; font-weight: 400; font-style: normal; margin: 0; padding: 0;">
-    <nav style="display: flex; align-items: center; background-color: #b4dcd4; padding: 10px; margin: 0; justify-content: center;">
-        <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;">
-        <ul style="list-style-type: none; display: inline-flex; gap: 30px;">
-            <a href="/" style="text-decoration: none;" >Home</a>
-            <a href="adopt" style="text-decoration: none;">Adopt</a>
-            <a href="fundraisers" style=" text-decoration: none;">Fundraisers</a>
-            <a href="donate" style=" text-decoration: none;">Donate</a>
+<body>
+    <nav>
+        <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;" alt="Care for Critters Logo">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/adopt">Adopt</a></li>
+            <li><a href="/fundraisers">Fundraisers</a></li>
+            <li><a href="/donate">Donate</a></li>
         </ul>
     </nav>
-    <p> HAHHAAH</p>
+    
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Supervisor Login</h2>
+            <p>Access the supervisor dashboard</p>
+            
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% endif %}
+            
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+        </div>
+    </div>
+    
+    <footer>
+        <div>
+            <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;" alt="Care for Critters Logo">
+        </div>
+        <div>
+            <a href="/">Home</a><br>
+            <a>About</a><br>
+            <a>Contact Us</a>
+        </div>
+        <div>
+            <a href="/login">Supervisor Login</a>
+        </div>
+    </footer>
 </body>
-<footer style="background-color: #b4dcd4; align-content: center; display: flex; gap: 20%; justify-content: center; padding: 10px;">
-    <div style="align-content: center;">
-        <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;">
-    </div>
-    <div style="line-height: 14px; align-content: center;">
-        <a href="/" style="font-size: small; text-decoration: none;">Home</a>
-        <br>
-        <a style="font-size: small;">About</a>
-        <br>
-        <a style="font-size: small;">Contact Us</a>
-    </div>
-    <div style="align-content: center;">
-        <a href="login" style="font-size: small; text-decoration: none;">Supervisor Login</a>
-    </div>
-</footer>
 </html>

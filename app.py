@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, redirect, url_for, session
+from functools import wraps
 import os
 from dotenv import load_dotenv
 import MySQLdb
@@ -6,6 +7,10 @@ from MySQLdb.cursors import DictCursor
 
 load_dotenv()
 app = Flask(__name__)
+
+# IMPORTANT: Add a secret key for session management
+# Generate a random secret key: python -c "import os; print(os.urandom(24).hex())"
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "your-secret-key-here-change-this")
 
 # -- MySQL Configuration --
 app.config['MYSQL_HOST'] = os.getenv("DB_HOST")
@@ -22,6 +27,13 @@ def get_db_connection():
         db=app.config['MYSQL_DB'],
         cursorclass=DictCursor
     )
+
+
+
+
+
+
+
 
 @app.route('/')
 def index():
