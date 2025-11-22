@@ -160,7 +160,7 @@ def get_sponsors():
 def get_fundraisers():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT EventName, EventLocation, EventDate, ShelterName FROM Fundraiser WHERE EventDate >= CURDATE() ORDER BY EventDate DESC")
+    cursor.execute("SELECT EventName, EventLocation, EventDate, ShelterName FROM Fundraiser WHERE EventDate >= CURDATE() ORDER BY EventDate ASC")
     events = cursor.fetchall()
     cursor.execute("SELECT ShelterName FROM Shelter")
     shelters = cursor.fetchall()
@@ -182,23 +182,23 @@ def get_filtered_fundraisers():
              query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
                       FROM Fundraiser
                       WHERE EventDate >= CURDATE() 
-                      ORDER BY EventDate DESC""")
+                      ORDER BY EventDate ASC""")
          else:
              query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
                       FROM Fundraiser
-                      ORDER BY EventDate DESC""")
+                      ORDER BY EventDate ASC""")
          cursor.execute(query)
     else:
         if len(past_event) == 0:
             query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
                       FROM Fundraiser
                       WHERE ShelterName = %s AND EventDate >= CURDATE() 
-                      ORDER BY EventDate DESC""")
+                      ORDER BY EventDate ASC""")
         else:
             query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
                       FROM Fundraiser
                       WHERE ShelterName = %s 
-                     ORDER BY EventDate DESC""")
+                     ORDER BY EventDate ASC""")
         cursor.execute(query, (selected_location,))
     result = cursor.fetchall()
 
