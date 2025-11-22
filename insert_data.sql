@@ -50,7 +50,6 @@ VALUES (1, 'Admin User', 'admin@careforcritters.com', '(403) 555-1234', 2, 'Mapl
 INSERT INTO Supervisor (WorkerID, Salary)
 VALUES (1, 50000.00);
 
--- Now the Account insert will work
 INSERT INTO Account (Username, Password, SupervisorID) 
 VALUES ('admin', 'password123', 1);
 

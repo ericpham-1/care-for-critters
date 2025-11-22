@@ -8,7 +8,7 @@ from MySQLdb.cursors import DictCursor
 load_dotenv()
 app = Flask(__name__)
 
-# IMPORTANT: Add a secret key for session management
+# secret key for session management, cookie related
 # Generate a random secret key: python -c "import os; print(os.urandom(24).hex())"
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "your-secret-key-here-change-this")
 
@@ -28,9 +28,8 @@ def get_db_connection():
         cursorclass=DictCursor
     )
 
-
-
-# Decorator to protect routes that require login
+# new stuff for login
+# decorator to protect routes that require login
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -39,8 +38,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# ==================== LOGIN ROUTES ====================
-
+# Login routes
 @app.route('/login', methods=['GET', 'POST'])
 def get_login():
     """Handle supervisor login"""
@@ -69,7 +67,7 @@ def get_login():
         conn.close()
         
         if account:
-            # Login successful - create session
+            # Login successful, create session
             session['logged_in'] = True
             session['supervisor_id'] = account['SupervisorID']
             session['supervisor_name'] = account['Name']
@@ -95,11 +93,6 @@ def supervisor_dashboard():
     """Protected supervisor dashboard - requires login"""
     supervisor_name = session.get('supervisor_name', 'Supervisor')
     return render_template('supervisor_dashboard.html', supervisor_name=supervisor_name)
-
-# ==================== YOUR EXISTING ROUTES ====================
-# (Keep all your existing routes below)
-
-
 
 
 @app.route('/')

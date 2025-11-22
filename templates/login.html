@@ -28,6 +28,7 @@
             align-items: center;
             background-color: #b4dcd4;
             padding: 10px;
+            margin: 0;
             justify-content: center;
         }
         
@@ -35,17 +36,13 @@
             list-style-type: none;
             display: inline-flex;
             gap: 30px;
+            margin: 0;
+            padding: 0;
         }
         
         nav a {
             text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        nav a:hover {
-            color: #fff;
+            color: black;
         }
         
         .login-container {
@@ -134,21 +131,22 @@
         
         footer {
             background-color: #b4dcd4;
+            align-content: center;
             display: flex;
             gap: 20%;
             justify-content: center;
             padding: 10px;
-            align-items: center;
         }
         
         footer a {
             font-size: small;
             text-decoration: none;
-            color: #333;
+            color: black;
         }
         
         footer div {
-            line-height: 20px;
+            line-height: 14px;
+            align-content: center;
         }
     </style>
 </head>
@@ -156,10 +154,10 @@
     <nav>
         <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;" alt="Care for Critters Logo">
         <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/adopt">Adopt</a></li>
-            <li><a href="/fundraisers">Fundraisers</a></li>
-            <li><a href="/donate">Donate</a></li>
+            <a href="/">Home</a>
+            <a href="/adopt">Adopt</a>
+            <a href="/fundraisers">Fundraisers</a>
+            <a href="/donate">Donate</a>
         </ul>
     </nav>
     
