@@ -2,11 +2,13 @@ USE careforcritters;
 
 INSERT INTO Address (AddressID, BuildingNo, Street, City, Province, PostalCode)
 VALUES
-    (DEFAULT, '143', 'Maple Street', 'Calgary', 'Alberta', 'A1B 3C4');
+    (DEFAULT, '143', 'Maple Street', 'Calgary', 'Alberta', 'A1B 3C4'),
+    (DEFAULT, '246', 'Oak Row', 'Calgary', 'Alberta', 'X1Y 3Z4');
 
 INSERT INTO Shelter (ShelterName, PhoneNumber, ShelterAddress)
 VALUES
-    ('Maple Street Branch', '(403) 111 2222', '1');
+    ('Maple Street Branch', '(403) 111 2222', '1'),
+    ('Oak Row Branch', '(403) 456 4567', '2');
 
 INSERT INTO Animal (PetID, Name, Description, Age, Diet, ShelterLocation)
 VALUES 
@@ -42,6 +44,6 @@ VALUES
 
 INSERT INTO Fundraiser (EventName, EventLocation, EventDate, Budget, ShelterName, AmountRaised)
 VALUES
-    ('Grand Opening Event', 'Central Park', '2025-12-1', 2000,  'Maple Street Branch', 5000),
+    ('Grand Opening Event', 'Central Park', '2025-12-1', 2000,  'Oak Row Branch', 5000),
     ('FruFru\'s Birthday Bash', 'Main Street', '2026-3-21', 1000,  'Maple Street Branch', 10000);
 
