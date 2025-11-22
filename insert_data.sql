@@ -45,5 +45,6 @@ VALUES
 INSERT INTO Fundraiser (EventName, EventLocation, EventDate, Budget, ShelterName, AmountRaised)
 VALUES
     ('Grand Opening Event', 'Central Park', '2025-12-1', 2000,  'Oak Row Branch', 5000),
+    ('2008 Christmas Party', 'Maple Street Branch', '2008-12-1', 2000,  'Maple Street Branch', 7000),
     ('FruFru\'s Birthday Bash', 'Main Street', '2026-3-21', 1000,  'Maple Street Branch', 10000);
 

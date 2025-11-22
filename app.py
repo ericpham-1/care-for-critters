@@ -158,7 +158,52 @@ def get_sponsors():
 
 @app.route('/fundraisers')
 def get_fundraisers():
-    return render_template('fundraisers.html')
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT EventName, EventLocation, EventDate, ShelterName FROM Fundraiser WHERE EventDate >= CURDATE() ORDER BY EventDate DESC")
+    events = cursor.fetchall()
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('fundraisers.html', events=events, locations=shelters)
+
+@app.route('/fundraisers/filter', methods=['POST'])
+def get_filtered_fundraisers():
+    selected_location = request.form['shelter_locations']
+    past_event = request.form.getlist('past')
+    print(past_event)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    if selected_location == "all":
+         if len(past_event) == 0 :
+             query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
+                      FROM Fundraiser
+                      WHERE EventDate >= CURDATE() 
+                      ORDER BY EventDate DESC""")
+         else:
+             query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
+                      FROM Fundraiser
+                      ORDER BY EventDate DESC""")
+         cursor.execute(query)
+    else:
+        if len(past_event) == 0:
+            query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
+                      FROM Fundraiser
+                      WHERE ShelterName = %s AND EventDate >= CURDATE() 
+                      ORDER BY EventDate DESC""")
+        else:
+            query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
+                      FROM Fundraiser
+                      WHERE ShelterName = %s 
+                     ORDER BY EventDate DESC""")
+        cursor.execute(query, (selected_location,))
+    result = cursor.fetchall()
+
+    return render_template('fundraisers.html', events=result, locations=shelters)
+
 
 @app.route('/adopt')
 def get_adoptions():
