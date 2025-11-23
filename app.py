@@ -244,7 +244,6 @@ def get_fundraisers():
 def get_filtered_fundraisers():
     selected_location = request.form['shelter_locations']
     past_event = request.form.getlist('past')
-    print(past_event)
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT ShelterName FROM Shelter")
@@ -344,7 +343,6 @@ def get_animals():
         if ages_set != None:
             if len(ages_set) != 0:
                 query = query + f" WHERE Age IN {ages_set}"
-    print(query)
     cursor.execute(query)
     animals = cursor.fetchall()
     cursor.close()

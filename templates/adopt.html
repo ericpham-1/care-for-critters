@@ -6,6 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animals.css') }}">
     <title>Document</title>
 </head>
 <body style="font-family: 'Fredoka', sans-serif; font-weight: 400; font-style: normal; margin: 0; padding: 0; color: black;">
@@ -31,7 +32,7 @@
             <div style="background-color: #b4dcd4; display:flex; flex-direction: column; width: 20%;border-radius: 30px; gap: 20px; padding: 20px; height: fit-content;">
                 <form method="POST" action="{{animal_type}}">
                     <p style="font-size: medium; font-weight: 500;">Filter Animals</p>
-                    <div>
+                    <div class="filter-group">
                         <label>Sort by shelter</label>
                         <select name="shelter_locations" id="shelter_locations">
                             <option value="None">All locations</option>
@@ -41,20 +42,18 @@
                         </select>
                     </div>
                     <br>
-                    <div>
+                    <div class="filter-group">
                         <label>Sort by pet age</label>
-                            <br>
                             {% for age in pet_ages %}
                             <label for="{{age.Age}}">
                                 <input type="checkbox" name="selected_ages" value="{{age.Age}}">
                                 {{age.Age}}
                             </label>
-                            <br>
                             {% endfor %}
                     </div>
                     <br>
-                    <div style="justify-content: center;">
-                        <button type="submit">Apply filters</button>
+                    <div style="justify-content: center;" class="submit">
+                        <button type="submit" >Apply filters</button>
                     </div>
                 </form> 
                 

@@ -6,6 +6,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animals.css') }}">
+
     <title>Document</title>
 </head>
 <body style="font-family: 'Fredoka', sans-serif; font-weight: 400; font-style: normal; margin: 0; padding: 0;">
@@ -13,7 +15,7 @@
         <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;">
         <ul style="list-style-type: none; display: inline-flex; gap: 30px;">
             <a href="/" style="text-decoration: none;" >Home</a>
-            <a href="adopt" style="text-decoration: none;">Adopt</a>
+            <a href="animals" style="text-decoration: none;">Adopt</a>
             <a href="fundraisers" style=" text-decoration: none;">Fundraisers</a>
             <a href="donate" style=" text-decoration: none;">Donate</a>
         </ul>
@@ -25,7 +27,7 @@
             <div style="background-color: #b4dcd4; display:flex; flex-direction: column; width: 20%;border-radius: 30px; gap: 20px; padding: 20px; height: fit-content;">
                 <form method="POST" action="/fundraisers/filter">
                     <p style="font-size: medium; font-weight: 500;">Filter Events</p>
-                    <div>
+                    <div class="filter-group">
                         <label>Sort by shelter</label>
                         <select name="shelter_locations" id="shelter_locations">
                             <option value="all">All locations</option>
@@ -35,13 +37,13 @@
                         </select>
                     </div>
                     <br>
-                    <div>
+                    <div class="filter-group">
                         <label class="checkbox-inline">
                             <input type="checkbox" value="past_event" name="past">Show past events</label>
                         </label>
                     </div>
                     <br>
-                    <div style="justify-content: center;">
+                    <div style="justify-content: center;" class="submit">
                         <button type="submit">Apply filters</button>
                     </div>
                 </form> 
