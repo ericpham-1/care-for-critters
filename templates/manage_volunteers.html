@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_volunteers.css') }}">
+    <title>Manage Volunteers - Care for Critters</title>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;" alt="Care for Critters Logo">
+            <ul>
+                <a href="/">Home</a>
+                <a href="/adopt">Adopt</a>
+                <a href="/fundraisers">Fundraisers</a>
+                <a href="/donate">Donate</a>
+            </ul>
+        </div>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </nav>
+    
+    <div class="container">
+        <div class="header-section">
+            <div>
+                <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+                <h1>Manage Volunteers</h1>
+            </div>
+            <button class="add-btn" onclick="showAddForm()">+ Add New Volunteer</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="shelter-filter">Filter by Shelter:</label>
+                <select id="shelter-filter" onchange="filterVolunteers()">
+                    <option value="">All Shelters</option>
+                    {% for shelter in shelters %}
+                    <option value="{{ shelter.ShelterName }}">{{ shelter.ShelterName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="sort-by">Sort by:</label>
+                <select id="sort-by" onchange="sortVolunteers()">
+                    <option value="name">Name (A-Z)</option>
+                    <option value="hours-asc">Hours (Low to High)</option>
+                    <option value="hours-desc">Hours (High to Low)</option>
+                    <option value="shelter">Shelter</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Volunteers Table -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Shelter</th>
+                        <th>Hours Worked</th>
+                        <th>Responsibilities</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="volunteers-table">
+                    {% for volunteer in volunteers %}
+                    <tr data-shelter="{{ volunteer.ShelterName }}" data-hours="{{ volunteer.HoursWorked }}">
+                        <td>{{ volunteer.Name }}</td>
+                        <td>{{ volunteer.Email }}</td>
+                        <td>{{ volunteer.PhoneNumber }}</td>
+                        <td>{{ volunteer.ShelterName }}</td>
+                        <td>{{ volunteer.HoursWorked }}</td>
+                        <td>{{ volunteer.Responsibilities }}</td>
+                        <td>
+                            <button class="edit-btn" onclick='editVolunteer({{ volunteer.WorkerID }}, "{{ volunteer.Name }}", "{{ volunteer.ShelterName }}", {{ volunteer.HoursWorked }}, "{{ volunteer.Responsibilities }}")'>Edit</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="volunteer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Add New Volunteer</h2>
+            
+            <form id="volunteer-form" method="POST">
+                <input type="hidden" id="worker-id" name="worker_id">
+                
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+
+                <h3 class="section-title">Address Information</h3>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="building-no">Building No *</label>
+                        <input type="text" id="building-no" name="building_no" required>
+                    </div>
+                    
+                    <div class="form-group half">
+                        <label for="street">Street *</label>
+                        <input type="text" id="street" name="street" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="city">City *</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+                    
+                    <div class="form-group half">
+                        <label for="province">Province *</label>
+                        <input type="text" id="province" name="province" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postal-code">Postal Code *</label>
+                    <input type="text" id="postal-code" name="postal_code" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="shelter">Shelter Location *</label>
+                    <select id="shelter" name="shelter" required>
+                        <option value="">Select a shelter</option>
+                        {% for shelter in shelters %}
+                        <option value="{{ shelter.ShelterName }}">{{ shelter.ShelterName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="hours">Hours Worked</label>
+                    <input type="number" id="hours" name="hours" min="0" value="0">
+                </div>
+                
+                <div class="form-group">
+                    <label for="responsibilities">Responsibilities</label>
+                    <textarea id="responsibilities" name="responsibilities" rows="3"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="submit-btn">Save Volunteer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div>
+            <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;" alt="Care for Critters Logo">
+        </div>
+        <div>
+            <a href="/">Home</a><br>
+            <a>About</a><br>
+            <a>Contact Us</a>
+        </div>
+        <div>
+            <a href="/dashboard">Supervisor Dashboard</a>
+        </div>
+    </footer>
+
+    <script>
+        // Show add form modal
+        function showAddForm() {
+            document.getElementById('modal-title').textContent = 'Add New Volunteer';
+            document.getElementById('volunteer-form').action = '/manage-volunteers/add';
+            document.getElementById('volunteer-form').reset();
+            document.getElementById('worker-id').value = '';
+            
+            // Show address fields for new volunteers
+            document.querySelectorAll('.section-title, .form-row').forEach(el => {
+                el.style.display = '';
+            });
+            document.getElementById('building-no').setAttribute('required', 'required');
+            document.getElementById('street').setAttribute('required', 'required');
+            document.getElementById('city').setAttribute('required', 'required');
+            document.getElementById('province').setAttribute('required', 'required');
+            document.getElementById('postal-code').setAttribute('required', 'required');
+            
+            document.getElementById('volunteer-modal').style.display = 'block';
+        }
+
+        // Show edit form modal
+        function editVolunteer(workerId, name, shelter, hours, responsibilities) {
+            document.getElementById('modal-title').textContent = 'Edit Volunteer';
+            document.getElementById('volunteer-form').action = '/manage-volunteers/update';
+            document.getElementById('worker-id').value = workerId;
+            document.getElementById('name').value = name;
+            document.getElementById('shelter').value = shelter;
+            document.getElementById('hours').value = hours;
+            document.getElementById('responsibilities').value = responsibilities;
+            
+            // Hide address fields when editing (we're not updating addresses)
+            document.querySelectorAll('.section-title, .form-row').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.getElementById('building-no').removeAttribute('required');
+            document.getElementById('street').removeAttribute('required');
+            document.getElementById('city').removeAttribute('required');
+            document.getElementById('province').removeAttribute('required');
+            document.getElementById('postal-code').removeAttribute('required');
+            
+            document.getElementById('volunteer-modal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('volunteer-modal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('volunteer-modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Filter volunteers by shelter
+        function filterVolunteers() {
+            const shelterFilter = document.getElementById('shelter-filter').value;
+            const rows = document.querySelectorAll('#volunteers-table tr');
+            
+            rows.forEach(row => {
+                const shelter = row.getAttribute('data-shelter');
+                if (shelterFilter === '' || shelter === shelterFilter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Sort volunteers
+        function sortVolunteers() {
+            const sortBy = document.getElementById('sort-by').value;
+            const tbody = document.getElementById('volunteers-table');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            rows.sort((a, b) => {
+                if (sortBy === 'name') {
+                    return a.cells[0].textContent.localeCompare(b.cells[0].textContent);
+                } else if (sortBy === 'hours-asc') {
+                    return parseInt(a.getAttribute('data-hours')) - parseInt(b.getAttribute('data-hours'));
+                } else if (sortBy === 'hours-desc') {
+                    return parseInt(b.getAttribute('data-hours')) - parseInt(a.getAttribute('data-hours'));
+                } else if (sortBy === 'shelter') {
+                    return a.getAttribute('data-shelter').localeCompare(b.getAttribute('data-shelter'));
+                }
+            });
+            
+            rows.forEach(row => tbody.appendChild(row));
+        }
+    </script>
+</body>
+</html>

@@ -6,8 +6,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
-    <title>Supervisor Dashboard - Care for Critters</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/supervisor_dash.css') }}">
+    <title>Supervisor Dashboard - Care for Critters</title>
 </head>
 <body>
     <nav>
@@ -30,6 +30,12 @@
         </div>
         
         <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h3>Manage Volunteers</h3>
+                <p>View, add, and update volunteer information</p>
+                <a href="/manage-volunteers" class="card-btn">Manage Volunteers</a>
+            </div>
+            
             <div class="dashboard-card">
                 <h3>View All Donations</h3>
                 <p>View and manage all donations made to the shelters</p>
