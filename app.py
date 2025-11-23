@@ -99,7 +99,7 @@ def supervisor_dashboard():
 def index():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT EventName, EventLocation, EventDate FROM FUNDRAISER ORDER BY EventDate")
+    cursor.execute("SELECT EventName, EventLocation, EventDate FROM FUNDRAISER WHERE EventDate >= CURDATE() ORDER BY EventDate")
     events = cursor.fetchall()
     cursor.execute("""        
         SELECT a.Name, a.Age, m.Species
