@@ -396,5 +396,136 @@ def get_exotic():
     conn.close()
     return render_template('adopt.html', animal_type="exotics", animals=exotic, locations=shelters)
 
+
+# Volunteer routes
+@app.route('/manage-volunteers')
+@login_required
+def manage_volunteers():
+    """Display all volunteers with their information"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Get all volunteers with their worker information
+    cursor.execute("""
+        SELECT w.WorkerID, w.Name, w.Email, w.PhoneNumber, w.ShelterName,
+               v.HoursWorked, v.Responsibilities
+        FROM Worker w
+        JOIN Volunteer v ON w.WorkerID = v.WorkerID
+        ORDER BY w.Name
+    """)
+    volunteers = cursor.fetchall()
+    
+    # Get all shelters for the dropdown filters
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+    
+    return render_template('manage_volunteers.html', 
+                         volunteers=volunteers, 
+                         shelters=shelters)
+
+@app.route('/manage-volunteers/add', methods=['POST'])
+@login_required
+def add_volunteer():
+    """Add a new volunteer to the database"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Get form data
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        shelter = request.form.get('shelter')
+        hours = request.form.get('hours', 0)
+        responsibilities = request.form.get('responsibilities', '')
+        
+        # Get address data
+        building_no = request.form.get('building_no')
+        street = request.form.get('street')
+        city = request.form.get('city')
+        province = request.form.get('province')
+        postal_code = request.form.get('postal_code')
+        
+        # First, insert address
+        cursor.execute("""
+            INSERT INTO Address (BuildingNo, Street, City, Province, PostalCode)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (building_no, street, city, province, postal_code))
+        
+        address_id = cursor.lastrowid
+        
+        # Then, insert into Worker table with the new AddressID
+        cursor.execute("""
+            INSERT INTO Worker (Name, Email, PhoneNumber, ShelterName, AddressID)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (name, email, phone, shelter, address_id))
+        
+        worker_id = cursor.lastrowid
+        
+        # Finally, insert into Volunteer table
+        cursor.execute("""
+            INSERT INTO Volunteer (WorkerID, HoursWorked, Responsibilities)
+            VALUES (%s, %s, %s)
+        """, (worker_id, hours, responsibilities))
+        
+        conn.commit()
+        print(f"Added new volunteer: {name} (WorkerID: {worker_id}, AddressID: {address_id})")
+        
+    except Exception as e:
+        conn.rollback()
+        print(f"Error adding volunteer: {e}")
+    
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return redirect(url_for('manage_volunteers'))
+
+@app.route('/manage-volunteers/update', methods=['POST'])
+@login_required
+def update_volunteer():
+    """Update existing volunteer information"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Get form data
+        worker_id = request.form.get('worker_id')
+        name = request.form.get('name')
+        shelter = request.form.get('shelter')
+        hours = request.form.get('hours')
+        responsibilities = request.form.get('responsibilities')
+        
+        # Update Worker table (name and shelter location)
+        cursor.execute("""
+            UPDATE Worker
+            SET Name = %s, ShelterName = %s
+            WHERE WorkerID = %s
+        """, (name, shelter, worker_id))
+        
+        # Update Volunteer table (hours and responsibilities)
+        cursor.execute("""
+            UPDATE Volunteer
+            SET HoursWorked = %s, Responsibilities = %s
+            WHERE WorkerID = %s
+        """, (hours, responsibilities, worker_id))
+        
+        conn.commit()
+        print(f"Updated volunteer: {name} (WorkerID: {worker_id})")
+        
+    except Exception as e:
+        conn.rollback()
+        print(f"Error updating volunteer: {e}")
+    
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return redirect(url_for('manage_volunteers'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)
