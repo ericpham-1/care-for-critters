@@ -42,9 +42,21 @@ INSERT INTO Donation(DonationID, SponsorID, ShelterName, AmountDonated)
 VALUES  
     (1, 1, 'Maple Street Branch', 25.00);
 
+-- Create a supervisor account for testing login
+INSERT INTO Address (AddressID, BuildingNo, Street, City, Province, PostalCode)
+VALUES (2, '456', 'Admin Lane', 'Calgary', 'Alberta', 'B2C 4D5');
+
+INSERT INTO Worker (WorkerID, Name, Email, PhoneNumber, AddressID, ShelterName)
+VALUES (1, 'Admin User', 'admin@careforcritters.com', '(403) 555-1234', 2, 'Maple Street Branch');
+
+INSERT INTO Supervisor (WorkerID, Salary)
+VALUES (1, 50000.00);
+
+INSERT INTO Account (Username, Password, SupervisorID) 
+VALUES ('admin', 'password123', 1);
+
 INSERT INTO Fundraiser (EventName, EventLocation, EventDate, Budget, ShelterName, AmountRaised)
 VALUES
     ('Grand Opening Event', 'Central Park', '2025-12-1', 2000,  'Oak Row Branch', 5000),
     ('2008 Christmas Party', 'Maple Street Branch', '2008-12-1', 2000,  'Maple Street Branch', 7000),
     ('FruFru\'s Birthday Bash', 'Main Street', '2026-3-21', 1000,  'Maple Street Branch', 10000);
-
