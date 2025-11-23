@@ -311,90 +311,168 @@ def get_animals():
     """Get ALL animals"""
     if request.method == 'POST':
         selected_location = request.form['shelter_locations']
+        selected_ages = request.form.getlist('selected_ages')
+        if len(selected_ages) == 1:
+            ages_set = f"({selected_ages[0]})"
+        else:
+            ages_set = tuple(map(int, selected_ages))
     else:
         selected_location = "None"
-    print(selected_location)
+        selected_ages = None
+        ages_set = None
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT ShelterName FROM Shelter")
     shelters = cursor.fetchall()
+    cursor.execute("""SELECT DISTINCT Age 
+                   FROM (
+                   SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
+                   UNION SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
+                   UNION SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
+                   ORDER BY Age ASC""")
+    all_ages = cursor.fetchall()
     query = ("""SELECT * FROM (
                    SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
                    UNION SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
                    UNION SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets""")
     if selected_location != "None":
         query = query + f" WHERE ShelterLocation = '{selected_location}'" 
+        if ages_set != None:
+            if len(ages_set) != 0:
+                query = query + f" AND Age IN {ages_set}"
+    else:
+        if ages_set != None:
+            if len(ages_set) != 0:
+                query = query + f" WHERE Age IN {ages_set}"
+    print(query)
     cursor.execute(query)
     animals = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('adopt.html', animal_type="animals", animals=animals, locations=shelters)
+    return render_template('adopt.html', animal_type="animals", animals=animals, locations=shelters, pet_ages=all_ages)
 
 @app.route('/mammals', methods=['GET', 'POST'])
 def get_mammals():
     """Get only mammals"""
     if request.method == 'POST':
         selected_location = request.form['shelter_locations']
+        selected_ages = request.form.getlist('selected_ages')
+        if len(selected_ages) == 1:
+            ages_set = f"({selected_ages[0]})"
+        else:
+            ages_set = tuple(map(int, selected_ages))
     else:
         selected_location = "None"
+        selected_ages = None
+        ages_set = None
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT ShelterName FROM Shelter")
     shelters = cursor.fetchall()
+    cursor.execute("""SELECT DISTINCT Age 
+                   FROM (
+                   SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
+                   ORDER BY Age ASC""")
+    all_ages = cursor.fetchall()
     query = ("""
         SELECT * FROM (SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
     """)
     if selected_location != "None":
         query = query + f" WHERE ShelterLocation = '{selected_location}'" 
+        if ages_set != None:
+            if len(ages_set) != 0:
+                query = query + f" AND Age IN {ages_set}"
+    else:
+        if ages_set != None:
+            if len(ages_set) != 0:
+                query = query + f" WHERE Age IN {ages_set}"
     cursor.execute(query)
     mammals = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('adopt.html', animal_type="mammals", animals=mammals, locations=shelters)
+    return render_template('adopt.html', animal_type="mammals", animals=mammals, locations=shelters, pet_ages=all_ages)
 
 @app.route('/fish', methods=['GET', 'POST'])
 def get_fish():
     """Get only fish"""
     if request.method == 'POST':
         selected_location = request.form['shelter_locations']
+        selected_ages = request.form.getlist('selected_ages')
+        if len(selected_ages) == 1:
+            ages_set = f"({selected_ages[0]})"
+        else:
+            ages_set = tuple(map(int, selected_ages))
     else:
         selected_location = "None"
+        selected_ages = None
+        ages_set = None
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT ShelterName FROM Shelter")
     shelters = cursor.fetchall()
+    cursor.execute("""SELECT DISTINCT Age 
+                   FROM (
+                   SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
+                   ORDER BY Age ASC""")
+    all_ages = cursor.fetchall()
     query = ("""
         SELECT * FROM (SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
     """)
     if selected_location != "None":
         query = query + f" WHERE ShelterLocation = '{selected_location}'" 
+        if ages_set != None:
+            if len(ages_set) != 0:
+                query = query + f" AND Age IN {ages_set}"
+    else:
+        if ages_set != None:
+            if len(ages_set) != 0:
+                query = query + f" WHERE Age IN {ages_set}"
     cursor.execute(query)
     fish = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('adopt.html', animal_type="fish", animals=fish, locations=shelters)
+    return render_template('adopt.html', animal_type="fish", animals=fish, locations=shelters, pet_ages=all_ages)
 
 @app.route('/exotics', methods=['GET', 'POST'])
 def get_exotic():
     """Get only exotic animals"""
     if request.method == 'POST':
         selected_location = request.form['shelter_locations']
+        selected_ages = request.form.getlist('selected_ages')
+        if len(selected_ages) == 1:
+            ages_set = f"({selected_ages[0]})"
+        else:
+            ages_set = tuple(map(int, selected_ages))
     else:
         selected_location = "None"
+        selected_ages = None
+        ages_set = None
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT ShelterName FROM Shelter")
     shelters = cursor.fetchall()
+    cursor.execute("""SELECT DISTINCT Age 
+                   FROM (
+                   SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
+                   ORDER BY Age ASC""")
+    all_ages = cursor.fetchall()
     query = ("""
         SELECT * FROM (SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
     """)
     if selected_location != "None":
         query = query + f" WHERE ShelterLocation = '{selected_location}'" 
+        if ages_set != None:
+            if len(ages_set) != 0:
+                query = query + f" AND Age IN {ages_set}"
+    else:
+        if ages_set != None:
+            if len(ages_set) != 0:
+                query = query + f" WHERE Age IN {ages_set}"
     cursor.execute(query)
     exotic = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('adopt.html', animal_type="exotics", animals=exotic, locations=shelters)
+    return render_template('adopt.html', animal_type="exotics", animals=exotic, locations=shelters, pet_ages=all_ages)
 
 
 # Volunteer routes

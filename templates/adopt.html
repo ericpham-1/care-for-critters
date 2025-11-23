@@ -34,13 +34,24 @@
                     <div>
                         <label>Sort by shelter</label>
                         <select name="shelter_locations" id="shelter_locations">
-                            <option value="None" style="font-family: 'Fredoka';">All locations</option>
+                            <option value="None">All locations</option>
                             {% for location in locations %}
                                 <option value="{{location.ShelterName}}">{{location.ShelterName}}</option>
                             {% endfor %}
                         </select>
                     </div>
-
+                    <br>
+                    <div>
+                        <label>Sort by pet age</label>
+                            <br>
+                            {% for age in pet_ages %}
+                            <label for="{{age.Age}}">
+                                <input type="checkbox" name="selected_ages" value="{{age.Age}}">
+                                {{age.Age}}
+                            </label>
+                            <br>
+                            {% endfor %}
+                    </div>
                     <br>
                     <div style="justify-content: center;">
                         <button type="submit">Apply filters</button>
