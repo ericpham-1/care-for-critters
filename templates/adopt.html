@@ -13,12 +13,55 @@
         <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;">
         <ul style="list-style-type: none; display: inline-flex; gap: 30px;">
             <a href="/" style="text-decoration: none;" >Home</a>
-            <a href="adopt" style="text-decoration: none;">Adopt</a>
+            <a href="animals" style="text-decoration: none;">Adopt</a>
             <a href="fundraisers" style=" text-decoration: none;">Fundraisers</a>
             <a href="donate" style=" text-decoration: none;">Donate</a>
         </ul>
     </nav>
-    <p> HAHHAAH</p>
+
+    <div style=" display: flex; justify-content: center; flex-direction: column">
+        <h3 style="font-weight: 500; font-size: xx-large; text-align: center; text-transform: capitalize;">{{animal_type}}</h3>
+        <div style="justify-content: center; display: flex; flex-direction: row; gap: 20px; text-align: center; height: 30px;">
+            <a href="animals" style="width: 125px; background-color: #0047ab; color: white; text-decoration: none; text-align: center; align-content: center; border-radius: 20px;">All animals</a>
+            <a href="mammals" style="width: 125px; background-color: #0047ab; color: white; text-decoration: none; text-align: center; align-content: center; border-radius: 20px;">Mammals</a>
+            <a href="exotics" style="width: 125px; background-color: #0047ab; color: white; text-decoration: none; text-align: center; align-content: center; border-radius: 20px;">Exotics</a>
+            <a href="fish" style="width: 125px; background-color: #0047ab; color: white; text-decoration: none; text-align: center; align-content: center; border-radius: 20px;">Fish</a>
+        </div>
+        <div style="display: flex; flex-direction: row; width:inherit; margin: 20px; gap: 20px;">
+            <div style="background-color: #b4dcd4; display:flex; flex-direction: column; width: 20%;border-radius: 30px; gap: 20px; padding: 20px; height: fit-content;">
+                <form method="POST" action="{{animal_type}}">
+                    <p style="font-size: medium; font-weight: 500;">Filter Animals</p>
+                    <div>
+                        <label>Sort by shelter</label>
+                        <select name="shelter_locations" id="shelter_locations">
+                            <option value="None">All locations</option>
+                            {% for location in locations %}
+                                <option value="{{location.ShelterName}}">{{location.ShelterName}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <br>
+                    <div style="justify-content: center;">
+                        <button type="submit">Apply filters</button>
+                    </div>
+                </form> 
+                
+            </div>
+            <div style=" width: 80%; gap: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr;">
+                {% for animal in animals %}
+                <div style="background-color: #e6eddc;  border-radius: 30px; padding: 20px;;">
+                    <div style="width: auto; height: 125px; background-color: green;"></div>
+                    <p style="font-size: medium; font-weight: 500;">{{animal.Name}}</p>
+                    <p>Species: {{animal.Species}}</p>
+                    <p>Age: {{animal.Age}}</p>
+                    <p>{{animal.ShelterLocation}}</p>
+                </div>
+                {% endfor%}
+            </div>
+        </div>
+
+    </div>
 </body>
 <footer style="background-color: #b4dcd4; align-content: center; display: flex; gap: 20%; justify-content: center; padding: 10px;">
     <div style="align-content: center;">

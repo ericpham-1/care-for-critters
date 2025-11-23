@@ -207,7 +207,16 @@ def get_filtered_fundraisers():
 
 @app.route('/adopt')
 def get_adoptions():
-    return render_template('adopt.html')
+
+    # conn = get_db_connection()
+    # cursor = conn.cursor()
+    # cursor.execute("""SELECT a.PetID, Name, Age, Species FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
+    #                UNION SELECT a.PetID, Name, Age, Species FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
+    #                UNION SELECT a.PetID, Name, Age, Species FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID);""")
+    # animals = cursor.fetchall()
+    # cursor.close()
+    # conn.close()
+    return render_template('adopt.html', animal_type="Animals")
 
 @app.route('/adoptForm')
 def adopt_form():
@@ -229,61 +238,95 @@ def get_shelters():
     conn.close()
     return jsonify(shelters)
 
-@app.route('/animals')
+@app.route('/animals', methods=['GET', 'POST'])
 def get_animals():
     """Get ALL animals"""
+    if request.method == 'POST':
+        selected_location = request.form['shelter_locations']
+    else:
+        selected_location = "None"
+    print(selected_location)
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT PetID, Name, Age, Description, Diet FROM Animal")
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    query = ("""SELECT * FROM (
+                   SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
+                   UNION SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
+                   UNION SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets""")
+    if selected_location != "None":
+        query = query + f" WHERE ShelterLocation = '{selected_location}'" 
+    cursor.execute(query)
     animals = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(animals)
+    return render_template('adopt.html', animal_type="animals", animals=animals, locations=shelters)
 
-@app.route('/mammals')
+@app.route('/mammals', methods=['GET', 'POST'])
 def get_mammals():
     """Get only mammals"""
+    if request.method == 'POST':
+        selected_location = request.form['shelter_locations']
+    else:
+        selected_location = "None"
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("""
-        SELECT a.Name, a.Age, m.Species, m.Weight
-        FROM Animal a
-        JOIN Mammal m ON a.PetID = m.PetID
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    query = ("""
+        SELECT * FROM (SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
     """)
+    if selected_location != "None":
+        query = query + f" WHERE ShelterLocation = '{selected_location}'" 
+    cursor.execute(query)
     mammals = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(mammals)
+    return render_template('adopt.html', animal_type="mammals", animals=mammals, locations=shelters)
 
-@app.route('/fish')
+@app.route('/fish', methods=['GET', 'POST'])
 def get_fish():
     """Get only fish"""
+    if request.method == 'POST':
+        selected_location = request.form['shelter_locations']
+    else:
+        selected_location = "None"
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("""
-        SELECT a.Name, a.Age, f.Species, f.WaterType
-        FROM Animal a
-        JOIN Fish f ON a.PetID = f.PetID
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    query = ("""
+        SELECT * FROM (SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
     """)
+    if selected_location != "None":
+        query = query + f" WHERE ShelterLocation = '{selected_location}'" 
+    cursor.execute(query)
     fish = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(fish)
+    return render_template('adopt.html', animal_type="fish", animals=fish, locations=shelters)
 
-@app.route('/exotic')
+@app.route('/exotics', methods=['GET', 'POST'])
 def get_exotic():
     """Get only exotic animals"""
+    if request.method == 'POST':
+        selected_location = request.form['shelter_locations']
+    else:
+        selected_location = "None"
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("""
-        SELECT a.Name, a.Age, e.Species, e.HabitatRequirements
-        FROM Animal a
-        JOIN Exotic e ON a.PetID = e.PetID
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    query = ("""
+        SELECT * FROM (SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
     """)
+    if selected_location != "None":
+        query = query + f" WHERE ShelterLocation = '{selected_location}'" 
+    cursor.execute(query)
     exotic = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(exotic)
+    return render_template('adopt.html', animal_type="exotics", animals=exotic, locations=shelters)
 
 if __name__ == '__main__':
     app.run(debug=True)

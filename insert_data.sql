@@ -12,12 +12,12 @@ VALUES
 
 INSERT INTO Animal (PetID, Name, Description, Age, Diet, ShelterLocation)
 VALUES 
-    (1, 'Max', 'Friendly golden retriever', 4, 'Dog food', 'Maple Street Branch'),
+    (1, 'Max', 'Friendly golden retriever', 4, 'Dog food', 'Oak Row Branch'),
     (2,'Whiskers', 'Playful tabby cat', 2, 'Cat food', 'Maple Street Branch'),
     (3,'Nemo', 'Clownfish', 1, 'Fish flakes', 'Maple Street Branch'),
     (4,'Spike', 'Bearded dragon', 3, 'Insects and veggies', 'Maple Street Branch'),
     (5,'James', 'Sugar Glider', 1, 'Fruits and veggies', 'Maple Street Branch'),
-    (6,'Sir Ruffles','Ragdoll Cat', 3, 'Cat food', 'Maple Street Branch');
+    (6,'Sir Ruffles','Ragdoll Cat', 3, 'Cat food', 'Oak Row Branch');
 
 INSERT INTO Mammal (PetID, Species, HealthRecords, Weight)
 VALUES 
