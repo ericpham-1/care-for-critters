@@ -44,10 +44,10 @@ VALUES
 
 -- Create a supervisor account for testing login
 INSERT INTO Address (AddressID, BuildingNo, Street, City, Province, PostalCode)
-VALUES (2, '456', 'Admin Lane', 'Calgary', 'Alberta', 'B2C 4D5');
+VALUES (3, '456', 'Admin Lane', 'Calgary', 'Alberta', 'B2C 4D5');
 
 INSERT INTO Worker (WorkerID, Name, Email, PhoneNumber, AddressID, ShelterName)
-VALUES (1, 'Admin User', 'admin@careforcritters.com', '(403) 555-1234', 2, 'Maple Street Branch');
+VALUES (1, 'Admin User', 'admin@careforcritters.com', '(403) 555-1234', 3, 'Maple Street Branch');
 
 INSERT INTO Supervisor (WorkerID, Salary)
 VALUES (1, 50000.00);
