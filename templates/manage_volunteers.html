@@ -71,7 +71,12 @@
                 </thead>
                 <tbody id="volunteers-table">
                     {% for volunteer in volunteers %}
-                    <tr data-shelter="{{ volunteer.ShelterName }}" data-hours="{{ volunteer.HoursWorked }}">
+                    <tr data-shelter="{{ volunteer.ShelterName }}" data-hours="{{ volunteer.HoursWorked }}" 
+                        data-worker-id="{{ volunteer.WorkerID }}"
+                        data-name="{{ volunteer.Name }}"
+                        data-email="{{ volunteer.Email }}"
+                        data-phone="{{ volunteer.PhoneNumber }}"
+                        data-responsibilities="{{ volunteer.Responsibilities }}">
                         <td>{{ volunteer.Name }}</td>
                         <td>{{ volunteer.Email }}</td>
                         <td>{{ volunteer.PhoneNumber }}</td>
@@ -79,7 +84,7 @@
                         <td>{{ volunteer.HoursWorked }}</td>
                         <td>{{ volunteer.Responsibilities }}</td>
                         <td>
-                            <button class="edit-btn" onclick='editVolunteer({{ volunteer.WorkerID }}, "{{ volunteer.Name }}", "{{ volunteer.ShelterName }}", {{ volunteer.HoursWorked }}, "{{ volunteer.Responsibilities }}")'>Edit</button>
+                            <button class="edit-btn" onclick="editVolunteerFromRow(this)">Edit</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -207,16 +212,30 @@
         }
 
         // Show edit form modal
-        function editVolunteer(workerId, name, shelter, hours, responsibilities) {
+        // Show edit form modal (called from row)
+        function editVolunteerFromRow(button) {
+            const row = button.closest('tr');
+            const workerId = row.getAttribute('data-worker-id');
+            const name = row.getAttribute('data-name');
+            const email = row.getAttribute('data-email');
+            const phone = row.getAttribute('data-phone');
+            const shelter = row.getAttribute('data-shelter');
+            const hours = row.getAttribute('data-hours');
+            const responsibilities = row.getAttribute('data-responsibilities');
+            
+            console.log("Edit clicked:", workerId, name, shelter, hours, responsibilities);
+            
             document.getElementById('modal-title').textContent = 'Edit Volunteer';
             document.getElementById('volunteer-form').action = '/manage-volunteers/update';
             document.getElementById('worker-id').value = workerId;
             document.getElementById('name').value = name;
+            document.getElementById('email').value = email;
+            document.getElementById('phone').value = phone;
             document.getElementById('shelter').value = shelter;
             document.getElementById('hours').value = hours;
             document.getElementById('responsibilities').value = responsibilities;
             
-            // Hide address fields when editing (we're not updating addresses)
+            // Hide address fields when editing
             document.querySelectorAll('.section-title, .form-row').forEach(el => {
                 el.style.display = 'none';
             });
