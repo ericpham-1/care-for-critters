@@ -54,8 +54,13 @@
             </div>
         </div>
 
-        <p id="error-message" class="error"></p>
-
+         <!--ERROR MESSAGE-->
+                {% if error %}
+                    <div class="error" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+                
         <!--NAV BUTTONS-->
         <div class="actions actions-step2">
             <button type="submit" class="donate-btn">Donate</button>

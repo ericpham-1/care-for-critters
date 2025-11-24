@@ -46,33 +46,5 @@ document.addEventListener('DOMContentLoaded', () => {
     donationAmountInput.value = otherAmountInput.value;
   });
   }
-
-                  // Page 2 Scripts //
-const page2 = document.getElementById("step2Form");
-    if (page2) {
-        const errorBox = document.getElementById("error-message");
-
-        page2.addEventListener("submit", (e) => {
-            const requiredFields = [
-                "first_name",
-                "last_name",
-                "email",
-                "phone_number"
-            ];
-            
-            errorBox.textContent = "";
-
-            for (let field of requiredFields) {
-                const input = document.querySelector(`input[name="${field}"]`);
-                if (!input || !input.value.trim()) {
-                    e.preventDefault();
-                    errorBox.textContent = "Please fill out all fields.";
-                    return;
-                }
-            }
-        });
-    }
-  
-
 });
 

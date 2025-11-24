@@ -168,6 +168,25 @@ def donate_step3():
         amount = request.form.get('amount')
         shelter = request.form.get('shelter')
 
+        # Validation:
+        required_fields = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "phone_number": phone_number
+        }
+
+        missing_fields = [name for name, value in required_fields.items() if not value or not value.strip()]
+        if missing_fields:
+            cursor.close()
+            conn.close()
+            return render_template(
+            "donate2.html",
+            amount=amount,
+            shelter=shelter,
+            error="Please fill out all required fields"
+            )
+        
         # Check if sponsor exists
         cursor.execute("""
             SELECT SponsorID
