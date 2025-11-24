@@ -331,9 +331,9 @@ def get_animals():
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
     query = ("""SELECT * FROM (
-                   SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
-                   UNION SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
-                   UNION SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets""")
+                   SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
+                   UNION SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
+                   UNION SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets""")
     if selected_location != "None":
         query = query + f" WHERE ShelterLocation = '{selected_location}'" 
         if ages_set != None:
@@ -369,11 +369,11 @@ def get_mammals():
     shelters = cursor.fetchall()
     cursor.execute("""SELECT DISTINCT Age 
                    FROM (
-                   SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
+                   SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
     query = ("""
-        SELECT * FROM (SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
+        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
     """)
     if selected_location != "None":
         query = query + f" WHERE ShelterLocation = '{selected_location}'" 
@@ -410,11 +410,11 @@ def get_fish():
     shelters = cursor.fetchall()
     cursor.execute("""SELECT DISTINCT Age 
                    FROM (
-                   SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
+                   SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
     query = ("""
-        SELECT * FROM (SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
+        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
     """)
     if selected_location != "None":
         query = query + f" WHERE ShelterLocation = '{selected_location}'" 
@@ -451,11 +451,11 @@ def get_exotic():
     shelters = cursor.fetchall()
     cursor.execute("""SELECT DISTINCT Age 
                    FROM (
-                   SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
+                   SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
     query = ("""
-        SELECT * FROM (SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
+        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
     """)
     if selected_location != "None":
         query = query + f" WHERE ShelterLocation = '{selected_location}'" 

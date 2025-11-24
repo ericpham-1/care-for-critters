@@ -20,7 +20,7 @@ VALUES
     (3,'Nemo', 'Clownfish', 1, 'Fish flakes', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxczooPThsOYUIPVcGV2wy69cTWn2EvbCt2g&s', 'Maple Street Branch'),
     (4,'Spike', 'Bearded dragon', 3, 'Insects and veggies', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0uSQ5K-_jrerFZr1HTT-Qb0VIKpPcaJFzag&s','Maple Street Branch'),
     (5,'James', 'Sugar Glider', 1, 'Fruits and veggies', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJPuayda2pLxrpOh1yKnZ3JJCsIzK1_XGHLg&s', 'Maple Street Branch'),
-    (6,'Sir Ruffles','Ragdoll Cat', 3, 'Cat food', 'https://www.thesprucepets.com/thmb/Wf8EcO4whw4UfJSqRcsE2au9KBw=/5256x0/filters:no_upscale():strip_icc()/ragdoll-cat-lying-down--portrait-579000275-5c868f0146e0fb00015f8fbf.jpg', 'Oak Row Branch');
+    (6,'Sir Ruffles','Ragdoll Cat', 3, 'Cat food', 'https://fb-strapi.s3.us-east-1.amazonaws.com/Fit_Bark_rag_doll_cat_059151f4ec.jpg', 'Oak Row Branch');
 
 INSERT INTO Mammal (PetID, Species, HealthRecords, Weight)
 VALUES 
