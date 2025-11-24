@@ -602,6 +602,188 @@ def update_volunteer():
     
     return redirect(url_for('manage_volunteers'))
 
+# Manage the Animals, supervisor route
+@app.route('/manage-animals')
+@login_required
+def manage_animals():
+    """Display all animals with their information"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Get all animals with type-specific information using UNION
+    cursor.execute("""
+        SELECT a.PetID, a.Name, a.Description, a.Age, a.Diet, a.Photo, a.ShelterLocation,
+               'Mammal' as AnimalType, m.Species, m.Weight, NULL as WaterType, 
+               NULL as HabitatRequirements, m.HealthRecords
+        FROM Animal a
+        JOIN Mammal m ON a.PetID = m.PetID
+        UNION
+        SELECT a.PetID, a.Name, a.Description, a.Age, a.Diet, a.Photo, a.ShelterLocation,
+               'Fish' as AnimalType, f.Species, NULL as Weight, f.WaterType, 
+               NULL as HabitatRequirements, NULL as HealthRecords
+        FROM Animal a
+        JOIN Fish f ON a.PetID = f.PetID
+        UNION
+        SELECT a.PetID, a.Name, a.Description, a.Age, a.Diet, a.Photo, a.ShelterLocation,
+               'Exotic' as AnimalType, e.Species, e.Weight, NULL as WaterType, 
+               e.HabitatRequirements, NULL as HealthRecords
+        FROM Animal a
+        JOIN Exotic e ON a.PetID = e.PetID
+        ORDER BY Name
+    """)
+    animals = cursor.fetchall()
+    
+    # Get all shelters for dropdowns
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+    
+    return render_template('manage_animals.html', 
+                         animals=animals, 
+                         shelters=shelters)
+
+@app.route('/manage-animals/add', methods=['POST'])
+@login_required
+def add_animal():
+    """Add a new animal to the database"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Get basic animal info
+        name = request.form.get('name')
+        description = request.form.get('description')
+        age = request.form.get('age')
+        diet = request.form.get('diet')
+        photo = request.form.get('photo')
+        shelter = request.form.get('shelter')
+        animal_type = request.form.get('animal_type')
+        
+        # Insert into Animal table
+        cursor.execute("""
+            INSERT INTO Animal (Name, Description, Age, Diet, Photo, ShelterLocation)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (name, description, age, diet, photo, shelter))
+        
+        pet_id = cursor.lastrowid
+        
+        # Insert into type-specific table
+        if animal_type == 'Mammal':
+            species = request.form.get('mammal_species')
+            weight = request.form.get('weight')
+            health_records = request.form.get('health_records', '')
+            
+            cursor.execute("""
+                INSERT INTO Mammal (PetID, Species, Weight, HealthRecords)
+                VALUES (%s, %s, %s, %s)
+            """, (pet_id, species, weight, health_records))
+            
+        elif animal_type == 'Fish':
+            species = request.form.get('fish_species')
+            water_type = request.form.get('water_type')
+            
+            cursor.execute("""
+                INSERT INTO Fish (PetID, Species, WaterType)
+                VALUES (%s, %s, %s)
+            """, (pet_id, species, water_type))
+            
+        elif animal_type == 'Exotic':
+            species = request.form.get('exotic_species')
+            weight = request.form.get('exotic_weight')
+            habitat = request.form.get('habitat')
+            
+            cursor.execute("""
+                INSERT INTO Exotic (PetID, Species, Weight, HabitatRequirements)
+                VALUES (%s, %s, %s, %s)
+            """, (pet_id, species, weight, habitat))
+        
+        conn.commit()
+        print(f"Added new animal: {name} (PetID: {pet_id}, Type: {animal_type})")
+        
+    except Exception as e:
+        conn.rollback()
+        print(f"Error adding animal: {e}")
+    
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return redirect(url_for('manage_animals'))
+
+@app.route('/manage-animals/update', methods=['POST'])
+@login_required
+def update_animal():
+    """Update existing animal information"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Get form data
+        pet_id = request.form.get('pet_id')
+        name = request.form.get('name')
+        description = request.form.get('description')
+        age = request.form.get('age')
+        diet = request.form.get('diet')
+        photo = request.form.get('photo')
+        shelter = request.form.get('shelter')
+        animal_type = request.form.get('animal_type')
+        
+        # Update Animal table
+        cursor.execute("""
+            UPDATE Animal
+            SET Name = %s, Description = %s, Age = %s, Diet = %s, 
+                Photo = %s, ShelterLocation = %s
+            WHERE PetID = %s
+        """, (name, description, age, diet, photo, shelter, pet_id))
+        
+        # Update type-specific table
+        if animal_type == 'Mammal':
+            species = request.form.get('mammal_species')
+            weight = request.form.get('weight')
+            health_records = request.form.get('health_records', '')
+            
+            cursor.execute("""
+                UPDATE Mammal
+                SET Species = %s, Weight = %s, HealthRecords = %s
+                WHERE PetID = %s
+            """, (species, weight, health_records, pet_id))
+            
+        elif animal_type == 'Fish':
+            species = request.form.get('fish_species')
+            water_type = request.form.get('water_type')
+            
+            cursor.execute("""
+                UPDATE Fish
+                SET Species = %s, WaterType = %s
+                WHERE PetID = %s
+            """, (species, water_type, pet_id))
+            
+        elif animal_type == 'Exotic':
+            species = request.form.get('exotic_species')
+            weight = request.form.get('exotic_weight')
+            habitat = request.form.get('habitat')
+            
+            cursor.execute("""
+                UPDATE Exotic
+                SET Species = %s, Weight = %s, HabitatRequirements = %s
+                WHERE PetID = %s
+            """, (species, weight, habitat, pet_id))
+        
+        conn.commit()
+        print(f"Updated animal: {name} (PetID: {pet_id})")
+        
+    except Exception as e:
+        conn.rollback()
+        print(f"Error updating animal: {e}")
+    
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return redirect(url_for('manage_animals'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_animals.css') }}">
+    <title>Manage Animals - Care for Critters</title>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;" alt="Care for Critters Logo">
+            <ul>
+                <a href="/">Home</a>
+                <a href="/adopt">Adopt</a>
+                <a href="/fundraisers">Fundraisers</a>
+                <a href="/donate">Donate</a>
+            </ul>
+        </div>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </nav>
+    
+    <div class="container">
+        <div class="header-section">
+            <div>
+                <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+                <h1>Manage Animals</h1>
+            </div>
+            <button class="add-btn" onclick="showAddForm()">+ Add New Animal</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="shelter-filter">Filter by Shelter:</label>
+                <select id="shelter-filter" onchange="filterAnimals()">
+                    <option value="">All Shelters</option>
+                    {% for shelter in shelters %}
+                    <option value="{{ shelter.ShelterName }}">{{ shelter.ShelterName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="type-filter">Filter by Type:</label>
+                <select id="type-filter" onchange="filterAnimals()">
+                    <option value="">All Types</option>
+                    <option value="Mammal">Mammals</option>
+                    <option value="Fish">Fish</option>
+                    <option value="Exotic">Exotic</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Animals Table -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Species</th>
+                        <th>Age</th>
+                        <th>Shelter</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="animals-table">
+                    {% for animal in animals %}
+                    <tr data-shelter="{{ animal.ShelterLocation }}" data-type="{{ animal.AnimalType }}">
+                        <td><img src="{{ animal.Photo }}" alt="{{ animal.Name }}" class="animal-thumbnail"></td>
+                        <td>{{ animal.Name }}</td>
+                        <td>{{ animal.AnimalType }}</td>
+                        <td>{{ animal.Species }}</td>
+                        <td>{{ animal.Age }}</td>
+                        <td>{{ animal.ShelterLocation }}</td>
+                        <td>
+                            <button class="edit-btn" onclick="editAnimalFromRow(this)" 
+                                data-pet-id="{{ animal.PetID }}"
+                                data-name="{{ animal.Name }}"
+                                data-description="{{ animal.Description }}"
+                                data-age="{{ animal.Age }}"
+                                data-diet="{{ animal.Diet }}"
+                                data-photo="{{ animal.Photo }}"
+                                data-shelter="{{ animal.ShelterLocation }}"
+                                data-type="{{ animal.AnimalType }}"
+                                data-species="{{ animal.Species }}"
+                                data-weight="{{ animal.Weight or '' }}"
+                                data-water-type="{{ animal.WaterType or '' }}"
+                                data-habitat="{{ animal.HabitatRequirements or '' }}"
+                                data-health="{{ animal.HealthRecords or '' }}">
+                                Edit
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="animal-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Add New Animal</h2>
+            
+            <form id="animal-form" method="POST">
+                <input type="hidden" id="pet-id" name="pet_id">
+                
+                <h3 class="section-title">Basic Information</h3>
+                
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea id="description" name="description" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="age">Age *</label>
+                        <input type="number" id="age" name="age" min="0" required>
+                    </div>
+                    
+                    <div class="form-group half">
+                        <label for="diet">Diet *</label>
+                        <input type="text" id="diet" name="diet" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="shelter">Shelter Location *</label>
+                    <select id="shelter" name="shelter" required>
+                        <option value="">Select a shelter</option>
+                        {% for shelter in shelters %}
+                        <option value="{{ shelter.ShelterName }}">{{ shelter.ShelterName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="photo">Photo URL *</label>
+                    <input type="url" id="photo" name="photo" placeholder="https://example.com/image.jpg" required onchange="previewImage()">
+                    <div id="image-preview" class="image-preview">
+                        <img id="preview-img" src="" alt="Preview" style="display:none;">
+                    </div>
+                </div>
+                
+                <h3 class="section-title">Animal Type</h3>
+                
+                <div class="form-group">
+                    <label for="animal-type">Type *</label>
+                    <select id="animal-type" name="animal_type" required onchange="toggleTypeFields()">
+                        <option value="">Select type</option>
+                        <option value="Mammal">Mammal</option>
+                        <option value="Fish">Fish</option>
+                        <option value="Exotic">Exotic</option>
+                    </select>
+                </div>
+                
+                <!-- Mammal Fields -->
+                <div id="mammal-fields" class="type-fields" style="display:none;">
+                    <div class="form-group">
+                        <label for="mammal-species">Species *</label>
+                        <input type="text" id="mammal-species" name="mammal_species">
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight (kg) *</label>
+                        <input type="number" step="0.1" id="weight" name="weight">
+                    </div>
+                    <div class="form-group">
+                        <label for="health-records">Health Records</label>
+                        <textarea id="health-records" name="health_records" rows="2"></textarea>
+                    </div>
+                </div>
+                
+                <!-- Fish Fields -->
+                <div id="fish-fields" class="type-fields" style="display:none;">
+                    <div class="form-group">
+                        <label for="fish-species">Species *</label>
+                        <input type="text" id="fish-species" name="fish_species">
+                    </div>
+                    <div class="form-group">
+                        <label for="water-type">Water Type *</label>
+                        <select id="water-type" name="water_type">
+                            <option value="">Select water type</option>
+                            <option value="Freshwater">Freshwater</option>
+                            <option value="Saltwater">Saltwater</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Exotic Fields -->
+                <div id="exotic-fields" class="type-fields" style="display:none;">
+                    <div class="form-group">
+                        <label for="exotic-species">Species *</label>
+                        <input type="text" id="exotic-species" name="exotic_species">
+                    </div>
+                    <div class="form-group">
+                        <label for="exotic-weight">Weight (kg)</label>
+                        <input type="number" step="0.1" id="exotic-weight" name="exotic_weight">
+                    </div>
+                    <div class="form-group">
+                        <label for="habitat">Habitat Requirements *</label>
+                        <textarea id="habitat" name="habitat" rows="2"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="submit-btn">Save Animal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div>
+            <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;" alt="Care for Critters Logo">
+        </div>
+        <div>
+            <a href="/">Home</a><br>
+            <a>About</a><br>
+            <a>Contact Us</a>
+        </div>
+        <div>
+            <a href="/dashboard">Supervisor Dashboard</a>
+        </div>
+    </footer>
+
+    <script>
+        function showAddForm() {
+            document.getElementById('modal-title').textContent = 'Add New Animal';
+            document.getElementById('animal-form').action = '/manage-animals/add';
+            document.getElementById('animal-form').reset();
+            document.getElementById('pet-id').value = '';
+            document.getElementById('preview-img').style.display = 'none';
+            toggleTypeFields();
+            document.getElementById('animal-modal').style.display = 'block';
+        }
+
+        function editAnimalFromRow(button) {
+            const data = button.dataset;
+            
+            document.getElementById('modal-title').textContent = 'Edit Animal';
+            document.getElementById('animal-form').action = '/manage-animals/update';
+            document.getElementById('pet-id').value = data.petId;
+            document.getElementById('name').value = data.name;
+            document.getElementById('description').value = data.description;
+            document.getElementById('age').value = data.age;
+            document.getElementById('diet').value = data.diet;
+            document.getElementById('photo').value = data.photo;
+            document.getElementById('shelter').value = data.shelter;
+            document.getElementById('animal-type').value = data.type;
+            
+            // Show image preview
+            const previewImg = document.getElementById('preview-img');
+            previewImg.src = data.photo;
+            previewImg.style.display = 'block';
+            
+            // Fill type-specific fields
+            toggleTypeFields();
+            if (data.type === 'Mammal') {
+                document.getElementById('mammal-species').value = data.species;
+                document.getElementById('weight').value = data.weight;
+                document.getElementById('health-records').value = data.health;
+            } else if (data.type === 'Fish') {
+                document.getElementById('fish-species').value = data.species;
+                document.getElementById('water-type').value = data.waterType;
+            } else if (data.type === 'Exotic') {
+                document.getElementById('exotic-species').value = data.species;
+                document.getElementById('exotic-weight').value = data.weight;
+                document.getElementById('habitat').value = data.habitat;
+            }
+            
+            document.getElementById('animal-modal').style.display = 'block';
+        }
+
+        function toggleTypeFields() {
+            const type = document.getElementById('animal-type').value;
+            document.querySelectorAll('.type-fields').forEach(el => el.style.display = 'none');
+            
+            if (type === 'Mammal') {
+                document.getElementById('mammal-fields').style.display = 'block';
+                setFieldRequired('mammal-species', true);
+                setFieldRequired('weight', true);
+                setFieldRequired('fish-species', false);
+                setFieldRequired('water-type', false);
+                setFieldRequired('exotic-species', false);
+                setFieldRequired('habitat', false);
+            } else if (type === 'Fish') {
+                document.getElementById('fish-fields').style.display = 'block';
+                setFieldRequired('fish-species', true);
+                setFieldRequired('water-type', true);
+                setFieldRequired('mammal-species', false);
+                setFieldRequired('weight', false);
+                setFieldRequired('exotic-species', false);
+                setFieldRequired('habitat', false);
+            } else if (type === 'Exotic') {
+                document.getElementById('exotic-fields').style.display = 'block';
+                setFieldRequired('exotic-species', true);
+                setFieldRequired('habitat', true);
+                setFieldRequired('mammal-species', false);
+                setFieldRequired('weight', false);
+                setFieldRequired('fish-species', false);
+                setFieldRequired('water-type', false);
+            }
+        }
+
+        function setFieldRequired(fieldId, required) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                if (required) {
+                    field.setAttribute('required', 'required');
+                } else {
+                    field.removeAttribute('required');
+                }
+            }
+        }
+
+        function previewImage() {
+            const url = document.getElementById('photo').value;
+            const previewImg = document.getElementById('preview-img');
+            if (url) {
+                previewImg.src = url;
+                previewImg.style.display = 'block';
+            } else {
+                previewImg.style.display = 'none';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('animal-modal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('animal-modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function filterAnimals() {
+            const shelterFilter = document.getElementById('shelter-filter').value;
+            const typeFilter = document.getElementById('type-filter').value;
+            const rows = document.querySelectorAll('#animals-table tr');
+            
+            rows.forEach(row => {
+                const shelter = row.getAttribute('data-shelter');
+                const type = row.getAttribute('data-type');
+                const showShelter = !shelterFilter || shelter === shelterFilter;
+                const showType = !typeFilter || type === typeFilter;
+                
+                if (showShelter && showType) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
