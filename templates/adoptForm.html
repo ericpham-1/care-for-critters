@@ -46,7 +46,7 @@
             </div>
 
             <!--Personal Information Form-->
-            <form class="form-section" id="infoForm" method="POST" novalidate>
+            <form class="form-section" id="infoForm" method="POST" action="/form_submit" novalidate>
                  <div class="header">
                     <div class="titles">
                         <h1>Adoption Application</h1>
@@ -64,12 +64,12 @@
                     <div class="address-group">
                         <div class="address-field building-no">
                             <label for="building_no">Building No.</label>
-                            <input id="building_no" name="building_no" type="text"/>
+                            <input id="building_no" name="building_no" type="text" autocomplete="off"/>
                         </div>
 
                         <div class="address-field street">
                             <label for="street">Street</label>
-                            <input id="street" name="street" type="text" />
+                            <input id="street" name="street" type="text" autocomplete="nope" />
                         </div>
 
                         <div class="address-field postal-code">
@@ -91,16 +91,21 @@
 
 
                     <label>Phone Number: </label>
-                    <input name="phone_number">
+                    <input name="phone_number" type="number">
 
                     <label>Driver's License</label>
-                    <input name="license_number">
+                    <input name="license_number" type="number">
 
                     <label>Email Address</label>
-                    <input name="email">
+                    <input type="email" name="email">
+
+                    <input type="hidden" name="pet_id" value="{{ pet.PetID }}">
+                    print("pet_id received from form:", pet_id)
+                    
                 </div>
 
                 <!--NAV Buttons-->
+                <p>Pet ID (debug): {{ pet.PetID }}</p>
                 <div class="actions">
                     <a href="/animals" class="cancel-btn">Cancel</a>
                     <button type="submit" class="continue-btn">Submit</button>

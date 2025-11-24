@@ -44,7 +44,8 @@ CREATE TABLE Animal (
 CREATE TABLE Adopter (
     AdopterID INT AUTO_INCREMENT PRIMARY KEY,
     DriverLicenseNo VARCHAR(50) UNIQUE,
-    Name VARCHAR(100) NOT NULL,
+    Fname VARCHAR(100) NOT NULL,
+    Lname VARCHAR(100) NOT NULL,
     Email VARCHAR(100),
     PhoneNumber VARCHAR(15),
     AddressID INT,
@@ -58,7 +59,7 @@ CREATE TABLE Adoption (
     AdoptionID INT AUTO_INCREMENT PRIMARY KEY,
     AdopterID INT,
     PetID INT,
-    AdoptionDate DATE,
+    AdoptionDate DATE ,
     Status VARCHAR(50),
     FOREIGN KEY (AdopterID) REFERENCES Adopter(AdopterID),
     FOREIGN KEY (PetID) REFERENCES Animal(PetID)

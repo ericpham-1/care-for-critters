@@ -342,6 +342,85 @@ def adopt_form(pet_id):
     
     return render_template('adoptForm.html', pet=pet)
 
+@app.route('/form_submit', methods=['POST'])
+def form_submit():
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
+    building_no = request.form.get("building_no")
+    street = request.form.get("street")
+    city = request.form.get("city")
+    province = request.form.get("province")
+    postal_code = request.form.get("postal_code")
+    phone_number = request.form.get("phone_number")
+    license_number = request.form.get("license_number")
+    email = request.form.get("email")
+    pet_id = request.form.get("pet_id")
+    print(f"Inserted Adoption Form: {pet_id}")
+
+    print(f"License Number from form: {license_number}")
+    print(f"Pet ID from form: {pet_id}")
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Check if Address is new
+    query = """
+    SELECT AddressID
+    FROM Address
+    WHERE BuildingNo = %s AND Street = %s AND City = %s AND Province = %s AND PostalCode = %s;
+    """
+    cursor.execute(query, (building_no, street, city, province, postal_code))
+    address = cursor.fetchone()
+    if address:
+        address_id = address['AddressID']
+    else:
+        address_query = """
+        INSERT INTO Address (BuildingNo, Street, City, Province, PostalCode)
+        VALUES (%s, %s, %s, %s, %s)
+        """
+        cursor.execute(address_query, (building_no, street, city, province, postal_code))
+        address_id = cursor.lastrowid
+
+    # Check if Adopter is new
+    query = """
+    SELECT AdopterID, AddressID
+    FROM Adopter
+    Where DriverLicenseNo = %s
+    """
+    cursor.execute(query, (license_number,))
+    adopter = cursor.fetchone()
+    
+    if adopter:
+        # If adopter changes their address
+        if adopter['AddressID'] != address_id:
+            cursor.execute("""
+            UPDATE Adopter
+            SET AddressID = %s
+            WHERE AdopterID = %s
+            """, (address_id, adopter['AdopterID']))
+        adopter_id = adopter['AdopterID']
+    else:
+        query = """
+        INSERT INTO Adopter (DriverLicenseNo, Fname, Lname, Email, PhoneNumber, AddressID)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(query, (license_number, first_name, last_name, email, phone_number, address_id))
+        adopter_id = cursor.lastrowid
+    
+    # New Adoption Record
+    adoption_query = """
+    INSERT INTO Adoption (AdopterID, PetID, AdoptionDate, Status)
+    VALUES (%s, %s, CURDATE(), 'Pending')
+    """
+    cursor.execute(adoption_query, (adopter_id, pet_id))
+
+    # Show new donor/donation
+    print(f"Inserted Adoption Form: {cursor.lastrowid}")
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return render_template("adopt_submit.html")
+
 
 @app.route('/shelters')
 def get_shelters():
