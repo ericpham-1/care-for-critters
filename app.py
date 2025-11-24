@@ -102,17 +102,17 @@ def index():
     cursor.execute("SELECT EventName, EventLocation, EventDate FROM FUNDRAISER WHERE EventDate >= CURDATE() ORDER BY EventDate")
     events = cursor.fetchall()
     cursor.execute("""        
-        SELECT a.Name, a.Age, m.Species
+        SELECT a.Name, a.Age, m.Species, a.Photo
         FROM Animal a
         JOIN Mammal m ON a.PetID = m.PetID""")
     mammals = cursor.fetchall()
     cursor.execute("""        
-        SELECT a.Name, a.Age, m.Species
+        SELECT a.Name, a.Age, m.Species, a.Photo
         FROM Animal a
         JOIN Exotic m ON a.PetID = m.PetID""")
     exotics = cursor.fetchall()
     cursor.execute("""        
-        SELECT a.Name, a.Age, m.Species
+        SELECT a.Name, a.Age, m.Species, a.Photo
         FROM Animal a
         JOIN Fish m ON a.PetID = m.PetID""")
     fishies = cursor.fetchall()

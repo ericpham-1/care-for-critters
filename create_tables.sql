@@ -32,7 +32,7 @@ CREATE TABLE Animal (
     Description TEXT,
     Age INT,
     Diet VARCHAR(100),
-    Photo VARCHAR(255),
+    Photo VARCHAR(2048),
     ShelterLocation VARCHAR(100),
     AdoptionStatus VARCHAR(100),
     FOREIGN KEY (ShelterLocation) REFERENCES Shelter(ShelterName)

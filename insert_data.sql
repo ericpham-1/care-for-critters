@@ -10,14 +10,14 @@ VALUES
     ('Maple Street Branch', '(403) 111 2222', '1'),
     ('Oak Row Branch', '(403) 456 4567', '2');
 
-INSERT INTO Animal (PetID, Name, Description, Age, Diet, ShelterLocation)
+INSERT INTO Animal (PetID, Name, Description, Age, Diet, Photo, ShelterLocation)
 VALUES 
-    (1, 'Max', 'Friendly golden retriever', 4, 'Dog food', 'Oak Row Branch'),
-    (2,'Whiskers', 'Playful tabby cat', 2, 'Cat food', 'Maple Street Branch'),
-    (3,'Nemo', 'Clownfish', 1, 'Fish flakes', 'Maple Street Branch'),
-    (4,'Spike', 'Bearded dragon', 3, 'Insects and veggies', 'Maple Street Branch'),
-    (5,'James', 'Sugar Glider', 1, 'Fruits and veggies', 'Maple Street Branch'),
-    (6,'Sir Ruffles','Ragdoll Cat', 3, 'Cat food', 'Oak Row Branch');
+    (1, 'Max', 'Friendly golden retriever', 4, 'Dog food', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgP08_Brwjqpw91miICGPnDK6nFeSyXkEOhQ&s', 'Oak Row Branch'),
+    (2,'Whiskers', 'Playful tabby cat', 2, 'Cat food', 'https://i1.pickpik.com/photos/869/637/291/kitten-newborn-cat-foster-7708c56ddf92a7557a3aaf1a8b538ebe.jpg', 'Maple Street Branch'),
+    (3,'Nemo', 'Clownfish', 1, 'Fish flakes', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxczooPThsOYUIPVcGV2wy69cTWn2EvbCt2g&s', 'Maple Street Branch'),
+    (4,'Spike', 'Bearded dragon', 3, 'Insects and veggies', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0uSQ5K-_jrerFZr1HTT-Qb0VIKpPcaJFzag&s','Maple Street Branch'),
+    (5,'James', 'Sugar Glider', 1, 'Fruits and veggies', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJPuayda2pLxrpOh1yKnZ3JJCsIzK1_XGHLg&s', 'Maple Street Branch'),
+    (6,'Sir Ruffles','Ragdoll Cat', 3, 'Cat food', 'https://www.thesprucepets.com/thmb/Wf8EcO4whw4UfJSqRcsE2au9KBw=/5256x0/filters:no_upscale():strip_icc()/ragdoll-cat-lying-down--portrait-579000275-5c868f0146e0fb00015f8fbf.jpg', 'Oak Row Branch');
 
 INSERT INTO Mammal (PetID, Species, HealthRecords, Weight)
 VALUES 
