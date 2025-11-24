@@ -51,7 +51,7 @@
             </div>
             <div style=" width: 80%; gap: 20px; display: flex; flex-direction: column;">
                 {% for event in events %}
-                <div style="background-color: #e6eddc;  border-radius: 30px; padding: 20px;">
+                <div style="background-color: #e6eddc;  border-radius: 30px; padding: 20px; box-shadow: 5px 5px 10px rgba(90, 90, 90, 0.5)">
                     <h2 style="font-size: large; font-weight: 500;">{{event.EventName}}</h2>
                     <h3 style="font-size: medium; font-weight: 400;">Event Location: {{event.EventLocation}}</h3>
                     <h3 style="font-size: medium; font-weight: 400;">Event Date: {{event.EventDate}}</h3>
