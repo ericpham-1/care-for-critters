@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Clear custom amount input
         otherAmountInput.value = '';
+        otherAmountInput.parentElement.classList.remove('selected');
 
         // Add .selected class & aria-pressed to clicked button
         button.classList.add('selected');
@@ -47,11 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
                   // Page 2 Scripts //
-const page2 = document.querySelector("step2Form");
+const page2 = document.getElementById("step2Form");
     if (page2) {
         const errorBox = document.getElementById("error-message");
 
-        page2Form.addEventListener("submit", (e) => {
+        page2.addEventListener("submit", (e) => {
             const requiredFields = [
                 "first_name",
                 "last_name",

@@ -23,15 +23,16 @@
         </div>
     </div>
 
-    <!--Back Button-->
-    <div class="back-btn">
-        <a href="/donate">&#10094;</a>
-    </div>
 
     <!--Personal Information Form-->
     <form id="step2Form" action="{{ url_for('donate_step3')}}" method="POST" novalidate>
         <div class="form-row">
+            <!--Back Button-->
+            <div class="back-btn">
+                <a href="/donate">&#10094;</a>
+            </div>
             <div class="form-content">
+
                 <div class="section">
                     <h2>Please enter your details</h2>
                     <p>You are donating ${{ amount }} to {{ shelter }}</p>
