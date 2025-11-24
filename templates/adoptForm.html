@@ -6,6 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/adoptForm.css') }}">
 
     <title>Adopt</title>
@@ -26,10 +27,21 @@
                 <p class="pet-id">PetID:</p>
                 
                 <div class="pet-details">
-                    <p>Approx. Age:</p>
-                    <p>Other Info:</p>
-                    <p>Species/Breed</p>
-                    <p>Diet:</p>
+
+                    <!--General Info-->
+                    <div class="general-info">
+                        <h3><b>Approx. Age:</b></h3>
+                        
+                        <h3><b>Species/Breed:</b></h3>
+            
+                        <h3><b>Diet:</b></h3>
+                    </div>
+                    
+                    <!--Type specific info-->
+                    <div class="other-info">
+                        <h3><b>Other Info:</b></h3>
+                    </div>
+
                 </div>
             </div>
 
@@ -49,8 +61,34 @@
                     <label>Last Name</label>
                     <input name="last_name">
 
-                    <label>Address</label>
-                    <input name="Address">
+                    <div class="address-group">
+                        <div class="address-field building-no">
+                            <label for="building_no">Building No.</label>
+                            <input id="building_no" name="building_no" type="text"/>
+                        </div>
+
+                        <div class="address-field street">
+                            <label for="street">Street</label>
+                            <input id="street" name="street" type="text" />
+                        </div>
+
+                        <div class="address-field postal-code">
+                            <label for="postal_code">Postal Code</label>
+                            <input id="postal_code" name="postal_code" type="text" />
+                        </div>                        
+                        
+                        <div class="address-field city">
+                            <label for="city">City</label>
+                            <input id="city" name="city" type="text" />
+                        </div>
+
+                        <div class="address-field province">
+                            <label for="province">Province</label>
+                            <input id="province" name="province" type="text" />
+                        </div>
+
+                    </div>
+
 
                     <label>Phone Number: </label>
                     <input name="phone_number">
@@ -65,7 +103,7 @@
                 <!--NAV Buttons-->
                 <div class="actions">
                     <a href="/" class="cancel-btn">Cancel</a>
-                    <button type="submit" class="continue-btn">Continue</button>
+                    <button type="submit" class="continue-btn">Submit</button>
                 </div>
             </form>
         </div>

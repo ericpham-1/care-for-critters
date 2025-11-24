@@ -38,8 +38,9 @@
 
 /* Left Side */
 .pet-info {
-    width: 45%;
+    width: 50%;
     padding: 30px;
+    padding-top: 40px;
     border-right: 2px solid #eee;
     font-family: "Fredoka", sans-serif;
     margin-top: 80px;
@@ -59,9 +60,42 @@
     border-radius: 8px;
 }
 
+.pet-name {
+    margin-top: 10px;
+    margin-bottom: 3px;
+}
+
+.pet-id {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: smaller;
+    color: #757575;
+}
+
+
+.pet-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    margin-top: 10px;
+}
+
+.pet-details div {
+  padding: 4px 0;
+}
+
+.details-left p {
+    margin: 4px 0;
+}
+
+.details-right p {
+    margin: 4px 0;
+}
+
+
 /* Right Side */
 .form-section {
-    width: 55%;
+    width: 50%;
     padding: 40px;
     padding-left: 90px;
     font-family: "Fredoka", sans-serif;
@@ -87,6 +121,66 @@
     font-size: 14px;
 }
 
+.address-group {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px 15px;
+    margin-top: 5px;
+    align-items: start;
+    flex-wrap: nowrap;
+}
+
+.address-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1; 
+  min-width: 0; 
+}
+
+.address-field label {
+  font-weight: 500;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.address-field input {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/*Address items*/
+.building-no {
+  grid-column: 1 / 2; 
+  grid-row: 1;
+}
+
+.street {
+  grid-column: 2 / 3; 
+  grid-row: 1;
+  max-width: 200px;
+}
+
+.postal-code {
+  grid-column: 3 / 4; 
+  grid-row: 1;
+}
+
+.city {
+  grid-column: 1 / 2; 
+  grid-row: 2;
+}
+
+.province {
+  grid-column: 2 / 3; 
+  grid-row: 2;
+  max-width: 150px;
+}
+
 .actions {
     margin-top: 30px;
     display: flex;
@@ -99,6 +193,8 @@
     background: #0e233f;
     color: white;
     text-decoration: none;
+    font-family: "Fredoka", sans-serif;
+    font-size: 18px;
 }
 
 .continue-btn {
@@ -106,5 +202,8 @@
     border-radius: 25px;
     background: #0049c1;
     color: white;
+    text-decoration: none;
     border: none;
+    font-family: "Fredoka", sans-serif;
+    font-size: 18px;
 }
