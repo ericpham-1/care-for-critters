@@ -99,7 +99,7 @@ def supervisor_dashboard():
 def index():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT EventName, EventLocation, EventDate FROM FUNDRAISER WHERE EventDate >= CURDATE() ORDER BY EventDate")
+    cursor.execute("SELECT EventName, EventLocation, EventDate, DATE_FORMAT(EventTime, '%h:%i %p') AS Time FROM FUNDRAISER WHERE EventDate >= CURDATE() ORDER BY EventDate")
     events = cursor.fetchall()
     cursor.execute("""        
         SELECT a.Name, a.Age, m.Species, a.Photo
@@ -251,7 +251,7 @@ def get_sponsors():
 def get_fundraisers():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT EventName, EventLocation, EventDate, ShelterName FROM Fundraiser WHERE EventDate >= CURDATE() ORDER BY EventDate ASC")
+    cursor.execute("SELECT EventName, EventLocation, EventDate, ShelterName, DATE_FORMAT(EventTime, '%h:%i %p') AS Time FROM Fundraiser WHERE EventDate >= CURDATE() ORDER BY EventDate ASC")
     events = cursor.fetchall()
     cursor.execute("SELECT ShelterName FROM Shelter")
     shelters = cursor.fetchall()
@@ -269,23 +269,23 @@ def get_filtered_fundraisers():
     shelters = cursor.fetchall()
     if selected_location == "all":
          if len(past_event) == 0 :
-             query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
+             query = ("""SELECT EventName, EventLocation, EventDate, ShelterName, DATE_FORMAT(EventTime, '%h:%i %p') AS Time  
                       FROM Fundraiser
                       WHERE EventDate >= CURDATE() 
                       ORDER BY EventDate ASC""")
          else:
-             query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
+             query = ("""SELECT EventName, EventLocation, EventDate, ShelterName, DATE_FORMAT(EventTime, '%h:%i %p') AS Time 
                       FROM Fundraiser
                       ORDER BY EventDate ASC""")
          cursor.execute(query)
     else:
         if len(past_event) == 0:
-            query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
+            query = ("""SELECT EventName, EventLocation, EventDate, ShelterName, DATE_FORMAT(EventTime, '%%h:%%i %%p') AS Time 
                       FROM Fundraiser
                       WHERE ShelterName = %s AND EventDate >= CURDATE() 
                       ORDER BY EventDate ASC""")
         else:
-            query = ("""SELECT EventName, EventLocation, EventDate, ShelterName 
+            query = ("""SELECT EventName, EventLocation, EventDate, ShelterName, DATE_FORMAT(EventTime, '%%h:%%i %%p') AS Time 
                       FROM Fundraiser
                       WHERE ShelterName = %s 
                      ORDER BY EventDate ASC""")
