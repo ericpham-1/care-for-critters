@@ -3,12 +3,15 @@ USE careforcritters;
 INSERT INTO Address (AddressID, BuildingNo, Street, City, Province, PostalCode)
 VALUES
     (DEFAULT, '143', 'Maple Street', 'Calgary', 'Alberta', 'A1B 3C4'),
-    (DEFAULT, '246', 'Oak Row', 'Calgary', 'Alberta', 'X1Y 3Z4');
+    (DEFAULT, '246', 'Oak Row', 'Calgary', 'Alberta', 'X1Y 3Z4'),
+    (DEFAULT, '383', 'Birch Grove Avenue', 'Calgary', 'Alberta', 'T3A 6K1'),
+    (DEFAULT, '1', 'Wayne Manor Drive', 'Gotham', 'New York', 'BAT M2N');
 
 INSERT INTO Shelter (ShelterName, PhoneNumber, ShelterAddress)
 VALUES
     ('Maple Street Branch', '(403) 111 2222', '1'),
-    ('Oak Row Branch', '(403) 456 4567', '2');
+    ('Oak Row Branch', '(403) 456 4567', '2'),
+    ('Birch Grove Branch', '(403) 222 3333', '3');
 
 INSERT INTO Animal (PetID, Name, Description, Age, Diet, Photo, ShelterLocation)
 VALUES 
@@ -44,16 +47,21 @@ VALUES
 
 -- Create a supervisor account for testing login
 INSERT INTO Address (AddressID, BuildingNo, Street, City, Province, PostalCode)
-VALUES (3, '456', 'Admin Lane', 'Calgary', 'Alberta', 'B2C 4D5');
+VALUES (DEFAULT, '456', 'Admin Lane', 'Calgary', 'Alberta', 'B2C 4D5');
 
 INSERT INTO Worker (WorkerID, Name, Email, PhoneNumber, AddressID, ShelterName)
-VALUES (1, 'Admin User', 'admin@careforcritters.com', '(403) 555-1234', 3, 'Maple Street Branch');
+VALUES 
+    (1, 'Admin User', 'admin@careforcritters.com', '(403) 555-1234', 3, 'Maple Street Branch'),
+    (2, 'Bruce Wayne', 'bruce.wayne@gotham.com', '(403) 123 4567', 4, 'Birch Grove Branch');
 
 INSERT INTO Supervisor (WorkerID, Salary)
 VALUES (1, 50000.00);
 
 INSERT INTO Account (Username, Password, SupervisorID) 
 VALUES ('admin', 'password123', 1);
+
+INSERT INTO Volunteer (WorkerID, HoursWorked, Responsibilities)
+VALUES (2, 5, 'Cleans the bat cages.');
 
 INSERT INTO Fundraiser (EventName, EventLocation, EventDate, Budget, ShelterName, AmountRaised)
 VALUES
