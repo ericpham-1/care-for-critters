@@ -20,21 +20,21 @@
             <!--Pet Info-->
             <div class="pet-info">
                 <div class="pet-image">
-                    <img class="pet-photo" src="/static/images/pet_placeholder.png" alt="Pet Image"> 
+                    <img class="pet-photo" src="{{ pet.Photo }}" alt="/static/images/pet_placeholder.png"> 
                 </div>
 
-                <h2 class="pet-name">Name</h2>
-                <p class="pet-id">PetID:</p>
+                <h2 class="pet-name">{{ pet.Name }}</h2>
+                <p class="pet-id">PetID: {{ pet.PetID }}</p>
                 
                 <div class="pet-details">
 
                     <!--General Info-->
                     <div class="general-info">
-                        <h3><b>Approx. Age:</b></h3>
+                        <h3><b>Approx. Age: </b> {{ pet.Age }}</h3>
                         
-                        <h3><b>Species/Breed:</b></h3>
+                        <h3><b>Species/Breed: </b>{{ pet.Species }}</h3>
             
-                        <h3><b>Diet:</b></h3>
+                        <h3><b>Diet: </b> {{ pet.Diet }} </h3>
                     </div>
                     
                     <!--Type specific info-->
@@ -102,7 +102,7 @@
 
                 <!--NAV Buttons-->
                 <div class="actions">
-                    <a href="/" class="cancel-btn">Cancel</a>
+                    <a href="/animals" class="cancel-btn">Cancel</a>
                     <button type="submit" class="continue-btn">Submit</button>
                 </div>
             </form>

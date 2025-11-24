@@ -308,9 +308,39 @@ def get_adoptions():
     # conn.close()
     return render_template('adopt.html', animal_type="Animals")
 
-@app.route('/adoptForm')
-def adopt_form():
-    return render_template('adoptForm.html')
+@app.route('/adoptForm/<int:pet_id>')
+def adopt_form(pet_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    query = """
+    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, m.Species
+    FROM Animal a
+    JOIN Mammal m ON a.PetID = m.PetID
+    WHERE a.PetID = %s
+
+    UNION 
+
+    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, f.Species
+    FROM Animal a
+    JOIN Fish f ON a.PetID = f.PetID
+    WHERE a.PetID = %s
+
+    UNION 
+
+    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, e.Species
+    FROM Animal a
+    JOIN Exotic e ON a.PetID = e.PetID
+    WHERE a.PetID = %s;
+    """
+    cursor.execute(query, (pet_id, pet_id, pet_id))
+    pet = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if pet is None:
+        return "Pet not Found", 404
+    
+    return render_template('adoptForm.html', pet=pet)
 
 
 @app.route('/shelters')

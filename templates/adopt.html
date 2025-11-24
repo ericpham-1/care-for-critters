@@ -68,9 +68,16 @@
                     <p>Species: {{animal.Species}}</p>
                     <p>Age: {{animal.Age}}</p>
                     <p>{{animal.ShelterLocation}}</p>
-                    <div style="justify-content: center;" class="submit">
-                        <button type="submit" >Apply for adoption</button>
-                    </div>
+                    <form method="GET" action="{{ url_for('adopt_form', pet_id=animal.PetID) }}">
+                        <button type="submit" class="apply-btn" style="padding:10px 20px; border-radius:10px; background-color:#0047ab; color:white; border:none; cursor: pointer;">
+                            <style>
+                                .apply-btn:hover{
+                                    opacity: 0.8;
+                                }
+                            </style>
+                            Apply for adoption
+                        </button>
+                    </form>
                 </div>
                 {% endfor%}
             </div>
