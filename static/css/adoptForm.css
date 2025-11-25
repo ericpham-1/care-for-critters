@@ -207,3 +207,9 @@
     font-family: "Fredoka", sans-serif;
     font-size: 18px;
 }
+
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}

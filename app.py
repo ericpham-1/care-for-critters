@@ -355,12 +355,57 @@ def form_submit():
     license_number = request.form.get("license_number")
     email = request.form.get("email")
     pet_id = request.form.get("pet_id")
-    print(f"Inserted Adoption Form: {pet_id}")
 
-    print(f"License Number from form: {license_number}")
-    print(f"Pet ID from form: {pet_id}")
     conn = get_db_connection()
     cursor = conn.cursor()
+
+    # Validation:
+    required_fields = {
+        "first_name": first_name,
+        "last_name": last_name,
+        "building_no" : building_no,
+        "street" : street,
+        "city" : city,
+        "province" : province,
+        "postal_code" : postal_code,
+        "license_number" : license_number,
+        "phone_number": phone_number,
+        "email": email,
+        }
+
+    # Get Pet
+    cursor.execute("""
+        SELECT * 
+        FROM Animal
+        WHERE PetID = %s
+        """, (pet_id,))
+    pet = cursor.fetchone()
+
+    missing_fields = [name for name, value in required_fields.items() if not value or not value.strip()]
+    if missing_fields:
+        cursor.close()
+        conn.close()
+        return render_template(
+        "adoptForm.html",
+        pet=pet,
+        error="Please fill out all required fields",
+        first_name=first_name,
+        last_name=last_name,
+        building_no=building_no,
+        street=street,
+        city=city,
+        province=province,
+        postal_code=postal_code,
+        phone_number=phone_number,
+        license_number=license_number,
+        email=email
+        )
+
+    #DEBUG
+    print(f"License Number from form: {license_number}")
+    print(f"Pet ID from form: {pet_id}")
+
+
 
     # Check if Address is new
     query = """
@@ -379,6 +424,8 @@ def form_submit():
         """
         cursor.execute(address_query, (building_no, street, city, province, postal_code))
         address_id = cursor.lastrowid
+        print(f"Address is: {address_id}")
+        #DEBUG
 
     # Check if Adopter is new
     query = """
@@ -388,10 +435,21 @@ def form_submit():
     """
     cursor.execute(query, (license_number,))
     adopter = cursor.fetchone()
-    
+    print(f"Adopter ID is: {adopter}")
+
     if adopter:
+        #Check if adopter address matches
+        adopter_id = adopter['AdopterID']
+        cursor.execute("""
+        SELECT AddressID
+        FROM Adopter
+        WHERE AdopterID = %s
+        """, (adopter_id,))
+        adopter_address = cursor.fetchone()
+        print(f"Adopter Address is: {adopter_address}")
+
         # If adopter changes their address
-        if adopter['AddressID'] != address_id:
+        if adopter_address and adopter_address['AddressID'] != address_id:
             cursor.execute("""
             UPDATE Adopter
             SET AddressID = %s
