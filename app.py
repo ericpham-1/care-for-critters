@@ -808,22 +808,19 @@ def update_animal():
 @app.route('/view-donors')
 @login_required
 def view_donors():
-    """Display donor information and donation summaries"""
+    """Display all donations with donor information"""
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # Get all donors with their total donations and donation count
+    # Get all donations with sponsor info - each row is one donation
     cursor.execute("""
-        SELECT s.SponsorID, s.Fname, s.Lname, s.Email, s.PhoneNumber,
-               COALESCE(SUM(d.AmountDonated), 0) as TotalDonated,
-               COUNT(d.DonationID) as DonationCount,
-               GROUP_CONCAT(DISTINCT d.ShelterName SEPARATOR ', ') as Shelters
-        FROM Sponsor s
-        LEFT JOIN Donation d ON s.SponsorID = d.SponsorID
-        GROUP BY s.SponsorID, s.Fname, s.Lname, s.Email, s.PhoneNumber
+        SELECT s.Fname, s.Lname, s.Email, s.PhoneNumber,
+               d.ShelterName, d.AmountDonated
+        FROM Donation d
+        JOIN Sponsor s ON d.SponsorID = s.SponsorID
         ORDER BY s.Lname, s.Fname
     """)
-    donors = cursor.fetchall()
+    all_donations = cursor.fetchall()
     
     # Get total donations overall
     cursor.execute("""
@@ -850,31 +847,10 @@ def view_donors():
     conn.close()
     
     return render_template('view_donors.html', 
-                         donors=donors,
+                         all_donations=all_donations,
                          total_donations=total_donations,
                          shelter_totals=shelter_totals,
                          shelters=shelters)
-
-@app.route('/view-donors/history/<int:sponsor_id>')
-@login_required
-def get_donor_history(sponsor_id):
-    """Get donation history for a specific donor"""
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute("""
-        SELECT DonationID, ShelterName, AmountDonated, 
-               NULL as DonationDate
-        FROM Donation
-        WHERE SponsorID = %s
-        ORDER BY DonationID DESC
-    """, (sponsor_id,))
-    
-    donations = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    
-    return jsonify(donations)
 
 if __name__ == '__main__':
     app.run(debug=True)

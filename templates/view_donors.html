@@ -31,19 +31,15 @@
             </div>
         </div>
 
-        <!-- Summary Cards for each branch-->
-        <div class="summary-grid">
-            <div class="summary-card">
-                <h3>Total Donations</h3>
-                <p class="total-amount">${{ "%.2f"|format(total_donations) }}</p>
+        <!-- Simple Summary -->
+        <div class="summary-box">
+            <h3>Donation Summary</h3>
+            <p><strong>Total Donations:</strong> ${{ "%.2f"|format(total_donations) }}</p>
+            <div class="shelter-totals">
+                {% for shelter_total in shelter_totals %}
+                <p><strong>{{ shelter_total.ShelterName }}:</strong> ${{ "%.2f"|format(shelter_total.Total) }}</p>
+                {% endfor %}
             </div>
-            
-            {% for shelter_total in shelter_totals %}
-            <div class="summary-card shelter-card">
-                <h3>{{ shelter_total.ShelterName }}</h3>
-                <p class="total-amount">${{ "%.2f"|format(shelter_total.Total) }}</p>
-            </div>
-            {% endfor %}
         </div>
 
         <!-- Filters -->
@@ -63,7 +59,6 @@
                 <select id="sort-by" onchange="sortDonors()">
                     <option value="name">Name (A-Z)</option>
                     <option value="total-desc">Total Donated (High to Low)</option>
-                    <option value="total-asc">Total Donated (Low to High)</option>
                     <option value="count-desc">Number of Donations (High to Low)</option>
                 </select>
             </div>
@@ -77,53 +72,22 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
-                        <th>Total Donated</th>
-                        <th>Number of Donations</th>
-                        <th>Actions</th>
+                        <th>Shelter</th>
+                        <th>Amount Donated</th>
                     </tr>
                 </thead>
                 <tbody id="donors-table">
-                    {% for donor in donors %}
-                    <tr data-shelters="{{ donor.Shelters }}" 
-                        data-total="{{ donor.TotalDonated }}" 
-                        data-count="{{ donor.DonationCount }}">
-                        <td>{{ donor.Fname }} {{ donor.Lname }}</td>
-                        <td>{{ donor.Email }}</td>
-                        <td>{{ donor.PhoneNumber }}</td>
-                        <td>${{ "%.2f"|format(donor.TotalDonated) }}</td>
-                        <td>{{ donor.DonationCount }}</td>
-                        <td>
-                            <button class="view-btn" onclick="viewDonorHistory({{ donor.SponsorID }}, '{{ donor.Fname }} {{ donor.Lname }}')">
-                                View History
-                            </button>
-                        </td>
+                    {% for donation in all_donations %}
+                    <tr data-total="{{ donation.AmountDonated }}" data-count="1">
+                        <td>{{ donation.Fname }} {{ donation.Lname }}</td>
+                        <td>{{ donation.Email }}</td>
+                        <td>{{ donation.PhoneNumber }}</td>
+                        <td>{{ donation.ShelterName }}</td>
+                        <td>${{ "%.2f"|format(donation.AmountDonated) }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-    </div>
-
-    <!-- Donation History Modal -->
-    <div id="history-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="donor-name">Donation History</h2>
-            
-            <div id="history-content">
-                <table class="history-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Shelter</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody id="history-body">
-                        <!-- Will be filled by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 
@@ -142,62 +106,6 @@
     </footer>
 
     <script>
-        async function viewDonorHistory(sponsorId, donorName) {
-            document.getElementById('donor-name').textContent = donorName + ' - Donation History';
-            
-            // Fetch donation history for this donor
-            try {
-                const response = await fetch(`/view-donors/history/${sponsorId}`);
-                const donations = await response.json();
-                
-                const historyBody = document.getElementById('history-body');
-                historyBody.innerHTML = '';
-                
-                if (donations.length === 0) {
-                    historyBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No donations found</td></tr>';
-                } else {
-                    donations.forEach(donation => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${donation.DonationDate || 'N/A'}</td>
-                            <td>${donation.ShelterName}</td>
-                            <td>$${parseFloat(donation.AmountDonated).toFixed(2)}</td>
-                        `;
-                        historyBody.appendChild(row);
-                    });
-                }
-                
-                document.getElementById('history-modal').style.display = 'block';
-            } catch (error) {
-                console.error('Error fetching donation history:', error);
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('history-modal').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('history-modal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        function filterDonors() {
-            const shelterFilter = document.getElementById('shelter-filter').value;
-            const rows = document.querySelectorAll('#donors-table tr');
-            
-            rows.forEach(row => {
-                const shelters = row.getAttribute('data-shelters');
-                if (shelterFilter === '' || shelters.includes(shelterFilter)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
         function sortDonors() {
             const sortBy = document.getElementById('sort-by').value;
             const tbody = document.getElementById('donors-table');
@@ -208,8 +116,6 @@
                     return a.cells[0].textContent.localeCompare(b.cells[0].textContent);
                 } else if (sortBy === 'total-desc') {
                     return parseFloat(b.getAttribute('data-total')) - parseFloat(a.getAttribute('data-total'));
-                } else if (sortBy === 'total-asc') {
-                    return parseFloat(a.getAttribute('data-total')) - parseFloat(b.getAttribute('data-total'));
                 } else if (sortBy === 'count-desc') {
                     return parseInt(b.getAttribute('data-count')) - parseInt(a.getAttribute('data-count'));
                 }
