@@ -804,5 +804,77 @@ def update_animal():
     return redirect(url_for('manage_animals'))
 
 
+# Donor information routes
+@app.route('/view-donors')
+@login_required
+def view_donors():
+    """Display donor information and donation summaries"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Get all donors with their total donations and donation count
+    cursor.execute("""
+        SELECT s.SponsorID, s.Fname, s.Lname, s.Email, s.PhoneNumber,
+               COALESCE(SUM(d.AmountDonated), 0) as TotalDonated,
+               COUNT(d.DonationID) as DonationCount,
+               GROUP_CONCAT(DISTINCT d.ShelterName SEPARATOR ', ') as Shelters
+        FROM Sponsor s
+        LEFT JOIN Donation d ON s.SponsorID = d.SponsorID
+        GROUP BY s.SponsorID, s.Fname, s.Lname, s.Email, s.PhoneNumber
+        ORDER BY s.Lname, s.Fname
+    """)
+    donors = cursor.fetchall()
+    
+    # Get total donations overall
+    cursor.execute("""
+        SELECT COALESCE(SUM(AmountDonated), 0) as Total
+        FROM Donation
+    """)
+    total_result = cursor.fetchone()
+    total_donations = total_result['Total'] if total_result else 0
+    
+    # Get total donations per shelter
+    cursor.execute("""
+        SELECT ShelterName, COALESCE(SUM(AmountDonated), 0) as Total
+        FROM Donation
+        GROUP BY ShelterName
+        ORDER BY ShelterName
+    """)
+    shelter_totals = cursor.fetchall()
+    
+    # Get all shelters for filter dropdown
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+    
+    return render_template('view_donors.html', 
+                         donors=donors,
+                         total_donations=total_donations,
+                         shelter_totals=shelter_totals,
+                         shelters=shelters)
+
+@app.route('/view-donors/history/<int:sponsor_id>')
+@login_required
+def get_donor_history(sponsor_id):
+    """Get donation history for a specific donor"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+        SELECT DonationID, ShelterName, AmountDonated, 
+               NULL as DonationDate
+        FROM Donation
+        WHERE SponsorID = %s
+        ORDER BY DonationID DESC
+    """, (sponsor_id,))
+    
+    donations = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    return jsonify(donations)
+
 if __name__ == '__main__':
     app.run(debug=True)
