@@ -38,7 +38,11 @@ VALUES
     (3, 'Nemo', 'Clownfish', 1, 'Fish flakes', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxczooPThsOYUIPVcGV2wy69cTWn2EvbCt2g&s', 'Maple Street Branch'),
     (4, 'Spike', 'Bearded dragon', 3, 'Insects and veggies', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0uSQ5K-_jrerFZr1HTT-Qb0VIKpPcaJFzag&s', 'Maple Street Branch'),
     (5, 'James', 'Sugar Glider', 1, 'Fruits and veggies', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJPuayda2pLxrpOh1yKnZ3JJCsIzK1_XGHLg&s', 'Maple Street Branch'),
-    (6, 'Sir Ruffles', 'Ragdoll Cat', 3, 'Cat food', 'https://fb-strapi.s3.us-east-1.amazonaws.com/Fit_Bark_rag_doll_cat_059151f4ec.jpg', 'Oak Row Branch');
+    (6, 'Sir Ruffles', 'Ragdoll Cat', 3, 'Cat food', 'https://fb-strapi.s3.us-east-1.amazonaws.com/Fit_Bark_rag_doll_cat_059151f4ec.jpg', 'Oak Row Branch'),
+    (7, 'Theo', 'Turtle', 1, 'Veggies', 'https://www.weknowpets.com.au/cdn/shop/articles/Untitled_design_48.jpg?v=1682744717', 'Birch Grove Branch'),
+    (8, 'Simon', 'Colourful corydoras', 1, 'Fish food', 'https://www.petland.ca/cdn/shop/articles/Bronze-Corydoras.jpg?v=1695136379', 'Birch Grove Branch'),
+    (9, 'Frank', '\"Frank the Tank\" toad', 4, 'Fruits and flies', 'https://live.staticflickr.com/65535/53850206471_18d921418e_b.jpg', 'Oak Row Branch'),
+    (10, 'Annie', 'Blue angelfish', 1, 'Fish food', 'https://www.swelluk.com/media/catalog/product/b/l/blue_angelfish.png?store=default&image-type=image', 'Oak Row Branch');
 
 INSERT INTO Mammal (PetID, Species, HealthRecords, Weight)
 VALUES 
@@ -49,11 +53,15 @@ VALUES
 
 INSERT INTO Fish (PetID, Species, WaterType)
 VALUES 
-    (3, 'Clownfish', 'Saltwater');
+    (3, 'Clownfish', 'Saltwater'),
+    (8, 'Corydoras', 'Freshwater'),
+    (10, 'Angelfish', 'Freshwater');
 
 INSERT INTO Exotic (PetID, Species, HabitatRequirements, Weight)
 VALUES 
-    (4, 'Bearded Dragon', 'Terrarium with heat lamp', 0.4);
+    (4, 'Bearded Dragon', 'Terrarium with heat lamp', 0.4),
+    (7, 'Turtle', 'Aquarium', 0.5),
+    (9, 'Toad', 'Terrarium', 3.14);
 
 -- =====================
 -- SPONSORS (More test data)

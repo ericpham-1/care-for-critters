@@ -566,18 +566,7 @@ def get_mammals():
                    SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
-    query = ("""
-        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
-    """)
-    if selected_location != "None":
-        query = query + f" WHERE ShelterLocation = '{selected_location}'" 
-        if ages_set != None:
-            if len(ages_set) != 0:
-                query = query + f" AND Age IN {ages_set}"
-    else:
-        if ages_set != None:
-            if len(ages_set) != 0:
-                query = query + f" WHERE Age IN {ages_set}"
+    query = get_animal_query("Mammal", selected_location, ages_set)
     cursor.execute(query)
     mammals = cursor.fetchall()
     cursor.close()
@@ -607,18 +596,7 @@ def get_fish():
                    SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
-    query = ("""
-        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
-    """)
-    if selected_location != "None":
-        query = query + f" WHERE ShelterLocation = '{selected_location}'" 
-        if ages_set != None:
-            if len(ages_set) != 0:
-                query = query + f" AND Age IN {ages_set}"
-    else:
-        if ages_set != None:
-            if len(ages_set) != 0:
-                query = query + f" WHERE Age IN {ages_set}"
+    query = get_animal_query("Fish", selected_location, ages_set)
     cursor.execute(query)
     fish = cursor.fetchall()
     cursor.close()
@@ -648,9 +626,17 @@ def get_exotic():
                    SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
-    query = ("""
-        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
-    """)
+    query = get_animal_query("Exotic", selected_location, ages_set)
+    cursor.execute(query)
+    exotic = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('adopt.html', animal_type="exotics", animals=exotic, locations=shelters, pet_ages=all_ages)
+
+def get_animal_query(type, selected_location, ages_set):
+    query = f"""
+        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN {type} e ON a.PetID=e.PetID)) AS allPets
+    """
     if selected_location != "None":
         query = query + f" WHERE ShelterLocation = '{selected_location}'" 
         if ages_set != None:
@@ -660,13 +646,8 @@ def get_exotic():
         if ages_set != None:
             if len(ages_set) != 0:
                 query = query + f" WHERE Age IN {ages_set}"
-    cursor.execute(query)
-    exotic = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return render_template('adopt.html', animal_type="exotics", animals=exotic, locations=shelters, pet_ages=all_ages)
-
-
+    print(query)
+    return query
 # Volunteer routes
 @app.route('/manage-volunteers')
 @login_required
