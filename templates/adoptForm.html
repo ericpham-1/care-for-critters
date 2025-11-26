@@ -20,21 +20,21 @@
             <!--Pet Info-->
             <div class="pet-info">
                 <div class="pet-image">
-                    <img class="pet-photo" src="/static/images/pet_placeholder.png" alt="Pet Image"> 
+                    <img class="pet-photo" src="{{ pet.Photo }}" alt="/static/images/pet_placeholder.png"> 
                 </div>
 
-                <h2 class="pet-name">Name</h2>
-                <p class="pet-id">PetID:</p>
+                <h2 class="pet-name">{{ pet.Name }}</h2>
+                <p class="pet-id">PetID: {{ pet.PetID }}</p>
                 
                 <div class="pet-details">
 
                     <!--General Info-->
                     <div class="general-info">
-                        <h3><b>Approx. Age:</b></h3>
+                        <h3><b>Approx. Age: </b> {{ pet.Age }}</h3>
                         
-                        <h3><b>Species/Breed:</b></h3>
+                        <h3><b>Species/Breed: </b>{{ pet.Species }}</h3>
             
-                        <h3><b>Diet:</b></h3>
+                        <h3><b>Diet: </b> {{ pet.Diet }} </h3>
                     </div>
                     
                     <!--Type specific info-->
@@ -46,7 +46,7 @@
             </div>
 
             <!--Personal Information Form-->
-            <form class="form-section" id="infoForm" method="POST" novalidate>
+            <form class="form-section" id="infoForm" method="POST" action="/form_submit" novalidate>
                  <div class="header">
                     <div class="titles">
                         <h1>Adoption Application</h1>
@@ -56,53 +56,64 @@
 
                 <div class="section">
                     <label>First Name</label>
-                    <input name="first_name">
+                    <input name="first_name"  value="{{ first_name|default('') }}" >
 
                     <label>Last Name</label>
-                    <input name="last_name">
+                    <input name="last_name" value="{{ last_name|default('') }}">
 
                     <div class="address-group">
                         <div class="address-field building-no">
                             <label for="building_no">Building No.</label>
-                            <input id="building_no" name="building_no" type="text"/>
+                            <input id="building_no" name="building_no" type="text" autocomplete="off" value="{{ building_no|default('') }}"/>
                         </div>
 
                         <div class="address-field street">
                             <label for="street">Street</label>
-                            <input id="street" name="street" type="text" />
+                            <input id="street" name="street" type="text" autocomplete="nope" value="{{ street|default('') }}"/>
                         </div>
 
                         <div class="address-field postal-code">
                             <label for="postal_code">Postal Code</label>
-                            <input id="postal_code" name="postal_code" type="text" />
+                            <input id="postal_code" name="postal_code" type="text" value="{{ postal_code|default('') }}"/>
                         </div>                        
                         
                         <div class="address-field city">
                             <label for="city">City</label>
-                            <input id="city" name="city" type="text" />
+                            <input id="city" name="city" type="text" value="{{ city|default('') }}"/>
                         </div>
 
                         <div class="address-field province">
                             <label for="province">Province</label>
-                            <input id="province" name="province" type="text" />
+                            <input id="province" name="province" type="text" value="{{ province|default('') }}"/>
                         </div>
 
                     </div>
 
 
                     <label>Phone Number: </label>
-                    <input name="phone_number">
+                    <input name="phone_number" type="number" value="{{ phone_number|default('') }}">
 
                     <label>Driver's License</label>
-                    <input name="license_number">
+                    <input name="license_number" type="number" value="{{ license_number|default('') }}">
 
                     <label>Email Address</label>
-                    <input name="email">
+                    <input type="email" name="email" value="{{ email|default('') }}">
+
+                    <input type="hidden" name="pet_id" value="{{ pet.PetID }}">
+                    
                 </div>
+
+                
+                <!--ERROR MESSAGE-->
+                {% if error %}
+                    <div class="error" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
 
                 <!--NAV Buttons-->
                 <div class="actions">
-                    <a href="/" class="cancel-btn">Cancel</a>
+                    <a href="/animals" class="cancel-btn">Cancel</a>
                     <button type="submit" class="continue-btn">Submit</button>
                 </div>
             </form>

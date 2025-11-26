@@ -308,10 +308,182 @@ def get_adoptions():
     # conn.close()
     return render_template('adopt.html', animal_type="Animals")
 
-@app.route('/adoptForm')
-def adopt_form():
-    return render_template('adoptForm.html')
+@app.route('/adoptForm/<int:pet_id>')
+def adopt_form(pet_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    query = """
+    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, m.Species
+    FROM Animal a
+    JOIN Mammal m ON a.PetID = m.PetID
+    WHERE a.PetID = %s
 
+    UNION 
+
+    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, f.Species
+    FROM Animal a
+    JOIN Fish f ON a.PetID = f.PetID
+    WHERE a.PetID = %s
+
+    UNION 
+
+    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, e.Species
+    FROM Animal a
+    JOIN Exotic e ON a.PetID = e.PetID
+    WHERE a.PetID = %s;
+    """
+    cursor.execute(query, (pet_id, pet_id, pet_id))
+    pet = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if pet is None:
+        return "Pet not Found", 404
+    
+    return render_template('adoptForm.html', pet=pet)
+
+@app.route('/form_submit', methods=['POST'])
+def form_submit():
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
+    building_no = request.form.get("building_no")
+    street = request.form.get("street")
+    city = request.form.get("city")
+    province = request.form.get("province")
+    postal_code = request.form.get("postal_code")
+    phone_number = request.form.get("phone_number")
+    license_number = request.form.get("license_number")
+    email = request.form.get("email")
+    pet_id = request.form.get("pet_id")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Validation:
+    required_fields = {
+        "first_name": first_name,
+        "last_name": last_name,
+        "building_no" : building_no,
+        "street" : street,
+        "city" : city,
+        "province" : province,
+        "postal_code" : postal_code,
+        "license_number" : license_number,
+        "phone_number": phone_number,
+        "email": email,
+        }
+
+    # Get Pet
+    cursor.execute("""
+        SELECT * 
+        FROM Animal
+        WHERE PetID = %s
+        """, (pet_id,))
+    pet = cursor.fetchone()
+
+    missing_fields = [name for name, value in required_fields.items() if not value or not value.strip()]
+    if missing_fields:
+        cursor.close()
+        conn.close()
+        return render_template(
+        "adoptForm.html",
+        pet=pet,
+        error="Please fill out all required fields",
+        first_name=first_name,
+        last_name=last_name,
+        building_no=building_no,
+        street=street,
+        city=city,
+        province=province,
+        postal_code=postal_code,
+        phone_number=phone_number,
+        license_number=license_number,
+        email=email
+        )
+
+    #DEBUG
+    print(f"License Number from form: {license_number}")
+    print(f"Pet ID from form: {pet_id}")
+
+
+
+    # Check if Address is new
+    query = """
+    SELECT AddressID
+    FROM Address
+    WHERE BuildingNo = %s AND Street = %s AND City = %s AND Province = %s AND PostalCode = %s;
+    """
+    cursor.execute(query, (building_no, street, city, province, postal_code))
+    address = cursor.fetchone()
+    if address:
+        address_id = address['AddressID']
+    else:
+        address_query = """
+        INSERT INTO Address (BuildingNo, Street, City, Province, PostalCode)
+        VALUES (%s, %s, %s, %s, %s)
+        """
+        cursor.execute(address_query, (building_no, street, city, province, postal_code))
+        address_id = cursor.lastrowid
+        print(f"Address is: {address_id}")
+        #DEBUG
+
+    # Check if Adopter is new
+    query = """
+    SELECT AdopterID, AddressID
+    FROM Adopter
+    Where DriverLicenseNo = %s
+    """
+    cursor.execute(query, (license_number,))
+    adopter = cursor.fetchone()
+    print(f"Adopter ID is: {adopter}")
+
+    if adopter:
+        #Check if adopter address matches
+        adopter_id = adopter['AdopterID']
+        cursor.execute("""
+        SELECT AddressID
+        FROM Adopter
+        WHERE AdopterID = %s
+        """, (adopter_id,))
+        adopter_address = cursor.fetchone()
+        print(f"Adopter Address is: {adopter_address}")
+
+        # If adopter changes their address
+        if adopter_address and adopter_address['AddressID'] != address_id:
+            cursor.execute("""
+            UPDATE Adopter
+            SET AddressID = %s
+            WHERE AdopterID = %s
+            """, (address_id, adopter['AdopterID']))
+        adopter_id = adopter['AdopterID']
+    else:
+        query = """
+        INSERT INTO Adopter (DriverLicenseNo, Fname, Lname, Email, PhoneNumber, AddressID)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(query, (license_number, first_name, last_name, email, phone_number, address_id))
+        adopter_id = cursor.lastrowid
+    
+    # New Adoption Record
+    adoption_query = """
+    INSERT INTO Adoption (AdopterID, PetID, AdoptionDate, Status)
+    VALUES (%s, %s, CURDATE(), 'Pending')
+    """
+    cursor.execute(adoption_query, (adopter_id, pet_id))
+
+    # Show new donor/donation
+    print(f"Inserted Adoption Form: {cursor.lastrowid}")
+    conn.commit()
+    cursor.close()
+    conn.close()
+   
+    return redirect(url_for('adopt_submit'))
+
+
+
+@app.route('/adopt_submit')
+def adopt_submit():
+    return render_template("adopt_submit.html")
 
 @app.route('/shelters')
 def get_shelters():
