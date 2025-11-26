@@ -479,11 +479,14 @@ def form_submit():
    
     return redirect(url_for('adopt_submit'))
 
-
-
 @app.route('/adopt_submit')
 def adopt_submit():
     return render_template("adopt_submit.html")
+
+
+@app.route('/application_status')
+def view_applications():
+    return render_template('application_status.html')
 
 @app.route('/shelters')
 def get_shelters():

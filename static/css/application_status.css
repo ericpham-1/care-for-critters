@@ -2,6 +2,70 @@
     display: flex; 
     align-items: center; 
     background-color: #b4dcd4; 
-    padding: 10px; margin: 0; 
+    padding: 0; 
+    margin: 0; 
     justify-content: center;
+    color: black;
 }
+
+.nav-links {
+    list-style-type: none;
+    display: inline-flex; 
+    gap: 30px;
+}
+
+.title {
+    font-family: Fredoka, sans-serif;
+    color: #0e233f;
+}
+
+.nav-elems {
+    text-decoration: none;
+    color: black;
+    font-family: Fredoka, sans-serif;
+}
+
+body {
+    font-family: 'Fredoka', sans-serif; 
+    font-weight: 400; 
+    font-style: normal; 
+    margin: 0; 
+    padding: 0; 
+    color: black;
+}
+
+.status-container {
+    margin-left: 50px;
+}
+.search-btn {
+    background-color: #0047ab; 
+    width: 100px; 
+    text-align: center; 
+    color: white; 
+    height: 30px; 
+    align-content: center; 
+    border-radius: 20px; 
+    text-decoration: none;
+}
+
+
+.footer {
+    background-color: #b4dcd4; 
+    align-content: center; 
+    display: flex; 
+    gap: 20%; 
+    justify-content: center; 
+    padding: 0;
+    margin-top: 30%;
+}
+
+.footer-elems {
+    line-height: 14px;
+    align-content: center;
+}
+
+.footer-link {
+    font-size: small; 
+    text-decoration: none;
+}
+
