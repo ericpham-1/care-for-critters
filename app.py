@@ -476,9 +476,14 @@ def form_submit():
     conn.commit()
     cursor.close()
     conn.close()
+   
+    return redirect(url_for('adopt_submit'))
 
+
+
+@app.route('/adopt_submit')
+def adopt_submit():
     return render_template("adopt_submit.html")
-
 
 @app.route('/shelters')
 def get_shelters():

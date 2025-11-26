@@ -21,6 +21,11 @@
     z-index: 10;
 }
 
+.title {
+    font-family: Fredoka, sans-serif;
+    color:#0049c1;
+}
+
 .Adoption-Box {
     display: flex;
     position: relative;
@@ -208,8 +213,86 @@
     font-size: 18px;
 }
 
+.cancel-btn:hover {
+    opacity: 0.5;
+}
+.continue-btn:hover {
+    opacity: 0.6;
+}
+
 .error {
     color: red;
     font-size: 0.9rem;
     margin-bottom: 10px;
+}
+
+.ThankYou-Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 999;
+}
+
+.ThankYou-Header {
+    display: flex;              
+    align-items: center;        
+    gap: 15px;                  
+    margin-bottom: 20px;   
+}
+.ThankYou-Box {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0px 8px 40px rgba(0,0,0,0.25);
+    text-align: center;
+}
+
+.ThankYou-Logo {
+    width: 120px;            
+    height: auto;
+}
+
+.thank-msg {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    font-family: Jua, sans-serif;
+    color: #0A2540;
+}
+
+
+.ThankYou-Actions {
+    padding: 10px 20px;
+    border-radius: 25px;
+    color: white;
+    text-decoration: none;
+    font-family: "Fredoka", sans-serif;
+    font-size: 18px;
+    justify-content: center;   
+}
+
+.home-btn {
+    padding: 10px 20px;
+    border-radius: 25px;
+    background: #0049c1;
+    color: white;
+    text-decoration: none;
+    font-family: "Fredoka", sans-serif;
+    font-size: 18px;
+}
+
+.home-btn:hover {
+    opacity: 0.9;
 }
