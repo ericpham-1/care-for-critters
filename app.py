@@ -479,11 +479,35 @@ def form_submit():
    
     return redirect(url_for('adopt_submit'))
 
-
-
 @app.route('/adopt_submit')
 def adopt_submit():
     return render_template("adopt_submit.html")
+
+
+@app.route('/application_status', methods=['GET', 'POST'])
+def view_applications():
+    email = request.args.get('email', '').strip()
+    results = []
+    error = None
+
+    if email:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        query = """
+        SELECT ad.AdoptionID, ad.AdopterID, ap.Fname, ap.Lname, ap.Email, an.PetID, an.Name AS PetName, ad.Status, ad.AdoptionDate
+        FROM Adoption ad JOIN Adopter ap ON ad.AdopterID = ap.AdopterID
+        LEFT JOIN Animal an ON ad.PetID = an.PetID
+        WHERE ap.Email = %s
+        ORDER BY ad.AdoptionDate DESC, ad.AdoptionID DESC;
+        """
+        cursor.execute(query, (email,))
+        results = cursor.fetchall()
+
+        if not results:
+            error = "No adoption applications found for that email"
+        cursor.close()
+        conn.close()
+    return render_template('application_status.html', email=email, results=results, error=error)
 
 @app.route('/shelters')
 def get_shelters():
