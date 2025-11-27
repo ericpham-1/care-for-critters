@@ -479,11 +479,35 @@ def form_submit():
    
     return redirect(url_for('adopt_submit'))
 
-
-
 @app.route('/adopt_submit')
 def adopt_submit():
     return render_template("adopt_submit.html")
+
+
+@app.route('/application_status', methods=['GET', 'POST'])
+def view_applications():
+    email = request.args.get('email', '').strip()
+    results = []
+    error = None
+
+    if email:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        query = """
+        SELECT ad.AdoptionID, ad.AdopterID, ap.Fname, ap.Lname, ap.Email, an.PetID, an.Name AS PetName, ad.Status, ad.AdoptionDate
+        FROM Adoption ad JOIN Adopter ap ON ad.AdopterID = ap.AdopterID
+        LEFT JOIN Animal an ON ad.PetID = an.PetID
+        WHERE ap.Email = %s
+        ORDER BY ad.AdoptionDate DESC, ad.AdoptionID DESC;
+        """
+        cursor.execute(query, (email,))
+        results = cursor.fetchall()
+
+        if not results:
+            error = "No adoption applications found for that email"
+        cursor.close()
+        conn.close()
+    return render_template('application_status.html', email=email, results=results, error=error)
 
 @app.route('/shelters')
 def get_shelters():
@@ -563,18 +587,7 @@ def get_mammals():
                    SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
-    query = ("""
-        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
-    """)
-    if selected_location != "None":
-        query = query + f" WHERE ShelterLocation = '{selected_location}'" 
-        if ages_set != None:
-            if len(ages_set) != 0:
-                query = query + f" AND Age IN {ages_set}"
-    else:
-        if ages_set != None:
-            if len(ages_set) != 0:
-                query = query + f" WHERE Age IN {ages_set}"
+    query = get_animal_query("Mammal", selected_location, ages_set)
     cursor.execute(query)
     mammals = cursor.fetchall()
     cursor.close()
@@ -604,18 +617,7 @@ def get_fish():
                    SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
-    query = ("""
-        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
-    """)
-    if selected_location != "None":
-        query = query + f" WHERE ShelterLocation = '{selected_location}'" 
-        if ages_set != None:
-            if len(ages_set) != 0:
-                query = query + f" AND Age IN {ages_set}"
-    else:
-        if ages_set != None:
-            if len(ages_set) != 0:
-                query = query + f" WHERE Age IN {ages_set}"
+    query = get_animal_query("Fish", selected_location, ages_set)
     cursor.execute(query)
     fish = cursor.fetchall()
     cursor.close()
@@ -645,9 +647,17 @@ def get_exotic():
                    SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
-    query = ("""
-        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
-    """)
+    query = get_animal_query("Exotic", selected_location, ages_set)
+    cursor.execute(query)
+    exotic = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('adopt.html', animal_type="exotics", animals=exotic, locations=shelters, pet_ages=all_ages)
+
+def get_animal_query(type, selected_location, ages_set):
+    query = f"""
+        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN {type} e ON a.PetID=e.PetID)) AS allPets
+    """
     if selected_location != "None":
         query = query + f" WHERE ShelterLocation = '{selected_location}'" 
         if ages_set != None:
@@ -657,13 +667,8 @@ def get_exotic():
         if ages_set != None:
             if len(ages_set) != 0:
                 query = query + f" WHERE Age IN {ages_set}"
-    cursor.execute(query)
-    exotic = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return render_template('adopt.html', animal_type="exotics", animals=exotic, locations=shelters, pet_ages=all_ages)
-
-
+    print(query)
+    return query
 # Volunteer routes
 @app.route('/manage-volunteers')
 @login_required
@@ -975,6 +980,107 @@ def update_animal():
     
     return redirect(url_for('manage_animals'))
 
+
+@app.route('/manage-events')
+@login_required
+def manage_events():
+    """Display all animals with their information"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Get all animals with type-specific information using UNION
+    cursor.execute("""
+        SELECT * FROM Fundraiser
+    """)
+    events = cursor.fetchall()
+    cursor.execute("""SELECT CURDATE() """)
+    # Get all shelters for dropdowns
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+    
+    return render_template('manage_events.html', 
+                         events=events, 
+                         shelters=shelters)
+
+
+
+@app.route('/manage-events/add', methods=['POST'])
+@login_required
+def add_event():
+    """Add a new animal to the database"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Get basic animal info
+        name = request.form.get('name')
+        location = request.form.get('location')
+        date = request.form.get('date')
+        time = request.form.get('time')
+        budget = request.form.get('budget')
+        amountRaised = request.form.get('amountRaised')
+        shelter = request.form.get('shelter')
+        
+        # Insert into event table
+        cursor.execute("""
+            INSERT INTO Fundraiser (EventName, EventLocation, EventDate, EventTime, Budget, ShelterName, AmountRaised)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (name, location, date, time, budget, shelter,amountRaised))
+
+        conn.commit()
+        print(f"Added new event: {name}")
+        
+    except Exception as e:
+        conn.rollback()
+        print(f"Error adding event: {e}")
+    
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return redirect(url_for('manage_events'))
+
+
+@app.route('/manage-events/update', methods=['POST'])
+@login_required
+def update_event():
+    """Update existing animal information"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Get form data
+        name = request.form.get('name')
+        location = request.form.get('location')
+        date = request.form.get('date')
+        time = request.form.get('time')
+        budget = request.form.get('budget')
+        amountRaised = request.form.get('raised')
+        shelter = request.form.get('shelter')
+        
+        # Update Animal table
+        cursor.execute("""
+            UPDATE Fundraiser
+            SET EventLocation = %s, EventDate = %s, EventTime = %s, 
+                Budget = %s, AmountRaised = %s, ShelterName = %s
+            WHERE EventName = %s
+        """, (location, date, time, budget, amountRaised, shelter, name))
+        
+        conn.commit()
+        print(f"Updated event")
+        
+    except Exception as e:
+        conn.rollback()
+        print(f"Error updating event: {e}")
+    
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return redirect(url_for('manage_events'))
 
 # Donor information routes
 @app.route('/view-donors')

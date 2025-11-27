@@ -166,7 +166,7 @@ CREATE TABLE FUNDRAISER (
     EventLocation VARCHAR(100),
     EventDate DATE,
     EventTime TIME,
-    BUDGET INT,
+    Budget INT,
     ShelterName VARCHAR(100),
     AmountRaised INT,
     PRIMARY KEY (EventName, EventLocation, EventDate),
