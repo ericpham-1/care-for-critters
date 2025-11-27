@@ -1130,5 +1130,27 @@ def view_donors():
                          shelter_totals=shelter_totals,
                          shelters=shelters)
 
+@app.route('/view-applications')
+@login_required
+def manage_applications():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    application_query = """
+    SELECT ad.AdoptionID, ad.AdopterID, ad.PetID, ad.AdoptionDate, ad.Status, ap.Fname, ap.Lname, ap.Email, ap.PhoneNumber, an.Name AS PetName, addr.BuildingNo, addr.Street, addr.City, addr.Province, addr.PostalCode
+    FROM Adoption ad JOIN Adopter ap ON ad.AdopterID = ap.AdopterID
+    JOIN Animal an ON ad.PetID = an.PetID
+    Left JOIN Address addr ON ap.AddressID = addr.AddressID
+    ORDER BY ad.AdoptionDate DESC;
+    """ 
+
+    cursor.execute(application_query)
+    adoptions = cursor.fetchall()
+    cursor.close()
+    conn.close
+
+
+    return render_template('manage_applications.html', adoptions=adoptions)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

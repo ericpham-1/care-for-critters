@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_volunteers.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_applications.css') }}">
+    <title>Manage Applications - Care for Critters</title>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;" alt="Care for Critters Logo">
+            <ul>
+                <a href="/" style="text-decoration: none; color: black;">Home</a>
+                <a href="animals" style="text-decoration: none; color: black">Adopt</a>
+                <a href="fundraisers" style=" text-decoration: none; color: black">Fundraisers</a>
+                <a href="donate" style=" text-decoration: none; color: black">Donate</a>
+                <a href="/application_status" style="text-decoration: none; color: black">Application Status</a>
+            </ul>
+        </div>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </nav>
+    
+    <div class="container">
+        <div class="header-section">
+            <div>
+                <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+                <h1>Manage Applications</h1>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="shelter-filter">Filter by Status:</label>
+                <select id="status-filter" onchange="filterApps()">
+                    <option value="Pending" selected>Pending</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Accepted">Accepted</option>                    
+                </select>
+            </div>
+        </div>
+
+        <!-- Volunteers Table -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Application ID</th>
+                        <th>Applicant</th>
+                        <th>Pet</th>
+                        <th>Address</th>
+                        <th>Application Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="volunteers-table">
+                    {% for adoption in adoptions %}
+                    <tr data-app-id="{{ adoption.AdoptionID }}"
+                        data-name="{{ adoption.Fname }} {{ adoption.Lname }}"
+                        data-email="{{ adoption.Email }}"
+                        data-pet="{{ adoption.PetName }}"
+                        data-date="{{ adoption.AdoptionDate }}"
+                        data-status="{{ adoption.Status }}">
+                        <td>{{ adoption.AdoptionID }}</td>
+                        <td>{{ adoption.Fname }} {{ adoption.Lname }} <br><small> {{ adoption.Email }}</small></td>
+                        <td>{{ adoption.PetName }}</td>
+                        <td>{{ adoption.BuildingNo }} {{ adoption.Street }} <br>
+                            {{ adoption.City }} {{ adoption.Province }} {{ adoption.PostalCode }}
+                        </td>
+                        <td>{{ adoption.AdoptionDate }}</td>
+                        <td class="
+                            {% if adoption.Status == 'Pending' %}status-pending{% endif %}
+                            {% if adoption.Status == 'Accepted' %}status-accepted{% endif %}
+                            {% if adoption.Status == 'Rejected' %}status-rejected{% endif %}
+                            ">{{ adoption.Status }}</td>            
+                        <td>
+                            <button class="edit-btn" onclick="approve('{{ adoption.AdoptionID }}')">Approve</button>
+                            <button class="reject-btn" onclick="reject('{{ adoption.AdoptionID }}')">Reject</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="volunteer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Are you sure you want to approve this application?</h2>
+        </div>
+    </div>
+
+    <footer>
+        <div>
+            <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;" alt="Care for Critters Logo">
+        </div>
+        <div>
+            <a href="/">Home</a><br>
+            <a>About</a><br>
+            <a>Contact Us</a>
+        </div>
+        <div>
+            <a href="/dashboard">Supervisor Dashboard</a>
+        </div>
+    </footer>
+
+    <script>
+        // Placeholder
+        function approve(id) {
+            alert("Approve application " + id);
+        }
+
+        function reject(id) {
+            alert("Reject application " + id);
+        }
+
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('volunteer-modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Filter applications by status
+        function filterApps() {
+            const selected = document.getElementById('status-filter').value;
+            const rows = document.querySelectorAll('#volunteers-table tr');
+            
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status');
+                if (status === selected) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+    // filters only 'Pending' applications on page load
+    window.addEventListener('DOMContentLoaded', (event) => {
+        filterApps();
+    });
+    </script>
+</body>
+</html>

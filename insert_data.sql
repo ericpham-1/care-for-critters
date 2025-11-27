@@ -191,7 +191,9 @@ INSERT INTO Adopter(AdopterID, DriverLicenseNo, Fname, Lname, Email, PhoneNumber
 VALUES
     (DEFAULT, 'D1234567', 'Jimothy', 'Socks', 'jimothy.socks@email.com', '(403) 123-4567', 9), 
     (DEFAULT, 'E9876543', 'Clara', 'Klay', 'Clara.Klay@email.com', '(825) 153-2495', 13), 
-    (DEFAULT, 'F4567890', 'Ivan', 'Rawya', 'Ivan.Rawya@email.com', '(403) 835-1535', 11);     
+    (DEFAULT, 'F4567890', 'Ivan', 'Rawya', 'Ivan.Rawya@email.com', '(403) 835-1535', 10),     
+    (DEFAULT, 'G3456789', 'Sarah', 'Johnson', 'sarah.j@email.com', '(403) 234-5678', 8),  
+    (DEFAULT, 'H6789012', 'Emily', 'Rodriguez', 'emily.r@email.com', '(403) 456-7890', 7);  
 
 -- =====================
 -- Adoption Applications
@@ -200,6 +202,13 @@ INSERT INTO Adoption(AdoptionID, AdopterID, PetID, AdoptionDate, Status)
 VALUES
     (DEFAULT, 1, 1, '2025-9-23', 'Rejected'),
     (DEFAULT, 1, 3, '2025-10-15', 'Accepted'),
-    (DEFAULT, 1, 5, '2025-11-20', 'Pending');
-
-
+    (DEFAULT, 1, 5, '2025-10-20', 'Pending'),
+    (DEFAULT, 2, 4, '2025-11-20', 'Accepted'),
+    (DEFAULT, 3, 2, '2025-11-21', 'Accepted'),
+    (DEFAULT, 4, 3, '2025-11-22', 'Rejected'),
+    (DEFAULT, 5, 4, '2025-11-23', 'Rejected'),
+    (DEFAULT, 5, 5, '2025-11-23', 'Pending'),
+    (DEFAULT, 4, 6, '2025-11-24', 'Pending'),
+    (DEFAULT, 3, 7, '2025-11-24', 'Pending'),
+    (DEFAULT, 2, 8, '2025-11-24', 'Pending'),
+    (DEFAULT, 3, 9, '2025-11-25', 'Pending');
