@@ -957,6 +957,107 @@ def update_animal():
     return redirect(url_for('manage_animals'))
 
 
+@app.route('/manage-events')
+@login_required
+def manage_events():
+    """Display all animals with their information"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Get all animals with type-specific information using UNION
+    cursor.execute("""
+        SELECT * FROM Fundraiser
+    """)
+    events = cursor.fetchall()
+    cursor.execute("""SELECT CURDATE() """)
+    # Get all shelters for dropdowns
+    cursor.execute("SELECT ShelterName FROM Shelter")
+    shelters = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+    
+    return render_template('manage_events.html', 
+                         events=events, 
+                         shelters=shelters)
+
+
+
+@app.route('/manage-events/add', methods=['POST'])
+@login_required
+def add_event():
+    """Add a new animal to the database"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Get basic animal info
+        name = request.form.get('name')
+        location = request.form.get('location')
+        date = request.form.get('date')
+        time = request.form.get('time')
+        budget = request.form.get('budget')
+        amountRaised = request.form.get('amountRaised')
+        shelter = request.form.get('shelter')
+        
+        # Insert into event table
+        cursor.execute("""
+            INSERT INTO Fundraiser (EventName, EventLocation, EventDate, EventTime, Budget, ShelterName, AmountRaised)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (name, location, date, time, budget, shelter,amountRaised))
+
+        conn.commit()
+        print(f"Added new event: {name}")
+        
+    except Exception as e:
+        conn.rollback()
+        print(f"Error adding event: {e}")
+    
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return redirect(url_for('manage_events'))
+
+
+@app.route('/manage-events/update', methods=['POST'])
+@login_required
+def update_event():
+    """Update existing animal information"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Get form data
+        name = request.form.get('name')
+        location = request.form.get('location')
+        date = request.form.get('date')
+        time = request.form.get('time')
+        budget = request.form.get('budget')
+        amountRaised = request.form.get('raised')
+        shelter = request.form.get('shelter')
+        
+        # Update Animal table
+        cursor.execute("""
+            UPDATE Fundraiser
+            SET EventLocation = %s, EventDate = %s, EventTime = %s, 
+                Budget = %s, AmountRaised = %s, ShelterName = %s
+            WHERE EventName = %s
+        """, (location, date, time, budget, amountRaised, shelter, name))
+        
+        conn.commit()
+        print(f"Updated event")
+        
+    except Exception as e:
+        conn.rollback()
+        print(f"Error updating event: {e}")
+    
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return redirect(url_for('manage_events'))
+
 # Donor information routes
 @app.route('/view-donors')
 @login_required

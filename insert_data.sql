@@ -174,11 +174,11 @@ VALUES
 -- =====================
 -- FUNDRAISERS
 -- =====================
-INSERT INTO Fundraiser (EventName, EventLocation, EventDate, Budget, ShelterName, AmountRaised)
+INSERT INTO Fundraiser (EventName, EventLocation, EventDate, EventTime, Budget, ShelterName, AmountRaised)
 VALUES
-    ('Grand Opening Event', 'Central Park', '2025-12-01', 2000, 'Oak Row Branch', 5000),
-    ('2008 Christmas Party', 'Maple Street Branch', '2008-12-01', 2000, 'Maple Street Branch', 7000),
-    ('FruFru Birthday Bash', 'Main Street', '2026-03-21', 1000, 'Maple Street Branch', 10000),
-    ('Spring Pet Adoption Fair', 'Prince Island Park', '2026-04-15', 3000, 'Birch Grove Branch', 8500),
-    ('Summer BBQ Fundraiser', 'Oak Row Branch', '2026-06-20', 1500, 'Oak Row Branch', 4200),
-    ('Fall Charity Walk', 'Bow River Pathway', '2026-09-10', 2500, 'Maple Street Branch', 6800);
+    ('Grand Opening Event', 'Central Park', '2025-12-01', '14:00:00', 2000, 'Oak Row Branch', 5000),
+    ('2008 Christmas Party', 'Maple Street Branch', '2008-12-01', '18:00:00', 2000, 'Maple Street Branch', 7000),
+    ('FruFru Birthday Bash', 'Main Street', '2026-03-21', '12:30:00', 1000, 'Maple Street Branch', 10000),
+    ('Spring Pet Adoption Fair', 'Prince Island Park', '2026-04-15', '10:30:00', 3000, 'Birch Grove Branch', 8500),
+    ('Summer BBQ Fundraiser', 'Oak Row Branch', '2026-06-20', '14:00:00', 1500, 'Oak Row Branch', 4200),
+    ('Fall Charity Walk', 'Bow River Pathway', '2026-09-10', '15:30:00', 2500, 'Maple Street Branch', 6800);

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_volunteers.css') }}">
+    <title>Manage Events - Care for Critters</title>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;" alt="Care for Critters Logo">
+            <ul>
+                <a href="/">Home</a>
+                <a href="/adopt">Adopt</a>
+                <a href="/fundraisers">Fundraisers</a>
+                <a href="/donate">Donate</a>
+            </ul>
+        </div>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </nav>
+    
+    <div class="container">
+        <div class="header-section">
+            <div>
+                <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+                <h1>Manage Events</h1>
+            </div>
+            <button class="add-btn" onclick="showAddForm()">+ Add New Event</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="shelter-filter">Filter by Shelter:</label>
+                <select id="shelter-filter" onchange="filterEvents()">
+                    <option value="">All Shelters</option>
+                    {% for shelter in shelters %}
+                    <option value="{{ shelter.ShelterName }}">{{ shelter.ShelterName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="time-filter">Sort by:</label>
+                <select id="time-filter" onchange="timeEvents()">
+                    <option value="all">Show all events</option>
+                    <option value="current">Show future events</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Volunteers Table -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Event Location</th>
+                        <th>Event Date</th>
+                        <th>Event Time</th>
+                        <th>Budget</th>
+                        <th>Amount Raised</th>
+                        <th>Shelter Location</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="events-table">
+                    {% for event in events %}
+                    <tr data-name="{{ event.EventName }}" 
+                        data-location="{{ event.EventLocation }}" 
+                        data-date="{{ event.EventDate }}"
+                        data-time="{{ event.EventTime }}"
+                        data-budget="{{ event.Budget }}"
+                        data-shelter="{{ event.ShelterName }}"
+                        data-raised="{{ event.AmountRaised }}">
+                        <td>{{ event.EventName }}</td>
+                        <td>{{ event.EventLocation }}</td>
+                        <td>{{ event.EventDate }}</td>
+                        <td>{{ event.EventTime }}</td>
+                        <td>{{ event.Budget }}</td>
+                        <td>{{ event.AmountRaised }}</td>
+                        <td>{{ event.ShelterName }}</td>
+                        <td>
+                            <button class="edit-btn" onclick="editEventFromRow(this)">Edit</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Add New Event</h2>
+            
+            <form id="event-form" method="POST">
+                
+                <div class="form-group">
+                    <label for="name">Event Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Event Location *</label>
+                    <input type="text" id="location" name="location" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date">Event Date *</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="time">Event Time *</label>
+                    <input type="time" id="time" name="time" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="budget">Event Budget *</label>
+                    <input type="number" id="budget" name="budget" required>
+                </div>
+                <div class="form-group">
+                    <label for="raised">Amount Raised *</label>
+                    <input type="number" id="raised" name="raised">
+                </div>
+
+                <div class="form-group">
+                    <label for="shelter">Hosting Shelter Location *</label>
+                    <select id="shelter" name="shelter" required>
+                        <option value="">Select a shelter</option>
+                        {% for shelter in shelters %}
+                        <option value="{{ shelter.ShelterName }}">{{ shelter.ShelterName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="submit-btn">Save Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div>
+            <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;" alt="Care for Critters Logo">
+        </div>
+        <div>
+            <a href="/">Home</a><br>
+            <a>About</a><br>
+            <a>Contact Us</a>
+        </div>
+        <div>
+            <a href="/dashboard">Supervisor Dashboard</a>
+        </div>
+    </footer>
+
+    <script>
+        // Show add form modal
+        function showAddForm() {
+            document.getElementById('modal-title').textContent = 'Add New Event';
+            document.getElementById('event-form').action = '/manage-events/add';
+            document.getElementById('event-form').reset();
+            // document.getElementById('worker-id').value = '';
+            
+            // Show address fields for new volunteers
+            document.querySelectorAll('.section-title, .form-row').forEach(el => {
+                el.style.display = '';
+            });
+   
+            document.getElementById('event-modal').style.display = 'block';
+        }
+
+        // Show edit form modal
+        // Show edit form modal (called from row)
+        function editEventFromRow(button) {
+            const row = button.closest('tr');
+            const name = row.getAttribute('data-name');
+            const location = row.getAttribute('data-location');
+            const date = row.getAttribute('data-date');
+            const time = row.getAttribute('data-time');
+            const budget = row.getAttribute('data-budget');
+            const shelter = row.getAttribute('data-shelter');
+            const raised = row.getAttribute('data-raised');
+            
+            console.log("Edit clicked:", name, location, date, time, budget, shelter, raised);
+            
+            document.getElementById('modal-title').textContent = 'Edit Event';
+            document.getElementById('event-form').action = '/manage-events/update';
+            document.getElementById('name').value = name;
+            document.getElementById('location').value = location;
+            document.getElementById('date').value = date;
+            document.getElementById('time').value = time;
+            document.getElementById('shelter').value = shelter;
+            document.getElementById('budget').value = budget;
+            document.getElementById('raised').value = raised;
+            
+            document.getElementById('event-modal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('event-modal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('event-modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Filter events by hosting shelter
+        function filterEvents() {
+            const shelterFilter = document.getElementById('shelter-filter').value;
+            const rows = document.querySelectorAll('#events-table tr');
+            
+            rows.forEach(row => {
+                const shelter = row.getAttribute('data-shelter');
+                if (shelterFilter === '' || shelter === shelterFilter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        
+        }
+
+        function timeEvents() {
+            const timeFilter = document.getElementById('time-filter').value;
+            const rows = document.querySelectorAll('#events-table tr');
+            const currentdate = new Date();
+            const formattedDate = currentdate.toISOString().slice(0,10);
+            rows.forEach(row => {
+                const event = row.getAttribute('data-shelter');
+                if (timeFilter === 'all') {
+                    row.style.display = '';
+                } else{
+                    if(row.getAttribute('data-date') < formattedDate){
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        
+    </script>
+</body>
+</html>
