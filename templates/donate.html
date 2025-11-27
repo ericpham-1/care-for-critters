@@ -48,7 +48,7 @@
                 <div class="section">
                     <h2>Choose a shelter to donate to: </h2>
                     <select name="shelter" required>
-                        <option value="" disabled selected>Select shelter</option> <!--TODO: INSERT SQL QUERY STUFF HERE-->
+                        <option value="" disabled selected>Select shelter</option> 
                         {% for s in shelters %}
                             <option value="{{ s.ShelterName }}">{{ s.ShelterName }}</option>
                         {% endfor %}

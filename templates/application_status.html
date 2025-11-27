@@ -27,12 +27,47 @@
             <h2>Check Your Adoption Application</h2>
         </div>
 
-        <form method="GET" action="application_status.html" class="status-form">
+        <form method="GET" action="{{ url_for('view_applications') }}" class="status-form">
             <input type="email" name="email" placeholder="Email Address" required>
             <button type="submit" class="search-btn">Check Status</button>
         </form>
 
+        {% if error %}
+            <div class="msg-error">{{ error }}</div>
+        {% endif %}
 
+        {% if results %}
+        <div class="welcome-msg">
+            <h3>Welcome, {{ results[0].Fname }} {{ results[0].Lname }}! <br> Here are your applications:</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Application ID</th>
+                        <th>Applicant</th>
+                        <th>Pet</th>
+                        <th>Adoption Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in results %}
+                    <tr>
+                        <td>{{ r.AdoptionID }}</td>
+                        <td>{{ r.Fname}} {{ r.Lname }} <br><small>{{ r.Email }}</small></td>
+                        <td>{{ r.PetName }}</td>
+                        <td>{{ r.AdoptionDate }}</td>
+                        <td class="
+                            {% if r.Status == 'Pending' %}status-pending{% endif %}
+                            {% if r.Status == 'Accepted' %}status-accepted{% endif %}
+                            {% if r.Status == 'Rejected' %}status-rejected{% endif %}
+                            ">{{ r.Status }}</td>                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
     </main>
 </body>
 

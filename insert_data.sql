@@ -182,3 +182,23 @@ VALUES
     ('Spring Pet Adoption Fair', 'Prince Island Park', '2026-04-15', 3000, 'Birch Grove Branch', 8500),
     ('Summer BBQ Fundraiser', 'Oak Row Branch', '2026-06-20', 1500, 'Oak Row Branch', 4200),
     ('Fall Charity Walk', 'Bow River Pathway', '2026-09-10', 2500, 'Maple Street Branch', 6800);
+
+-- =====================
+-- Adopters
+-- =====================
+INSERT INTO Adopter(AdopterID, DriverLicenseNo, Fname, Lname, Email, PhoneNumber, AddressID)
+VALUES
+    (DEFAULT, 'D1234567', 'Jimothy', 'Socks', 'jimothy.socks@email.com', '(403) 123-4567', 9), 
+    (DEFAULT, 'E9876543', 'Clara', 'Klay', 'Clara.Klay@email.com', '(825) 153-2495', 13), 
+    (DEFAULT, 'F4567890', 'Ivan', 'Rawya', 'Ivan.Rawya@email.com', '(403) 835-1535', 11);     
+
+-- =====================
+-- Adoption Applications
+-- =====================
+INSERT INTO Adoption(AdoptionID, AdopterID, PetID, AdoptionDate, Status)
+VALUES
+    (DEFAULT, 1, 1, '2025-9-23', 'Rejected'),
+    (DEFAULT, 1, 3, '2025-10-15', 'Accepted'),
+    (DEFAULT, 1, 5, '2025-11-20', 'Pending');
+
+
