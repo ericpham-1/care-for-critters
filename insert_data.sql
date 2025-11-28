@@ -201,10 +201,10 @@ VALUES
 INSERT INTO Adoption(AdoptionID, AdopterID, PetID, AdoptionDate, Status)
 VALUES
     (DEFAULT, 1, 1, '2025-9-23', 'Rejected'),
-    (DEFAULT, 1, 3, '2025-10-15', 'Accepted'),
+    (DEFAULT, 1, 3, '2025-10-15', 'Rejected'),
     (DEFAULT, 1, 5, '2025-10-20', 'Pending'),
-    (DEFAULT, 2, 4, '2025-11-20', 'Accepted'),
-    (DEFAULT, 3, 2, '2025-11-21', 'Accepted'),
+    (DEFAULT, 2, 4, '2025-11-20', 'Rejected'),
+    (DEFAULT, 3, 2, '2025-11-21', 'Rejected'),
     (DEFAULT, 4, 3, '2025-11-22', 'Rejected'),
     (DEFAULT, 5, 4, '2025-11-23', 'Rejected'),
     (DEFAULT, 5, 5, '2025-11-23', 'Pending'),
