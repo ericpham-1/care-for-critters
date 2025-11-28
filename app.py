@@ -546,18 +546,19 @@ def get_animals():
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
     query = ("""SELECT * FROM (
-                   SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
-                   UNION SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
-                   UNION SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets""")
+                   SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
+                   UNION SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
+                   UNION SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
+                    WHERE AdoptionStatus IS NULL""")
     if selected_location != "None":
-        query = query + f" WHERE ShelterLocation = '{selected_location}'" 
+        query = query + f" AND ShelterLocation = '{selected_location}'" 
         if ages_set != None:
             if len(ages_set) != 0:
                 query = query + f" AND Age IN {ages_set}"
     else:
         if ages_set != None:
             if len(ages_set) != 0:
-                query = query + f" WHERE Age IN {ages_set}"
+                query = query + f" AND Age IN {ages_set}"
     cursor.execute(query)
     animals = cursor.fetchall()
     cursor.close()
@@ -656,7 +657,8 @@ def get_exotic():
 
 def get_animal_query(type, selected_location, ages_set):
     query = f"""
-        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN {type} e ON a.PetID=e.PetID)) AS allPets
+        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation, AdoptionStatus FROM (Animal a JOIN {type} e ON a.PetID=e.PetID) WHERE AdoptionStatus IS NULL)
+        AS allPets
     """
     if selected_location != "None":
         query = query + f" WHERE ShelterLocation = '{selected_location}'" 
@@ -1201,12 +1203,20 @@ def review_application():
             WHERE PetID = %s           
             """, (petID,))
         elif action == 'reject':
-            # Update Adoption status to Rejected, do nothing to Animal
+            # Update Adoption status to Rejected
             cursor.execute("""
             UPDATE Adoption
             SET Status = 'Rejected'
             WHERE AdoptionID = %s
             """, (adoptionID,))
+
+            # Set Animal adoption status to NULL (Just for testing)
+            cursor.execute("""
+            UPDATE Animal
+            SET AdoptionStatus = NULL
+            WHERE PetID = %s           
+            """, (petID,))
+
         conn.commit()
     except Exception as e:
         conn.rollback()
