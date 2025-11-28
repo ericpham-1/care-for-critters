@@ -385,8 +385,7 @@ def form_submit():
     if missing_fields:
         cursor.close()
         conn.close()
-        return render_template(
-        "adoptForm.html",
+        return render_template('adoptForm.html',
         pet=pet,
         error="Please fill out all required fields",
         first_name=first_name,
@@ -435,7 +434,6 @@ def form_submit():
     """
     cursor.execute(query, (license_number,))
     adopter = cursor.fetchone()
-    print(f"Adopter ID is: {adopter}")
 
     if adopter:
         #Check if adopter address matches
@@ -447,6 +445,7 @@ def form_submit():
         """, (adopter_id,))
         adopter_address = cursor.fetchone()
         print(f"Adopter Address is: {adopter_address}")
+        print(f"Adopter ID is: {adopter_id}")
 
         # If adopter changes their address
         if adopter_address and adopter_address['AddressID'] != address_id:
@@ -455,7 +454,6 @@ def form_submit():
             SET AddressID = %s
             WHERE AdopterID = %s
             """, (address_id, adopter['AdopterID']))
-        adopter_id = adopter['AdopterID']
     else:
         query = """
         INSERT INTO Adopter (DriverLicenseNo, Fname, Lname, Email, PhoneNumber, AddressID)
@@ -463,6 +461,8 @@ def form_submit():
         """
         cursor.execute(query, (license_number, first_name, last_name, email, phone_number, address_id))
         adopter_id = cursor.lastrowid
+        print(f"New Adopter entered. ID is: {adopter_id}")
+
     
     # New Adoption Record
     adoption_query = """
@@ -477,7 +477,7 @@ def form_submit():
     cursor.close()
     conn.close()
    
-    return redirect(url_for('adopt_submit'))
+    return redirect(url_for('get_animals', submitted='1'))
 
 @app.route('/adopt_submit')
 def adopt_submit():
@@ -563,7 +563,8 @@ def get_animals():
     animals = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('adopt.html', animal_type="animals", animals=animals, locations=shelters, pet_ages=all_ages)
+    submitted = request.args.get('submitted')
+    return render_template('adopt.html', animal_type="animals", animals=animals, locations=shelters, pet_ages=all_ages, submitted=submitted)
 
 @app.route('/mammals', methods=['GET', 'POST'])
 def get_mammals():

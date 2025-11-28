@@ -8,7 +8,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 40px;
+    box-sizing: border-box;  
     z-index: 999;
 }
 
@@ -30,15 +31,25 @@
     display: flex;
     position: relative;
     flex-direction: row;
-    width: 80%;
-    max-width: 1100px;
+    width: 905w;
+    max-width: 1100px;    
     max-height: 90vh;
-    margin: 40px auto;
+    margin: 0;
     background: white;
-    border-radius: 12px;
     overflow: auto;
     box-shadow: 0px 8px 40px rgba(0,0,0,0.25);
+    border-radius: 16px;
+    overflow-y: auto;    
+}
 
+#adopt-modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    padding: 20px; /* Prevent touching screen edges */
 }
 
 /* Left Side */
@@ -102,7 +113,7 @@
 .form-section {
     width: 50%;
     padding: 40px;
-    padding-left: 90px;
+    padding-left: 40px;
     font-family: "Fredoka", sans-serif;
 }
 
@@ -118,7 +129,8 @@
 }
 
 .section input {
-    width: 50%;
+    width: 100%;
+    max-width: 140px;    
     padding: 10px;
     margin-top: 5px;
     border-radius: 6px;
@@ -126,14 +138,28 @@
     font-size: 14px;
 }
 
+.contact-row,
+.name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.contact-field,
+.name-field {
+    display: flex;
+    flex-direction: column;
+}
+
 .address-group {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
     grid-template-rows: auto auto;
-    gap: 10px 15px;
+    gap: 8px 10px;
     margin-top: 5px;
     align-items: start;
     flex-wrap: nowrap;
+    font-weight: 500;
 }
 
 .address-field {
@@ -167,7 +193,11 @@
 .street {
   grid-column: 2 / 3; 
   grid-row: 1;
-  max-width: 200px;
+  max-width: none;
+}
+
+.street input {
+    max-width: 400px;
 }
 
 .postal-code {
@@ -183,13 +213,18 @@
 .province {
   grid-column: 2 / 3; 
   grid-row: 2;
-  max-width: 150px;
+  max-width: none;
+}
+
+.province input {
+  max-width: 100px;
 }
 
 .actions {
     margin-top: 30px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;   
+    gap: 15px; 
 }
 
 .cancel-btn {
@@ -198,6 +233,7 @@
     background: #0e233f;
     color: white;
     text-decoration: none;
+    border: none;
     font-family: "Fredoka", sans-serif;
     font-size: 18px;
 }
@@ -283,16 +319,17 @@
     justify-content: center;   
 }
 
-.home-btn {
+.close-btn {
     padding: 10px 20px;
     border-radius: 25px;
     background: #0049c1;
     color: white;
     text-decoration: none;
+    border: none;
     font-family: "Fredoka", sans-serif;
     font-size: 18px;
 }
 
-.home-btn:hover {
+.close-btn:hover {
     opacity: 0.9;
 }

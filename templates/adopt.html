@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/animals.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/adoptForm.css') }}">
     <title>Document</title>
 </head>
 <body style="font-family: 'Fredoka', sans-serif; font-weight: 400; font-style: normal; margin: 0; padding: 0; color: black;">
@@ -69,23 +70,176 @@
                     <p>Species: {{animal.Species}}</p>
                     <p>Age: {{animal.Age}}</p>
                     <p>{{animal.ShelterLocation}}</p>
-                    <form method="GET" action="{{ url_for('adopt_form', pet_id=animal.PetID) }}">
-                        <button type="submit" class="apply-btn" style="padding:10px 20px; border-radius:10px; background-color:#0047ab; color:white; border:none; cursor: pointer;">
-                            <style>
-                                .apply-btn:hover{
-                                    opacity: 0.8;
-                                }
-                            </style>
-                            Apply for adoption
-                        </button>
-                    </form>
+                    <button type="button" class="apply-btn" onclick="openAdoptModal(this)"
+                        data-pet-id="{{ animal.PetID }}"
+                        data-name="{{ animal.Name }}"
+                        data-age="{{ animal.Age }}"
+                        data-species="{{ animal.Species }}"
+                        data-photo="{{ animal.Photo }}"
+                    >
+                    <style>
+                    .apply-btn:hover{
+                        opacity: 0.8;
+                    }
+                    </style>
+                        Apply for adoption
+                    </button>
                 </div>
                 {% endfor%}
             </div>
         </div>
 
     </div>
-</body>
+
+    
+<div id="adopt-modal" style="display: none;">
+    <div class="Adoption-Form-Overlay">
+        <div class="Adoption-Box">
+            <img class="logo" src="/static/images/C4C_Logo.png" alt="Logo">
+
+            <!--Pet Info-->
+            <div class="pet-info">
+                <div class="pet-image">
+                    <img id="modal-photo" class="pet-photo" src="" alt="/static/images/pet_placeholder.png"> 
+                </div>
+
+                <h2 class="pet-name" id="modal-pet-name"></h2>
+                <p class="pet-id">PetID: <span id="modal-pet-id"></span></p>
+                
+                <div class="pet-details">
+
+                    <!--General Info-->
+                    <div class="general-info">
+                        <h3><b>Approx. Age: </b><span id="modal-pet-age"></span></h3>
+                        
+                        <h3><b>Species/Breed: </b><span id="modal-pet-species"></span></h3>
+            
+                        <h3><b>Diet: </b><span id="modal-pet-diet"></span></h3>
+                    </div>
+                    
+                    <!--Type specific info-->
+                    <div class="other-info">
+                        <h3><b>Other Info:</b></h3>
+                    </div>
+                    
+
+                </div>
+            </div>
+
+            <!--Personal Information Form-->
+            <form class="form-section" id="infoForm" method="POST" action="/form_submit" novalidate>
+                 <div class="header">
+                    <div class="titles">
+                        <h1>Adoption Application</h1>
+                        <p>Please fill out the form below: </p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="name-row">
+                        <div class="name-field">
+                            <label>First Name</label>
+                            <input name="first_name"  value="{{ first_name|default('') }}" >
+                        </div>
+                        <div class="name-field">
+                            <label>Last Name</label>
+                            <input name="last_name" value="{{ last_name|default('') }}">
+                        </div>
+
+                    </div>
+                    
+
+                    <div class="address-group">
+                        <div class="address-field building-no">
+                            <label for="building_no">Building No.</label>
+                            <input id="building_no" name="building_no" type="text" autocomplete="off" value="{{ building_no|default('') }}"/>
+                        </div>
+
+                        <div class="address-field street">
+                            <label for="street">Street</label>
+                            <input id="street" name="street" type="text" autocomplete="nope" value="{{ street|default('') }}"/>
+                        </div>
+
+                        <div class="address-field postal-code">
+                            <label for="postal_code">Postal Code</label>
+                            <input id="postal_code" name="postal_code" type="text" value="{{ postal_code|default('') }}"/>
+                        </div>                        
+                        
+                        <div class="address-field city">
+                            <label for="city">City</label>
+                            <input id="city" name="city" type="text" value="{{ city|default('') }}"/>
+                        </div>
+
+                        <div class="address-field province">
+                            <label for="province">Province</label>
+                            <input id="province" name="province" type="text" value="{{ province|default('') }}"/>
+                        </div>
+
+                    </div>
+
+                    <div class="contact-row">
+                        <div class="contact-field">
+                            <label>Email Address</label>
+                            <input type="email" name="email" value="{{ email|default('') }}">
+                        </div>
+                        <div class="contact-field">
+                            <label>Phone Number: </label>
+                            <input name="phone_number" type="number" value="{{ phone_number|default('') }}">
+                        </div>
+                    </div>
+
+                    <label>Driver's License</label>
+                    <input name="license_number" type="number" value="{{ license_number|default('') }}">    
+
+                    <input type="hidden" name="pet_id" id="modal-pet-id-input">
+
+                </div>
+
+                <br>
+                <br>
+                <!--ERROR MESSAGE-->
+                {% if error %}
+                    <div class="error" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                <!--NAV Buttons-->
+                <div class="actions">
+                    <button  type="button" class="cancel-btn" onclick="closeAdoptModal()">Cancel</button>
+                    <button type="submit" class="continue-btn">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="adopt-submit-modal" style="display: none;">
+    <div class="ThankYou-Overlay">
+        <div class="ThankYou-Box">
+            <div class="ThankYou-Header">
+                <img class="ThankYou-Logo" src="/static/images/C4C_Logo.png" alt="Logo">
+                <div class="title">
+                    <h1>Care for Critters</h1>               
+                </div>
+            </div>
+
+            <div class="thank-msg">
+                <div class="section">
+                    <h2>Thank you for submitting an <br> 
+                        adoption application to Care for Critters. Your <br>
+                        application is currently being processed. We will notify <br>
+                        you via Email!</h2>
+                </div>
+            </div>
+
+            <div class="ThankYou-Actions">
+                <button class="close-btn" onclick="closeAdoptModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer style="background-color: #b4dcd4; align-content: center; display: flex; gap: 20%; justify-content: center; padding: 10px;">
     <div style="align-content: center;">
         <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;">
@@ -101,4 +255,52 @@
         <a href="login" style="font-size: small; text-decoration: none;">Supervisor Login</a>
     </div>
 </footer>
+
+<script>
+    function openAdoptModal(button) {
+        const petId = button.getAttribute('data-pet-id');
+        const name = button.getAttribute('data-name');
+        const age = button.getAttribute('data-age');
+        const species = button.getAttribute('data-species');
+        const photo = button.getAttribute('data-photo');
+
+        // Fill fields
+        document.getElementById('modal-pet-name').textContent = name;
+        document.getElementById('modal-pet-id').textContent = petId;
+        document.getElementById('modal-pet-age').textContent = age;
+        document.getElementById('modal-pet-species').textContent = species;
+        document.getElementById('modal-photo').src = photo;
+
+        // Hidden input for form_submit
+        document.getElementById('modal-pet-id-input').value = petId;
+
+        // Show modal
+        document.getElementById('adopt-modal').style.display = 'block';
+    }
+
+    function closeAdoptModal() {
+        document.getElementById('adopt-modal').style.display = 'none';
+        document.getElementById('adopt-submit-modal').style.display = 'none';
+    }
+
+
+
+    // Optional: close when clicking outside, same as manage_applications
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('adopt-submit-modal');        
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+</script>
+
+<!--Thank You page for submitting an adoption application-->
+{% if submitted == '1' %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('adopt-submit-modal').style.display = 'block';
+    });
+</script>
+{% endif %}
+</body>
 </html>
