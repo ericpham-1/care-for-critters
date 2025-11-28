@@ -374,11 +374,27 @@ def form_submit():
         }
 
     # Get Pet
-    cursor.execute("""
-        SELECT * 
-        FROM Animal
-        WHERE PetID = %s
-        """, (pet_id,))
+    query = """
+    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, m.Species
+    FROM Animal a
+    JOIN Mammal m ON a.PetID = m.PetID
+    WHERE a.PetID = %s
+
+    UNION 
+
+    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, f.Species
+    FROM Animal a
+    JOIN Fish f ON a.PetID = f.PetID
+    WHERE a.PetID = %s
+
+    UNION 
+
+    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, e.Species
+    FROM Animal a
+    JOIN Exotic e ON a.PetID = e.PetID
+    WHERE a.PetID = %s;
+    """
+    cursor.execute(query, (pet_id, pet_id, pet_id))
     pet = cursor.fetchone()
 
     missing_fields = [name for name, value in required_fields.items() if not value or not value.strip()]
