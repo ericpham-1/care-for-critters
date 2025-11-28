@@ -100,21 +100,21 @@
             <!--Pet Info-->
             <div class="pet-info">
                 <div class="pet-image">
-                    <img id="modal-photo" class="pet-photo" src="" alt="/static/images/pet_placeholder.png"> 
+                    <img id="modal-photo" class="pet-photo" src="{% if reopen_modal and animal %} {{ animal.Photo }} {% endif %}" alt="/static/images/pet_placeholder.png"> 
                 </div>
 
-                <h2 class="pet-name" id="modal-pet-name"></h2>
-                <p class="pet-id">PetID: <span id="modal-pet-id"></span></p>
+                <h2 class="pet-name" id="modal-pet-name">{% if reopen_modal and animal %} {{ animal.Name }} {% endif %}</h2>
+                <p class="pet-id">PetID: <span id="modal-pet-id">{% if reopen_modal and animal %} {{ animal.PetID }} {% endif %}</span></p>
                 
                 <div class="pet-details">
 
                     <!--General Info-->
                     <div class="general-info">
-                        <h3><b>Approx. Age: </b><span id="modal-pet-age"></span></h3>
+                        <h3><b>Approx. Age: </b><span id="modal-pet-age">{% if reopen_modal and animal %} {{ animal.Age }} {% endif %}</span></h3>
                         
-                        <h3><b>Species/Breed: </b><span id="modal-pet-species"></span></h3>
+                        <h3><b>Species/Breed: </b><span id="modal-pet-species">{% if reopen_modal and animal %} {{ animal.Species }} {% endif %}</span></h3>
             
-                        <h3><b>Diet: </b><span id="modal-pet-diet"></span></h3>
+                        <h3><b>Diet: </b><span id="modal-pet-diet">{% if reopen_modal and animal %} {{ animal.Diet }} {% endif %}</span></h3>
                     </div>
                     
                     <!--Type specific info-->
@@ -191,7 +191,8 @@
                     <label>Driver's License</label>
                     <input name="license_number" type="number" value="{{ license_number|default('') }}">    
 
-                    <input type="hidden" name="pet_id" id="modal-pet-id-input">
+                    <input type="hidden" name="pet_id" id="modal-pet-id-input"
+                        value="{% if reopen_modal and animal %}{{ animal.PetID }}{% endif %}">
 
                 </div>
 
@@ -206,7 +207,7 @@
 
                 <!--NAV Buttons-->
                 <div class="actions">
-                    <button  type="button" class="cancel-btn" onclick="closeAdoptModal()">Cancel</button>
+                    <a href="/animals" class="cancel-btn">Cancel</a>
                     <button type="submit" class="continue-btn">Submit</button>
                 </div>
             </form>
@@ -300,6 +301,15 @@
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('adopt-submit-modal').style.display = 'block';
     });
+</script>
+{% endif %}
+
+{% if reopen_modal %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Open the modal again
+    document.getElementById("adopt-modal").style.display = "block";
+});
 </script>
 {% endif %}
 </body>

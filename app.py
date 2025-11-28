@@ -385,9 +385,11 @@ def form_submit():
     if missing_fields:
         cursor.close()
         conn.close()
-        return render_template('adoptForm.html',
-        pet=pet,
+        return render_template(
+        'adopt.html',
+        animal=pet,
         error="Please fill out all required fields",
+        reopen_modal=True,
         first_name=first_name,
         last_name=last_name,
         building_no=building_no,
