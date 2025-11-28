@@ -55,6 +55,15 @@
                     <option value="Exotic">Exotic</option>
                 </select>
             </div>
+            
+            <div class="filter-group">
+                <label for="adoption-filter">Filter by Status:</label>
+                <select id="adoption-filter" onchange="filterAnimals()">
+                    <option value="">All Animals</option>
+                    <option value="available">Available for Adoption</option>
+                    <option value="adopted">Adopted</option>
+                </select>
+            </div>
         </div>
 
         <!-- Animals Table -->
@@ -68,18 +77,28 @@
                         <th>Species</th>
                         <th>Age</th>
                         <th>Shelter</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="animals-table">
                     {% for animal in animals %}
-                    <tr data-shelter="{{ animal.ShelterLocation }}" data-type="{{ animal.AnimalType }}">
+                    <tr data-shelter="{{ animal.ShelterLocation }}" 
+                        data-type="{{ animal.AnimalType }}"
+                        data-adoption-status="{{ 'adopted' if animal.AdoptionStatus else 'available' }}">
                         <td><img src="{{ animal.Photo }}" alt="{{ animal.Name }}" class="animal-thumbnail"></td>
                         <td>{{ animal.Name }}</td>
                         <td>{{ animal.AnimalType }}</td>
                         <td>{{ animal.Species }}</td>
                         <td>{{ animal.Age }}</td>
                         <td>{{ animal.ShelterLocation }}</td>
+                        <td>
+                            {% if animal.AdoptionStatus %}
+                            <span class="status-badge adopted">Adopted</span>
+                            {% else %}
+                            <span class="status-badge available">Available</span>
+                            {% endif %}
+                        </td>
                         <td>
                             <button class="edit-btn" onclick="editAnimalFromRow(this)" 
                                 data-pet-id="{{ animal.PetID }}"
@@ -353,15 +372,19 @@
         function filterAnimals() {
             const shelterFilter = document.getElementById('shelter-filter').value;
             const typeFilter = document.getElementById('type-filter').value;
+            const adoptionFilter = document.getElementById('adoption-filter').value;
             const rows = document.querySelectorAll('#animals-table tr');
             
             rows.forEach(row => {
                 const shelter = row.getAttribute('data-shelter');
                 const type = row.getAttribute('data-type');
+                const adoptionStatus = row.getAttribute('data-adoption-status');
+                
                 const showShelter = !shelterFilter || shelter === shelterFilter;
                 const showType = !typeFilter || type === typeFilter;
+                const showAdoption = !adoptionFilter || adoptionStatus === adoptionFilter;
                 
-                if (showShelter && showType) {
+                if (showShelter && showType && showAdoption) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';

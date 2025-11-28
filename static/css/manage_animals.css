@@ -364,3 +364,21 @@ footer div {
     line-height: 14px;
     align-content: center;
 }
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-badge.available {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-badge.adopted {
+    background-color: #fff3cd;
+    color: #856404;
+}

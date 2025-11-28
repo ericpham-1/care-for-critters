@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # secret key for session management, cookie related
 # Generate a random secret key: python -c "import os; print(os.urandom(24).hex())"
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "your-secret-key-here-change-this")
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "the-secret-key-goes-here")
 
 # -- MySQL Configuration --
 app.config['MYSQL_HOST'] = os.getenv("DB_HOST")
@@ -811,18 +811,21 @@ def manage_animals():
     # Get all animals with type-specific information using UNION
     cursor.execute("""
         SELECT a.PetID, a.Name, a.Description, a.Age, a.Diet, a.Photo, a.ShelterLocation,
+               a.AdoptionStatus,
                'Mammal' as AnimalType, m.Species, m.Weight, NULL as WaterType, 
                NULL as HabitatRequirements, m.HealthRecords
         FROM Animal a
         JOIN Mammal m ON a.PetID = m.PetID
         UNION
         SELECT a.PetID, a.Name, a.Description, a.Age, a.Diet, a.Photo, a.ShelterLocation,
+               a.AdoptionStatus,
                'Fish' as AnimalType, f.Species, NULL as Weight, f.WaterType, 
                NULL as HabitatRequirements, NULL as HealthRecords
         FROM Animal a
         JOIN Fish f ON a.PetID = f.PetID
         UNION
         SELECT a.PetID, a.Name, a.Description, a.Age, a.Diet, a.Photo, a.ShelterLocation,
+               a.AdoptionStatus,
                'Exotic' as AnimalType, e.Species, e.Weight, NULL as WaterType, 
                e.HabitatRequirements, NULL as HealthRecords
         FROM Animal a
