@@ -1135,12 +1135,36 @@ def view_donors():
 def manage_applications():
     conn = get_db_connection()
     cursor = conn.cursor()
+
+    # Query to get all info on adoption application, adopter, and pet being adopted
     application_query = """
-    SELECT ad.AdoptionID, ad.AdopterID, ad.PetID, ad.AdoptionDate, ad.Status, ap.Fname, ap.Lname, ap.Email, ap.PhoneNumber, an.Name AS PetName, addr.BuildingNo, addr.Street, addr.City, addr.Province, addr.PostalCode
-    FROM Adoption ad JOIN Adopter ap ON ad.AdopterID = ap.AdopterID
-    JOIN Animal an ON ad.PetID = an.PetID
-    Left JOIN Address addr ON ap.AddressID = addr.AddressID
-    ORDER BY ad.AdoptionDate DESC;
+    SELECT 
+        Adoption.AdoptionID,
+        Adoption.AdoptionDate,
+        Adoption.Status,
+
+        Adopter.AdopterID,
+        Adopter.Fname,
+        Adopter.Lname,
+        Adopter.Email,
+        Adopter.PhoneNumber,
+        Adopter.DriverLicenseNo,
+
+        Address.BuildingNo,
+        Address.Street,
+        Address.City,
+        Address.Province,
+        Address.PostalCode,
+
+        Animal.PetID,
+        Animal.Name AS PetName,
+        Animal.Photo,
+        Animal.ShelterLocation
+        FROM Adoption
+        JOIN Adopter ON Adoption.AdopterID = Adopter.AdopterID
+        JOIN Address ON Adopter.AddressID = Address.AddressID
+        JOIN Animal ON Adoption.PetID = Animal.PetID
+        ORDER BY AdoptionDate DESC;
     """ 
 
     cursor.execute(application_query)

@@ -51,10 +51,10 @@
                 <thead>
                     <tr>
                         <th>Application ID</th>
+                        <th>Application Date</th>                        
                         <th>Applicant</th>
                         <th>Pet</th>
-                        <th>Address</th>
-                        <th>Application Date</th>
+                        <th>Shelter</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -66,35 +66,30 @@
                         data-email="{{ adoption.Email }}"
                         data-pet="{{ adoption.PetName }}"
                         data-date="{{ adoption.AdoptionDate }}"
+                        data-petID="{{ adoption.PetID }}"
+                        data-photo="{{ adoption.Photo }}"
+                        data-address="{{ adoption.BuildingNo }} {{ adoption.Street }}, {{ adoption.City }}, {{ adoption.Province }} {{ adoption.PostalCode }}"
+                        data-shelter="{{ adoption.ShelterLocation }}"
+                        data-license="{{ adoption.DriverLicenseNo }}"
+                        data-phone="{{ adoption.PhoneNumber }}"
                         data-status="{{ adoption.Status }}">
                         <td>{{ adoption.AdoptionID }}</td>
-                        <td>{{ adoption.Fname }} {{ adoption.Lname }} <br><small> {{ adoption.Email }}</small></td>
-                        <td>{{ adoption.PetName }}</td>
-                        <td>{{ adoption.BuildingNo }} {{ adoption.Street }} <br>
-                            {{ adoption.City }} {{ adoption.Province }} {{ adoption.PostalCode }}
-                        </td>
-                        <td>{{ adoption.AdoptionDate }}</td>
+                        <td>{{ adoption.AdoptionDate }}</td>                        
+                        <td>{{ adoption.Fname }} {{ adoption.Lname }} <br><small> {{ adoption.Email }}</small></td>           
+                        <td>{{ adoption.PetName }} <br><small> {{ adoption.PetID }}</small></td>
+                        <td>{{ adoption.ShelterLocation }}</td>
                         <td class="
                             {% if adoption.Status == 'Pending' %}status-pending{% endif %}
                             {% if adoption.Status == 'Accepted' %}status-accepted{% endif %}
                             {% if adoption.Status == 'Rejected' %}status-rejected{% endif %}
                             ">{{ adoption.Status }}</td>            
                         <td>
-                            <button class="edit-btn" onclick="approve('{{ adoption.AdoptionID }}')">Approve</button>
-                            <button class="reject-btn" onclick="reject('{{ adoption.AdoptionID }}')">Reject</button>
+                            <button onclick="reviewApplicationFromRow(this)">Review</button>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-    </div>
-
-    <!-- Add/Edit Modal -->
-    <div id="volunteer-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modal-title">Are you sure you want to approve this application?</h2>
         </div>
     </div>
 
@@ -112,24 +107,37 @@
         </div>
     </footer>
 
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeReview()">&times;</span>
+
+            <h1 id="modal-title"> Review Application</h1>
+            <br>
+            <div class="review-section">
+                <h3 id="modal-title">Applicant Information</h3>
+                <p><strong>Name: </strong> <span id="rev-name"></span></p>
+                <p><strong>Email: </strong> <span id="rev-email"></span></p>
+                <p><strong>Phone: </strong> <span id="rev-phone"></span></p>
+                <p><strong>Driver License: </strong> <span id="rev-licenseNo"></span></p>
+                <p><strong>Address: </strong> <span id="rev-address"></span></p>
+            </div>
+            <br>
+            <div class="review-section">
+                <h3>Pet Information</h3>
+                <p><strong>Name: </strong> <span id="rev-petName"></span></p>
+                <p><strong>ID: </strong> <span id="rev-petID"></span></p>
+                <p><strong>Shelter Location: </strong> <span id="rev-shelter"></span></p>
+                <img id="rev-photo" class="photo" src="" alt="Pet Photo">
+            </div>
+
+            <div class="form-actions">
+                <button class="submit-btn" onclick="approveApplication()">Accept</button>
+                <button class="submit-btn" style = "background-color: #ed4e4e;"  onclick="rejectApplication()">Reject</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Placeholder
-        function approve(id) {
-            alert("Approve application " + id);
-        }
-
-        function reject(id) {
-            alert("Reject application " + id);
-        }
-
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('volunteer-modal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
 
         // Filter applications by status
         function filterApps() {
@@ -146,10 +154,42 @@
             });
         }
 
-    // filters only 'Pending' applications on page load
-    window.addEventListener('DOMContentLoaded', (event) => {
-        filterApps();
-    });
+        // filters only 'Pending' applications on page load
+        window.addEventListener('DOMContentLoaded', (event) => {
+            filterApps();
+        });
+
+     // Open review modal
+    function reviewApplicationFromRow(button) {
+        const row = button.closest('tr');
+
+        document.getElementById("rev-name").textContent = row.getAttribute('data-name');
+        document.getElementById("rev-email").textContent = row.getAttribute('data-email');
+        document.getElementById("rev-phone").textContent = row.getAttribute('data-phone');
+        document.getElementById("rev-licenseNo").textContent = row.getAttribute('data-license');
+        document.getElementById("rev-address").textContent = row.getAttribute('data-address');
+        
+        document.getElementById("rev-petName").textContent = row.getAttribute('data-pet');
+        document.getElementById("rev-petID").textContent = row.getAttribute('data-petID');
+        document.getElementById("rev-shelter").textContent = row.getAttribute('data-shelter');
+        document.getElementById("rev-photo").src = row.getAttribute('data-photo');
+
+        document.getElementById("review-modal").style.display = "block";
+    }
+
+    // Close modal
+    function closeReview() {
+        document.getElementById("review-modal").style.display = "none";
+    }
+
+    // Close when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById("review-modal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+
     </script>
 </body>
 </html>
