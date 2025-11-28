@@ -84,7 +84,7 @@
                             {% if adoption.Status == 'Rejected' %}status-rejected{% endif %}
                             ">{{ adoption.Status }}</td>            
                         <td>
-                            <button onclick="reviewApplicationFromRow(this)">Review</button>
+                            <button class="edit-btn" onclick="reviewApplicationFromRow(this)">Review</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -113,27 +113,34 @@
 
             <h1 id="modal-title"> Review Application</h1>
             <br>
-            <div class="review-section">
-                <h3 id="modal-title">Applicant Information</h3>
-                <p><strong>Name: </strong> <span id="rev-name"></span></p>
-                <p><strong>Email: </strong> <span id="rev-email"></span></p>
-                <p><strong>Phone: </strong> <span id="rev-phone"></span></p>
-                <p><strong>Driver License: </strong> <span id="rev-licenseNo"></span></p>
-                <p><strong>Address: </strong> <span id="rev-address"></span></p>
-            </div>
-            <br>
-            <div class="review-section">
-                <h3>Pet Information</h3>
-                <p><strong>Name: </strong> <span id="rev-petName"></span></p>
-                <p><strong>ID: </strong> <span id="rev-petID"></span></p>
-                <p><strong>Shelter Location: </strong> <span id="rev-shelter"></span></p>
-                <img id="rev-photo" class="photo" src="" alt="Pet Photo">
-            </div>
+            <form id="review-form" method="POST" action="{{ url_for('review_application') }}">
+                <!-- Hidden fields to identify the application -->
+                <input type="hidden" name="adoptionID" id="form-adoptionID">
+                <input type="hidden" name="petID" id="form-petID">
 
-            <div class="form-actions">
-                <button class="submit-btn" onclick="approveApplication()">Accept</button>
-                <button class="submit-btn" style = "background-color: #ed4e4e;"  onclick="rejectApplication()">Reject</button>
-            </div>
+                <div class="review-section">
+                    <h3>Applicant Information</h3>
+                    <p><strong>Name: </strong> <span id="rev-name"></span></p>
+                    <p><strong>Email: </strong> <span id="rev-email"></span></p>
+                    <p><strong>Phone: </strong> <span id="rev-phone"></span></p>
+                    <p><strong>Driver License: </strong> <span id="rev-licenseNo"></span></p>
+                    <p><strong>Address: </strong> <span id="rev-address"></span></p>
+                </div>
+                <br>
+                <div class="review-section">
+                    <h3>Pet Information</h3>
+                    <p><strong>Name: </strong> <span id="rev-petName"></span></p>
+                    <p><strong>ID: </strong> <span id="rev-petID"></span></p>
+                    <p><strong>Shelter Location: </strong> <span id="rev-shelter"></span></p>
+                    <img id="rev-photo" class="photo" src="" alt="Pet Photo">
+                </div>
+
+                <div class="form-actions">
+                    <button class="submit-btn" name="action" value="accept">Accept</button>
+                    <button class="submit-btn" name="action" value="reject" style = "background-color: #ed4e4e;"  onclick="rejectApplication()">Reject</button>
+                </div>
+ 
+            </form>        
         </div>
     </div>
 
@@ -173,6 +180,10 @@
         document.getElementById("rev-petID").textContent = row.getAttribute('data-petID');
         document.getElementById("rev-shelter").textContent = row.getAttribute('data-shelter');
         document.getElementById("rev-photo").src = row.getAttribute('data-photo');
+
+        // Save adoption and pet IDs for Accept/Reject
+        document.getElementById("form-adoptionID").value = row.getAttribute('data-app-id');
+        document.getElementById("form-petID").value = row.getAttribute('data-petID');
 
         document.getElementById("review-modal").style.display = "block";
     }

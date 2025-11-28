@@ -1175,6 +1175,47 @@ def manage_applications():
 
     return render_template('manage_applications.html', adoptions=adoptions)
 
+@app.route('/view-applications/review', methods=['POST'])
+@login_required
+def review_application():
+    action = request.form.get('action')
+    adoptionID = request.form.get('adoptionID')
+    petID = request.form.get('petID')
+    print(f"Adoption ID:", adoptionID)
+    print(f"Pet ID:", petID)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        if action == 'accept':
+            # Update Adoption status to Accepted
+            cursor.execute("""
+            UPDATE Adoption
+            SET Status = 'Accepted'                           
+            WHERE AdoptionID = %s
+            """, (adoptionID,))
+            # Update Animal adoption status to Adopted
+            cursor.execute("""
+            UPDATE Animal
+            SET AdoptionStatus = 'Adopted'
+            WHERE PetID = %s           
+            """, (petID,))
+        elif action == 'reject':
+            # Update Adoption status to Rejected, do nothing to Animal
+            cursor.execute("""
+            UPDATE Adoption
+            SET Status = 'Rejected'
+            WHERE AdoptionID = %s
+            """, (adoptionID,))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        print(f"Error updating application: {e}") 
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect(url_for('manage_applications'))
 
 if __name__ == '__main__':
     app.run(debug=True)
