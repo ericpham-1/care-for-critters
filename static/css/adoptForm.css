@@ -54,7 +54,7 @@
 
 /* Left Side */
 .pet-info {
-    width: 50%;
+    width: 60%;
     padding: 30px;
     padding-top: 40px;
     border-right: 2px solid #eee;
@@ -111,7 +111,7 @@
 
 /* Right Side */
 .form-section {
-    width: 50%;
+    width: 40%;
     padding: 40px;
     padding-left: 40px;
     font-family: "Fredoka", sans-serif;
@@ -193,12 +193,9 @@
 .street {
   grid-column: 2 / 3; 
   grid-row: 1;
-  max-width: none;
+  max-width: 100%;
 }
 
-.street input {
-    max-width: 400px;
-}
 
 .postal-code {
   grid-column: 3 / 4; 
