@@ -106,6 +106,22 @@
     </footer>
 
     <script>
+        function filterDonors() {
+            const shelterFilter = document.getElementById('shelter-filter').value.toLowerCase();
+            const tbody = document.getElementById('donors-table');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            rows.forEach(row => {
+                const shelterCell = row.cells[3].textContent.toLowerCase();
+                
+                if (shelterFilter === '' || shelterCell.includes(shelterFilter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    
         function sortDonors() {
             const sortBy = document.getElementById('sort-by').value;
             const tbody = document.getElementById('donors-table');
