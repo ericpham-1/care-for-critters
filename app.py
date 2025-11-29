@@ -308,6 +308,24 @@ def get_adoptions():
     # conn.close()
     return render_template('adopt.html', animal_type="Animals")
 
+# Gets the full pet info
+def get_pet_info(pet_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT a.*, m.HealthRecords, m.Weight AS MammalWeight, f.WaterType, e.HabitatRequirements, e.Weight AS ExoticWeight
+    FROM Animal a
+    LEFT JOIN Mammal m ON a.PetID = m.PetID
+    LEFT JOIN Fish f ON a.PetID = f.PetID
+    LEFT JOIN Exotic e ON a.PetID = e.PetID
+    WHERE a.PetID = %s
+    """, (pet_id,))
+    pet = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return pet    
+
 @app.route('/adoptForm/<int:pet_id>')
 def adopt_form(pet_id):
     conn = get_db_connection()
@@ -374,21 +392,17 @@ def form_submit():
         }
 
     # Get Pet
-    cursor.execute("""
-        SELECT * 
-        FROM Animal
-        WHERE PetID = %s
-        """, (pet_id,))
-    pet = cursor.fetchone()
+    pet = get_pet_info(pet_id)
 
     missing_fields = [name for name, value in required_fields.items() if not value or not value.strip()]
     if missing_fields:
         cursor.close()
         conn.close()
         return render_template(
-        "adoptForm.html",
-        pet=pet,
+        'adopt.html',
+        animal=pet,
         error="Please fill out all required fields",
+        reopen_modal=True,
         first_name=first_name,
         last_name=last_name,
         building_no=building_no,
@@ -435,7 +449,6 @@ def form_submit():
     """
     cursor.execute(query, (license_number,))
     adopter = cursor.fetchone()
-    print(f"Adopter ID is: {adopter}")
 
     if adopter:
         #Check if adopter address matches
@@ -447,6 +460,7 @@ def form_submit():
         """, (adopter_id,))
         adopter_address = cursor.fetchone()
         print(f"Adopter Address is: {adopter_address}")
+        print(f"Adopter ID is: {adopter_id}")
 
         # If adopter changes their address
         if adopter_address and adopter_address['AddressID'] != address_id:
@@ -455,7 +469,6 @@ def form_submit():
             SET AddressID = %s
             WHERE AdopterID = %s
             """, (address_id, adopter['AdopterID']))
-        adopter_id = adopter['AdopterID']
     else:
         query = """
         INSERT INTO Adopter (DriverLicenseNo, Fname, Lname, Email, PhoneNumber, AddressID)
@@ -463,6 +476,8 @@ def form_submit():
         """
         cursor.execute(query, (license_number, first_name, last_name, email, phone_number, address_id))
         adopter_id = cursor.lastrowid
+        print(f"New Adopter entered. ID is: {adopter_id}")
+
     
     # New Adoption Record
     adoption_query = """
@@ -477,7 +492,13 @@ def form_submit():
     cursor.close()
     conn.close()
    
-    return redirect(url_for('adopt_submit'))
+    return redirect(url_for('get_animals', submitted='1'))
+
+@app.route("/get_pet_details/<int:pet_id>")
+def get_pet_details(pet_id):
+    pet = get_pet_info(pet_id)
+    return jsonify(pet)
+
 
 @app.route('/adopt_submit')
 def adopt_submit():
@@ -546,9 +567,9 @@ def get_animals():
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
     query = ("""SELECT * FROM (
-                   SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
-                   UNION SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
-                   UNION SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
+                   SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
+                   UNION SELECT a.PetID, Description, Name, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
+                   UNION SELECT a.PetID, Description, Name, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
                     WHERE AdoptionStatus IS NULL""")
     if selected_location != "None":
         query = query + f" AND ShelterLocation = '{selected_location}'" 
@@ -563,7 +584,8 @@ def get_animals():
     animals = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('adopt.html', animal_type="animals", animals=animals, locations=shelters, pet_ages=all_ages)
+    submitted = request.args.get('submitted')
+    return render_template('adopt.html', animal_type="animals", animals=animals, locations=shelters, pet_ages=all_ages, submitted=submitted)
 
 @app.route('/mammals', methods=['GET', 'POST'])
 def get_mammals():
@@ -585,7 +607,7 @@ def get_mammals():
     shelters = cursor.fetchall()
     cursor.execute("""SELECT DISTINCT Age 
                    FROM (
-                   SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
+                   SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
     query = get_animal_query("Mammal", selected_location, ages_set)
@@ -615,7 +637,7 @@ def get_fish():
     shelters = cursor.fetchall()
     cursor.execute("""SELECT DISTINCT Age 
                    FROM (
-                   SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
+                   SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
     query = get_animal_query("Fish", selected_location, ages_set)
@@ -645,7 +667,7 @@ def get_exotic():
     shelters = cursor.fetchall()
     cursor.execute("""SELECT DISTINCT Age 
                    FROM (
-                   SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
+                   SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
     query = get_animal_query("Exotic", selected_location, ages_set)
@@ -657,7 +679,7 @@ def get_exotic():
 
 def get_animal_query(type, selected_location, ages_set):
     query = f"""
-        SELECT * FROM (SELECT a.PetID, Name, Age, Species, Photo, ShelterLocation, AdoptionStatus FROM (Animal a JOIN {type} e ON a.PetID=e.PetID) WHERE AdoptionStatus IS NULL)
+        SELECT * FROM (SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN {type} e ON a.PetID=e.PetID) WHERE AdoptionStatus IS NULL)
         AS allPets
     """
     if selected_location != "None":

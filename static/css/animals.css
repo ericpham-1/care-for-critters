@@ -40,3 +40,12 @@
     cursor: pointer;
     text-decoration: none;
 }
+
+.apply-btn {
+    padding:10px 20px;
+    border-radius:10px;
+    background-color:#0047ab;
+    color:white;     
+    border:none; 
+    cursor: pointer;
+}
