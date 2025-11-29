@@ -102,12 +102,7 @@
 <div id="adopt-modal" style="display: none;">
     <div class="Adoption-Form-Overlay">
         <div class="Adoption-Box">
-
-
             <!--Pet Info-->
-
-   
-
             <div class="pet-info">
                 <h1 class="pet-name" id="modal-pet-name">{% if reopen_modal and animal %} {{ animal.Name }} {% endif %}</h1>
                 <p class="pet-id">PetID: <span id="modal-pet-id">{% if reopen_modal and animal %} {{ animal.PetID }} {% endif %}</span></p>                     
@@ -166,11 +161,11 @@
                 <div class="section">
                     <div class="name-row">
                         <div class="name-field">
-                            <label>First Name</label>
+                            <label>First Name.*</label>
                             <input name="first_name"  value="{{ first_name|default('') }}" >
                         </div>
                         <div class="name-field">
-                            <label>Last Name</label>
+                            <label>Last Name.*</label>
                             <input name="last_name" value="{{ last_name|default('') }}">
                         </div>
 
@@ -179,17 +174,17 @@
 
                     <div class="address-row">
                         <div class="address-field building-no">
-                            <label for="building_no">Building No.</label>
+                            <label for="building_no">Building No.*</label>
                             <input id="building_no" name="building_no" type="text" autocomplete="off" value="{{ building_no|default('') }}"/>
                         </div>
 
                         <div class="address-field street">
-                            <label for="street">Street</label>
+                            <label for="street">Street.*</label>
                             <input id="street" name="street" type="text" autocomplete="nope" value="{{ street|default('') }}"/>
                         </div>
 
                         <div class="address-field postal-code">
-                            <label for="postal_code">Postal Code</label>
+                            <label for="postal_code">Postal Code.*</label>
                             <input id="postal_code" name="postal_code" type="text" value="{{ postal_code|default('') }}"/>
                         </div>                        
                         
@@ -197,28 +192,28 @@
 
                     <div class="address-row2">
                         <div class="address-field city">
-                            <label for="city">City</label>
+                            <label for="city">City.*</label>
                             <input id="city" name="city" type="text" value="{{ city|default('') }}"/>
                         </div>
 
                         <div class="address-field province">
-                            <label for="province">Province</label>
+                            <label for="province">Province.*</label>
                             <input id="province" name="province" type="text" value="{{ province|default('') }}"/>
                         </div>                            
                     </div>
 
                     <div class="contact-row">
                         <div class="contact-field">
-                            <label>Email Address</label>
+                            <label>Email Address.*</label>
                             <input type="email" name="email" value="{{ email|default('') }}">
                         </div>
                         <div class="contact-field">
-                            <label>Phone Number: </label>
+                            <label>Phone Number:.* </label>
                             <input name="phone_number" type="number" value="{{ phone_number|default('') }}">
                         </div>
                     </div>
 
-                    <label>Driver's License</label>
+                    <label>Driver's License.*</label>
                     <input name="license_number" type="number" value="{{ license_number|default('') }}">    
 
                     <input type="hidden" name="pet_id" id="modal-pet-id-input"
@@ -347,9 +342,6 @@
         document.getElementById('adopt-submit-modal').style.display = 'none';
     }
 
-
-
-    // Optional: close when clicking outside, same as manage_applications
     window.addEventListener('click', function(event) {
         const modal = document.getElementById('adopt-submit-modal');        
         if (event.target === modal) {
