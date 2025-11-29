@@ -129,9 +129,7 @@
                     </div>
                     
                     <!--Type specific info-->
-                    <div class="other-info">
-                        <p><b>Other Info:</b></p>
-                        
+                    <div class="other-info">                        
                         {% if animal is defined and animal %}
                             <!--Showing Mammal Specific Info-->
                             {% if animal.HealthRecords %}
@@ -317,36 +315,33 @@
         // Hidden input for form_submit
         document.getElementById('modal-pet-id-input').value = petId;
 
-        let otherHTML = "";
-
-        if (health) {
-            otherHTML += `<p><b>Health Records:</b> ${health}</p>`;
-            if (mweight) {
-                otherHTML += `<p><b>Weight:</b> ${mweight} kg</p>`;
-            }
-        }
-
-        if (water) {
-            otherHTML += `<p><b>Water Type:</b> ${water}</p>`;
-        }
-
-        if (habitat) {
-            otherHTML += `<p><b>Habitat Requirements:</b> ${habitat}</p>`;
-            if (eweight) {
-                otherHTML += `<p><b>Weight:</b> ${eweight} kg</p>`;
-            }
-        }
-
-        // Put it into the Other Info box
-        const otherInfoDiv = document.querySelector('.other-info');
-        if (otherInfoDiv) {
-            otherInfoDiv.innerHTML = `<h3><b>Other Info:</b></h3>` + otherHTML;
-        }
+        // Fetch type-specific info from Flask
+        fetch(`/get_pet_details/${petId}`)
+            .then(response => response.json())
+            .then(data => {
+                    const infoBox = document.querySelector(".other-info");
+                if (data.HealthRecords) {
+                    infoBox.innerHTML += `
+                        <p><b>Health Records:</b> ${data.HealthRecords}</p>
+                        <p><b>Weight:</b> ${data.MammalWeight} kg</p>
+                    `;
+                }
+                else if (data.WaterType) {
+                    infoBox.innerHTML += `
+                        <p><b>Water Type:</b> ${data.WaterType}</p>
+                    `;
+                }
+                else if (data.HabitatRequirements) {
+                    infoBox.innerHTML += `
+                        <p><b>Habitat Requirements:</b> ${data.HabitatRequirements}</p>
+                        <p><b>Weight:</b> ${data.ExoticWeight} kg</p>
+                    `;
+                }
+            });
 
         // Show modal
         document.getElementById('adopt-modal').style.display = 'block';
     }
-
     function closeAdoptModal() {
         document.getElementById('adopt-modal').style.display = 'none';
         document.getElementById('adopt-submit-modal').style.display = 'none';

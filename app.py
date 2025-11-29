@@ -308,6 +308,24 @@ def get_adoptions():
     # conn.close()
     return render_template('adopt.html', animal_type="Animals")
 
+# Gets the full pet info
+def get_pet_info(pet_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT a.*, m.HealthRecords, m.Weight AS MammalWeight, f.WaterType, e.HabitatRequirements, e.Weight AS ExoticWeight
+    FROM Animal a
+    LEFT JOIN Mammal m ON a.PetID = m.PetID
+    LEFT JOIN Fish f ON a.PetID = f.PetID
+    LEFT JOIN Exotic e ON a.PetID = e.PetID
+    WHERE a.PetID = %s
+    """, (pet_id,))
+    pet = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return pet    
+
 @app.route('/adoptForm/<int:pet_id>')
 def adopt_form(pet_id):
     conn = get_db_connection()
@@ -374,16 +392,7 @@ def form_submit():
         }
 
     # Get Pet
-    query = """
-    SELECT a.*, m.HealthRecords, m.Weight AS MammalWeight, f.WaterType, e.HabitatRequirements, e.Weight AS ExoticWeight
-    FROM Animal a
-    LEFT JOIN Mammal m ON a.PetID = m.PetID
-    LEFT JOIN Fish f ON a.PetID = f.PetID
-    LEFT JOIN Exotic e ON a.PetID = e.PetID
-    WHERE a.PetID = %s
-    """
-    cursor.execute(query, (pet_id,))
-    pet = cursor.fetchone()
+    pet = get_pet_info(pet_id)
 
     missing_fields = [name for name, value in required_fields.items() if not value or not value.strip()]
     if missing_fields:
@@ -484,6 +493,12 @@ def form_submit():
     conn.close()
    
     return redirect(url_for('get_animals', submitted='1'))
+
+@app.route("/get_pet_details/<int:pet_id>")
+def get_pet_details(pet_id):
+    pet = get_pet_info(pet_id)
+    return jsonify(pet)
+
 
 @app.route('/adopt_submit')
 def adopt_submit():
