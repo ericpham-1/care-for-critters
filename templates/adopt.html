@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/animals.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/adoptForm.css') }}">
-    <title>Document</title>
+    <title>Animals</title>
 </head>
 <body style="font-family: 'Fredoka', sans-serif; font-weight: 400; font-style: normal; margin: 0; padding: 0; color: black;">
     <nav style="display: flex; align-items: center; background-color: #b4dcd4; padding: 10px; margin: 0; justify-content: center;">
@@ -72,10 +72,17 @@
                     <p>{{animal.ShelterLocation}}</p>
                     <button type="button" class="apply-btn" onclick="openAdoptModal(this)"
                         data-pet-id="{{ animal.PetID }}"
+                        data-desc="{{ animal.Description }}"
                         data-name="{{ animal.Name }}"
                         data-age="{{ animal.Age }}"
                         data-species="{{ animal.Species }}"
+                        data-diet="{{ animal.Diet }}"
                         data-photo="{{ animal.Photo }}"
+                        data-health="{{ animal.HealthRecords }}" 
+                        data-weight="{{ animal.MammalWeight }}"
+                        data-weight="{{ animal.ExoticWeight }}"                
+                        data-water="{{ animal.WaterType }}"     
+                        data-habitat="{{ animal.HabitatRequirements }}"                        
                     >
                     <style>
                     .apply-btn:hover{
@@ -95,31 +102,54 @@
 <div id="adopt-modal" style="display: none;">
     <div class="Adoption-Form-Overlay">
         <div class="Adoption-Box">
-            <img class="logo" src="/static/images/C4C_Logo.png" alt="Logo">
+
 
             <!--Pet Info-->
+
+   
+
             <div class="pet-info">
+                <h1 class="pet-name" id="modal-pet-name">{% if reopen_modal and animal %} {{ animal.Name }} {% endif %}</h1>
+                <p class="pet-id">PetID: <span id="modal-pet-id">{% if reopen_modal and animal %} {{ animal.PetID }} {% endif %}</span></p>                     
+     
                 <div class="pet-image">
                     <img id="modal-photo" class="pet-photo" src="{% if reopen_modal and animal %} {{ animal.Photo }} {% endif %}" alt="/static/images/pet_placeholder.png"> 
                 </div>
-
-                <h2 class="pet-name" id="modal-pet-name">{% if reopen_modal and animal %} {{ animal.Name }} {% endif %}</h2>
-                <p class="pet-id">PetID: <span id="modal-pet-id">{% if reopen_modal and animal %} {{ animal.PetID }} {% endif %}</span></p>
-                
                 <div class="pet-details">
 
                     <!--General Info-->
                     <div class="general-info">
-                        <h3><b>Approx. Age: </b><span id="modal-pet-age">{% if reopen_modal and animal %} {{ animal.Age }} {% endif %}</span></h3>
+                        <p><b>Description: </b><span id="modal-pet-desc">{% if reopen_modal and animal %}{{ animal.Description }}{% endif %}</span></p>
+
+                        <p><b>Approx. Age: </b><span id="modal-pet-age">{% if reopen_modal and animal %}{{ animal.Age }}{% endif %}</span></p>
                         
-                        <h3><b>Species/Breed: </b><span id="modal-pet-species">{% if reopen_modal and animal %} {{ animal.Species }} {% endif %}</span></h3>
+                        <p><b>Species/Breed: </b><span id="modal-pet-species">{% if reopen_modal and animal %}{{ animal.Species }}{% endif %}</span></p>
             
-                        <h3><b>Diet: </b><span id="modal-pet-diet">{% if reopen_modal and animal %} {{ animal.Diet }} {% endif %}</span></h3>
+                        <p><b>Diet: </b><span id="modal-pet-diet">{% if reopen_modal and animal %}{{ animal.Diet }}{% endif %}</span></p>
                     </div>
                     
                     <!--Type specific info-->
                     <div class="other-info">
-                        <h3><b>Other Info:</b></h3>
+                        <p><b>Other Info:</b></p>
+                        
+                        {% if animal is defined and animal %}
+                            <!--Showing Mammal Specific Info-->
+                            {% if animal.HealthRecords %}
+                                <p><b>Health Records:</b> {{ animal.HealthRecords }}</p>
+                                <p><b>Weight:</b> {{ animal.MammalWeight }} kg</p>
+                            {% endif %}
+
+                            <!--Showing Fish Specific Info-->
+                            {% if animal.WaterType %}
+                                <p><b>Water Type:</b> {{ animal.WaterType }}</p>
+                            {% endif %}
+
+                            <!--Showing Exotic Specific Info-->
+                            {% if animal.HabitatRequirements %}
+                                <p><b>Habitat Requirements:</b> {{ animal.HabitatRequirements }}</p>
+                                <p><b>Weight:</b> {{ animal.ExoticWeight }} kg</p>
+                            {% endif %}
+                        {% endif %}            
                     </div>
                     
 
@@ -149,7 +179,7 @@
                     </div>
                     
 
-                    <div class="address-group">
+                    <div class="address-row">
                         <div class="address-field building-no">
                             <label for="building_no">Building No.</label>
                             <input id="building_no" name="building_no" type="text" autocomplete="off" value="{{ building_no|default('') }}"/>
@@ -165,6 +195,9 @@
                             <input id="postal_code" name="postal_code" type="text" value="{{ postal_code|default('') }}"/>
                         </div>                        
                         
+                    </div>    
+
+                    <div class="address-row2">
                         <div class="address-field city">
                             <label for="city">City</label>
                             <input id="city" name="city" type="text" value="{{ city|default('') }}"/>
@@ -173,8 +206,7 @@
                         <div class="address-field province">
                             <label for="province">Province</label>
                             <input id="province" name="province" type="text" value="{{ province|default('') }}"/>
-                        </div>
-
+                        </div>                            
                     </div>
 
                     <div class="contact-row">
@@ -260,19 +292,56 @@
     function openAdoptModal(button) {
         const petId = button.getAttribute('data-pet-id');
         const name = button.getAttribute('data-name');
+        const desc = button.getAttribute('data-desc');        
         const age = button.getAttribute('data-age');
         const species = button.getAttribute('data-species');
         const photo = button.getAttribute('data-photo');
+        const diet = button.getAttribute('data-diet');
+
+        // Type Specific
+        const health = button.getAttribute('data-health');
+        const water = button.getAttribute('data-water');
+        const mweight = button.getAttribute('data-mweight');
+        const eweight = button.getAttribute('data-eweight');
+        const habitat = button.getAttribute('data-habitat');        
 
         // Fill fields
         document.getElementById('modal-pet-name').textContent = name;
         document.getElementById('modal-pet-id').textContent = petId;
+        document.getElementById('modal-pet-desc').textContent = desc;
         document.getElementById('modal-pet-age').textContent = age;
         document.getElementById('modal-pet-species').textContent = species;
+        document.getElementById('modal-pet-diet').textContent = diet;
         document.getElementById('modal-photo').src = photo;
 
         // Hidden input for form_submit
         document.getElementById('modal-pet-id-input').value = petId;
+
+        let otherHTML = "";
+
+        if (health) {
+            otherHTML += `<p><b>Health Records:</b> ${health}</p>`;
+            if (mweight) {
+                otherHTML += `<p><b>Weight:</b> ${mweight} kg</p>`;
+            }
+        }
+
+        if (water) {
+            otherHTML += `<p><b>Water Type:</b> ${water}</p>`;
+        }
+
+        if (habitat) {
+            otherHTML += `<p><b>Habitat Requirements:</b> ${habitat}</p>`;
+            if (eweight) {
+                otherHTML += `<p><b>Weight:</b> ${eweight} kg</p>`;
+            }
+        }
+
+        // Put it into the Other Info box
+        const otherInfoDiv = document.querySelector('.other-info');
+        if (otherInfoDiv) {
+            otherInfoDiv.innerHTML = `<h3><b>Other Info:</b></h3>` + otherHTML;
+        }
 
         // Show modal
         document.getElementById('adopt-modal').style.display = 'block';
