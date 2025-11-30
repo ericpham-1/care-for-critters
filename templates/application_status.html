@@ -11,14 +11,14 @@
     <title>View Application Status</title>
 </head>
 <body>
-    <nav class ="nav-bar">
+    <nav style="display: flex; align-items: center; background-color: #b4dcd4; padding: 10px; margin: 0; justify-content: center;">
         <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;">
-        <ul class="nav-links">
-            <a href="/" class="nav-elems">Home</a>
-            <a href="animals" class="nav-elems">Adopt</a>
-            <a href="fundraisers" class="nav-elems">Fundraisers</a>
-            <a href="donate" class="nav-elems">Donate</a>
-            <a href="/application_status" class="nav-elems">Application Status</a>
+        <ul style="list-style-type: none; display: inline-flex; gap: 30px;">
+            <a href="/" style="text-decoration: none; color: black;">Home</a>
+            <a href="animals" style="text-decoration: none; color: black">Adopt</a>
+            <a href="fundraisers" style=" text-decoration: none; color: black">Fundraisers</a>
+            <a href="donate" style=" text-decoration: none; color: black">Donate</a>
+            <a href="/application_status" style="text-decoration: none; color: black">Application Status</a>
         </ul>
     </nav>
 
@@ -69,19 +69,19 @@
         </div>
         {% endif %}
     </main>
-    <footer class="footer">
+<footer style="background-color: #b4dcd4; align-content: center; display: flex; gap: 20%; justify-content: center; padding: 10px;">
     <div style="align-content: center;">
         <img src="{{url_for('static', filename='images/C4C_Logo.png')}}" style="height: 50px;">
     </div>
-    <div class="footer-elem">
-        <a href="/" class="footer-link">Home</a>
+    <div style="line-height: 14px; align-content: center;">
+        <a href="/" style="font-size: small; text-decoration: none;">Home</a>
         <br>
-        <a class="footer-link">About</a>
+        <a style="font-size: small;">About</a>
         <br>
-        <a class="footer-link">Contact Us</a>
+        <a style="font-size: small;">Contact Us</a>
     </div>
     <div style="align-content: center;">
-        <a href="login" class="footer-link">Supervisor Login</a>
+        <a href="login" style="font-size: small; text-decoration: none;">Supervisor Login</a>
     </div>
 </footer>
 </body>
