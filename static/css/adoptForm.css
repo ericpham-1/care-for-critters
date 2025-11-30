@@ -56,14 +56,14 @@
 .pet-info {
     width: 60%;
     padding: 30px;
-    padding-top: 10px;
+    padding-top: 20px;
     border-right: 2px solid #eee;
     font-family: "Fredoka", sans-serif;
 }
 
 .pet-image {
     width: 100%;
-    height: 400px;
+    height: 380px;
     border-radius: 8px;
     margin-bottom: 20px;
 }
@@ -109,8 +109,7 @@
 /* Right Side */
 .form-section {
     width: 40%;
-    padding: 40px;
-    padding-left: 40px;
+    padding: 20px 30px;
     font-family: "Fredoka", sans-serif;
 }
 

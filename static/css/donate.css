@@ -19,13 +19,15 @@ body {
 
 .donation-box {
     background: white;
-    max-width: 550px;
+    max-width: 500px;
     width: 100%;
-    padding: 40px;
+    padding: 30px;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    max-height: 90vh;
-    overflow-y: auto;
+    max-height: 80vh;
+    overflow: hidden;
+    justify-content: space-between;
+    flex-direction: column;
 }
 
 
@@ -40,7 +42,7 @@ body {
 }
 
 h1 {
-    font-size: 48px;
+    font-size: 32px;
     font-weight: 600;
     margin: 0;
     color: #0047AB;
@@ -65,7 +67,7 @@ h1 {
 .section h2 {
     margin-bottom: 20px;
     color: #626161;
-    font-size: 22px;
+    font-size: 18px;
 }
 
 /* ==========================
@@ -135,7 +137,7 @@ button,
     padding: 15px 0;
     font-family: "Jua", sans-serif;
     color: #0A2540;
-    font-size: 28px;
+    font-size: 20px;
     background: white;
     cursor: pointer;
 }
