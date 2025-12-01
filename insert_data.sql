@@ -164,19 +164,22 @@ VALUES
     (DEFAULT, 'Natasha Romanoff', 'nromanoff@email.com', '(403) 777-8888', 10, 'Oak Row Branch'),
     (DEFAULT, 'Steve Rogers', 'srogers@email.com', '(403) 999-0000', 11, 'Maple Street Branch'),
     (DEFAULT, 'Carol Danvers', 'cdanvers@email.com', '(403) 222-3333', 12, 'Birch Grove Branch'),
-    (DEFAULT, 'Wanda Maximoff', 'wmaximoff@email.com', '(403) 444-5555', 13, 'Oak Row Branch');
+    (DEFAULT, 'Wanda Maximoff', 'wmaximoff@email.com', '(403) 444-5555', 13, 'Oak Row Branch'),
+    (DEFAULT, 'Tessa Gray', 't.gray@careforcritter.com', '(403) 587-8715', 8, 'Birch Grove Branch');
 
 -- =====================
 -- SUPERVISOR
 -- =====================
 INSERT INTO Supervisor (WorkerID, Salary)
-VALUES (1, 50000.00);
+VALUES (1, 50000.00),
+        (11, 60000.00);
 
 -- =====================
 -- ACCOUNT
 -- =====================
 INSERT INTO Account (Username, Password, SupervisorID) 
-VALUES ('admin', 'password123', 1);
+VALUES ('admin', 'password123', 1),
+        ('t.gray', 'password456', 11);
 
 -- =====================
 -- VOLUNTEERS (Various hours and responsibilities)
