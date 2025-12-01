@@ -120,16 +120,19 @@ def index():
     conn.close()
     return render_template('index.html', events=events, mammals=mammals, exotics=exotics, fishies=fishies)
 
-@app.route('/donate')
-def donate_step1():
+# Fetches shelter names
+def get_shelter_names():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("" \
-    "SELECT ShelterName " \
-    "FROM Shelter")
+    cursor.execute("SELECT ShelterName FROM Shelter")
     shelters = cursor.fetchall()
     cursor.close()
     conn.close()
+    return shelters
+
+@app.route('/donate')
+def donate_step1():
+    shelters = get_shelter_names()
     return render_template('donate.html', shelters=shelters)
 
 @app.route("/donate/2", methods=["POST"])
@@ -142,10 +145,7 @@ def donate_step2():
 
     # quick validation
     if not amount or not shelter:
-        cursor.execute("" \
-        "SELECT ShelterName " \
-        "FROM Shelter")
-        shelters = cursor.fetchall()
+        shelters = get_shelter_names()
         cursor.close()
         conn.close()
         return render_template("donate.html", shelters=shelters, error="Please choose amount and shelter")
@@ -223,7 +223,7 @@ def donate_step3():
     else:
         cursor.close()
         conn.close()
-        return render_template("donate1.html")
+        return render_template("donate.html")
     
 @app.route('/donations')
 def get_donations():
@@ -291,22 +291,9 @@ def get_filtered_fundraisers():
                      ORDER BY EventDate ASC""")
         cursor.execute(query, (selected_location,))
     result = cursor.fetchall()
-
+    cursor.close()
+    conn.close()
     return render_template('fundraisers.html', events=result, locations=shelters)
-
-
-@app.route('/adopt')
-def get_adoptions():
-
-    # conn = get_db_connection()
-    # cursor = conn.cursor()
-    # cursor.execute("""SELECT a.PetID, Name, Age, Species FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
-    #                UNION SELECT a.PetID, Name, Age, Species FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
-    #                UNION SELECT a.PetID, Name, Age, Species FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID);""")
-    # animals = cursor.fetchall()
-    # cursor.close()
-    # conn.close()
-    return render_template('adopt.html', animal_type="Animals")
 
 # Gets the full pet info
 def get_pet_info(pet_id):
@@ -326,39 +313,6 @@ def get_pet_info(pet_id):
     conn.close()
     return pet    
 
-@app.route('/adoptForm/<int:pet_id>')
-def adopt_form(pet_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    query = """
-    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, m.Species
-    FROM Animal a
-    JOIN Mammal m ON a.PetID = m.PetID
-    WHERE a.PetID = %s
-
-    UNION 
-
-    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, f.Species
-    FROM Animal a
-    JOIN Fish f ON a.PetID = f.PetID
-    WHERE a.PetID = %s
-
-    UNION 
-
-    SELECT a.PetID, a.Name, a.Age, a.Diet, a.Photo, e.Species
-    FROM Animal a
-    JOIN Exotic e ON a.PetID = e.PetID
-    WHERE a.PetID = %s;
-    """
-    cursor.execute(query, (pet_id, pet_id, pet_id))
-    pet = cursor.fetchone()
-    cursor.close()
-    conn.close()
-
-    if pet is None:
-        return "Pet not Found", 404
-    
-    return render_template('adoptForm.html', pet=pet)
 
 @app.route('/form_submit', methods=['POST'])
 def form_submit():
@@ -418,8 +372,6 @@ def form_submit():
     #DEBUG
     print(f"License Number from form: {license_number}")
     print(f"Pet ID from form: {pet_id}")
-
-
 
     # Check if Address is new
     query = """
@@ -693,6 +645,7 @@ def get_animal_query(type, selected_location, ages_set):
                 query = query + f" WHERE Age IN {ages_set}"
     print(query)
     return query
+
 # Volunteer routes
 @app.route('/manage-volunteers')
 @login_required
@@ -1129,9 +1082,7 @@ def manage_applications():
     cursor.execute(application_query)
     adoptions = cursor.fetchall()
     cursor.close()
-    conn.close
-
-
+    conn.close()
     return render_template('manage_applications.html', adoptions=adoptions)
 
 @app.route('/view-applications/review', methods=['POST'])
