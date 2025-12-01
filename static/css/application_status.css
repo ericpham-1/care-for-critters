@@ -7,24 +7,20 @@
     justify-content: center;
     color: black;
 }
-
 .nav-links {
     list-style-type: none;
     display: inline-flex; 
     gap: 30px;
 }
-
 .title {
     font-family: 'Fredoka', sans-serif;
     color: #0e233f;
 }
-
 .nav-elems {
     text-decoration: none;
     color: black;
     font-family: 'Fredoka', sans-serif;
 }
-
 html,
 body {
     font-family: 'Fredoka', sans-serif; 
@@ -35,30 +31,51 @@ body {
     padding: 0; 
     color: black;
 }
-
 body {
     display: flex;
     flex-direction: column;
 }
-
 main {
     flex: 1; 
 }
-
 .status-container {
     margin-left: 50px;
     margin-top: 30px;
 }
+
+/* Updated input styling to match admin side */
+.status-form input[type="email"] {
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    width: 300px;
+    box-sizing: border-box;
+    margin-right: 10px;
+}
+
+.status-form input[type="email"]:focus {
+    outline: none;
+    border-color: #8cc9ba;
+}
+
+/* Updated button styling to match admin side */
 .search-btn {
-    background-color: #0047ab; 
-    width: 100px; 
-    text-align: center; 
-    color: white; 
-    height: 30px; 
-    align-content: center; 
-    border-radius: 20px; 
-    text-decoration: none;
+    padding: 10px 24px;
+    background-color: #8cc9ba;
+    color: white;
     border: none;
+    border-radius: 6px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-btn:hover {
+    background-color: #7ab8a8;
 }
 
 .table-container {
@@ -68,52 +85,42 @@ main {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     max-width: 90%;
 }
-
 table {
     width: 100%;
     border-collapse: collapse;
 }
-
 thead {
     background-color: #1f60bb;
     color: white;
 }
-
 th {
     padding: 15px;
     text-align: left;
     font-weight: 600;
 }
-
 td {
     padding: 15px;
     border-bottom: 1px solid #f0f0f0;
 }
-
 tbody tr:hover {
     background-color: #f9f9f9;
 }
-
 .status-pending {
     color: orange;
     font-weight: bold;
 }
-
 .status-accepted {
     color: green;
     font-weight: bold;
 }
-
 .status-rejected {
     color: red;
     font-weight: bold;
 }
-
 .msg-error {
     color: red;
     margin-top: 30px;
 }
-
 .footer {
     background-color: #b4dcd4; 
     align-content: center; 
@@ -124,15 +131,11 @@ tbody tr:hover {
     padding-top: 30px;
     margin-top: 23%;
 }
-
 .footer-elems {
     line-height: 14px;
     align-content: center;
 }
-
 .footer-link {
     font-size: small; 
     text-decoration: none;
 }
-
-

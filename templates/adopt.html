@@ -289,15 +289,18 @@
         const species = button.getAttribute('data-species');
         const photo = button.getAttribute('data-photo');
         const diet = button.getAttribute('data-diet');
-
+    
         // Type Specific
         const health = button.getAttribute('data-health');
         const water = button.getAttribute('data-water');
         const mweight = button.getAttribute('data-mweight');
         const eweight = button.getAttribute('data-eweight');
         const habitat = button.getAttribute('data-habitat');        
-
-        // Fill fields
+    
+        // **CLEAR FORM FIRST - BEFORE filling in any values**
+        document.getElementById('infoForm').reset();
+    
+        // Fill pet info fields
         document.getElementById('modal-pet-name').textContent = name;
         document.getElementById('modal-pet-id').textContent = petId;
         document.getElementById('modal-pet-desc').textContent = desc;
@@ -305,15 +308,17 @@
         document.getElementById('modal-pet-species').textContent = species;
         document.getElementById('modal-pet-diet').textContent = diet;
         document.getElementById('modal-photo').src = photo;
-
-        // Hidden input for form_submit
+    
+        // Hidden input for form_submit - SET THIS AFTER RESET
         document.getElementById('modal-pet-id-input').value = petId;
-
+    
         // Fetch type-specific info from Flask
         fetch(`/get_pet_details/${petId}`)
             .then(response => response.json())
             .then(data => {
-                    const infoBox = document.querySelector(".other-info");
+                const infoBox = document.querySelector(".other-info");
+                infoBox.innerHTML = '';
+                
                 if (data.HealthRecords) {
                     infoBox.innerHTML += `
                         <p><b>Health Records:</b> ${data.HealthRecords}</p>
@@ -332,10 +337,11 @@
                     `;
                 }
             });
-
+    
         // Show modal
         document.getElementById('adopt-modal').style.display = 'block';
     }
+
     function closeAdoptModal() {
         document.getElementById('adopt-modal').style.display = 'none';
         document.getElementById('adopt-submit-modal').style.display = 'none';
