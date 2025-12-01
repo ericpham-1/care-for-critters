@@ -31,4 +31,4 @@ At the top of the db_setup.sh file, various DB variables are specified. Change t
 Run the script in the terminal using `./db_setup.sh`. A database careforcritters will be created on the local device. Any data added to the application will NOT be saved to this file, changes are temporary and data will reset to the base values added from the insert_data.sql file. 
 
 ## Running the Project
-To run the project, ensure the database is setup (refer to the above steps) and the virtual environment is running. Run the application with `python app.py` or `python3 app.py` (machine dependent). Visit the web app at http://127.0.0.1:5000. 
+To run the project, ensure the database is setup (refer to the above steps) and the virtual environment is running. Run the application with `python app.py` or `python3 app.py` (machine dependent). Visit the web app at http://127.0.0.1:5000.   
