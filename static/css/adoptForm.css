@@ -58,7 +58,7 @@
     padding: 30px;
     padding-top: 20px;
     border-right: 2px solid #eee;
-    font-family: "Fredoka", sans-serif;
+    font-family: 'Fredoka', sans-serif;
 }
 
 .pet-image {
@@ -110,11 +110,11 @@
 .form-section {
     width: 40%;
     padding: 20px 30px;
-    font-family: "Fredoka", sans-serif;
+    font-family: 'Fredoka', sans-serif;
 }
 
 .header {
-    font-family: "Fredoka", sans-serif;
+    font-family: 'Fredoka', sans-serif;
     color: #0A2540
 }
 
@@ -227,7 +227,7 @@
     color: white;
     text-decoration: none;
     border: none;
-    font-family: "Fredoka", sans-serif;
+    font-family: 'Fredoka', sans-serif;
     font-size: 18px;
 }
 
@@ -238,7 +238,7 @@
     color: white;
     text-decoration: none;
     border: none;
-    font-family: "Fredoka", sans-serif;
+    font-family: 'Fredoka', sans-serif;
     font-size: 18px;
 }
 
@@ -307,7 +307,7 @@
     border-radius: 25px;
     color: white;
     text-decoration: none;
-    font-family: "Fredoka", sans-serif;
+    font-family: 'Fredoka', sans-serif;
     font-size: 18px;
     justify-content: center;   
 }
@@ -319,7 +319,7 @@
     color: white;
     text-decoration: none;
     border: none;
-    font-family: "Fredoka", sans-serif;
+    font-family: 'Fredoka', sans-serif;
     font-size: 18px;
 }
 

@@ -1,7 +1,7 @@
 /*BASE TEMPLATE*/
 
 body {
-    font-family: "Fredoka", sans-serif;
+    font-family: 'Fredoka', sans-serif;
     background: white;
     margin: 0;
     padding: 40px 0;
@@ -130,7 +130,7 @@ button,
 .amount-btn {
     border: 2px solid #333;
     padding: 15px 0;
-    font-family: "Jua", sans-serif;
+    font-family: 'Fredoka', sans-serif;
     color: #0A2540;
     font-size: 25px;
     background: white;
@@ -154,7 +154,7 @@ button,
     padding: 15px;
     color: #0A2540;
     font-size: 22px;
-    font-family: "Jua", sans-serif;
+    font-family: 'Fredoka', sans-serif;
     border-radius: 25px;
 }
 
