@@ -49,7 +49,11 @@ VALUES
     (14, 'Winter', 'Family friendly husky', 5, 'Dog food', 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmf.b37mrtl.ru%2Frbthmedia%2Fimages%2F2023.01%2Foriginal%2F63c54448fa390f007f458924.jpg&f=1&nofb=1&ipt=a687eb86590b7a51e3f9fc2d62d90463d515943f37feaa15bf47a74749c22ca1', 'Oak Row Branch'),
     (15, 'Shimmer', 'Lively Goldfish with golden scales', 1, 'Fish pellets', 'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fcdn.sheknows.com%2Farticles%2F2014%2F05%2FMike_C%2FChefMom%2FGoldfish2.jpg&f=1&nofb=1&ipt=f950ff534cdedf6bf14b557718490317e0d1100a342d76848ac68ac4b52cedde', 'Maple Street Branch'),
     (16, 'Maria', 'Pink betafish', 1, 'Fish pellets', 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fanimalia-life.club%2Fdata_images%2Ffish%2Ffish2.jpg&f=1&nofb=1&ipt=ed249fca0c727dc1b99f18305cbf94cabbbb9779e460a4a92c27f16b9358e67e', 'Oak Row Branch'),
-    (17, 'Hank', 'Friendly little turtle', 7, 'Greens and some bugs', 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.thoughtco.com%2Fthmb%2F8_MCVXj2Hi-sSbq_ixH16cqXBG8%3D%2F1920x1279%2Ffilters%3Ano_upscale()%3Amax_bytes(150000)%3Astrip_icc()%2Fturtle-509524_1920-5c429d55c9e77c000127edd2.jpg&f=1&nofb=1&ipt=f5ebd64d619464378af90a47b058990802618e9e896e877cfd0ec2028970728d', 'Maple Street Branch');
+    (17, 'Hank', 'Friendly little turtle', 7, 'Greens and some bugs', 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.thoughtco.com%2Fthmb%2F8_MCVXj2Hi-sSbq_ixH16cqXBG8%3D%2F1920x1279%2Ffilters%3Ano_upscale()%3Amax_bytes(150000)%3Astrip_icc()%2Fturtle-509524_1920-5c429d55c9e77c000127edd2.jpg&f=1&nofb=1&ipt=f5ebd64d619464378af90a47b058990802618e9e896e877cfd0ec2028970728d', 'Maple Street Branch'),
+    (18, 'Bubbles', 'Colourful betafish', 1, 'Fish pellets', 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.primeapi.com%2Fcmscdn%2Fcdn%2Fcms%2FSNG%2Fmost_expensive_betta_fish_type_cc878f09a9.jpg&f=1&nofb=1&ipt=5445d26fe235cd4b0a507b24905006cfc0a0139012e5a82019615ab156211b95', 'Birch Grove Branch'),
+    (19, 'Hero', 'Little goldfish', 1, 'Fish pellets', 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ffirstquarterfinance.com%2Fwp-content%2Fuploads%2FWhat-to-Do-With-Unwanted-Pet-Fish-Featured-Image.jpg&f=1&nofb=1&ipt=f00e162add66739dce9c3a90cdb8678fb1660bb896f739d65d4617bb4962c05e', 'Maple Street Branch'),
+    (20, 'Ringo', 'Friendly little gecko', 2, 'Bugs and greens', 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ffriendlypets.com%2Fwp-content%2Fuploads%2F2020%2F04%2FCanva-Leopard-gecko-scaled.jpg&f=1&nofb=1&ipt=9bfdaad6a2f4bc3d75a69850ddbdb7171af35d63b98cd03eeecf7ee9afe6267a', 'Oak Row Branch'),
+    (21, 'Jumper', 'Little tree frog who loves to jump', 3, 'Bugs', 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.saymedia-content.com%2F.image%2Ft_share%2FMTczOTYxMDI4MjkwNDIyNjUx%2Fgreen-tree-frogs.jpg&f=1&nofb=1&ipt=d345304820b878d16ccb083ade1ef9e9cb6b411ad76d9f3dcf2bf20d920d2ec2', 'Maple Street Branch');
 
 INSERT INTO Mammal (PetID, Species, HealthRecords, Weight)
 VALUES 
@@ -67,7 +71,9 @@ VALUES
     (8, 'Corydoras', 'Freshwater'),
     (10, 'Angelfish', 'Freshwater'),
     (15, 'Goldfish', 'Freshwater'),
-    (16, 'Betafish', 'Freshwater');
+    (16, 'Betafish', 'Freshwater'),
+    (18, 'Betafish', 'Freshwater'),
+    (19, 'Goldfish', 'Freshwater');
 
 INSERT INTO Exotic (PetID, Species, HabitatRequirements, Weight)
 VALUES 
@@ -75,7 +81,9 @@ VALUES
     (7, 'Turtle', 'Aquarium', 0.5),
     (9, 'Toad', 'Terrarium', 3.14),
     (13, 'Parrot', 'Cage with nest', 0.35),
-    (17, 'Turtle', 'Terrarium with heat lamp', 3.2);
+    (17, 'Turtle', 'Terrarium with heat lamp', 3.2),
+    (20, 'Gecko', 'Terrarium with heat lamp', 1.5),
+    (21, 'Tree Frog', 'Terrarium with pond and heat lamp', 2.0);
 
 -- =====================
 -- SPONSORS (More test data)
