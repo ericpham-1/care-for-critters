@@ -1,5 +1,5 @@
 DB_USER="root"
-DB_PASSWORD="Gacon12%"
+DB_PASSWORD="password"
 DB_NAME="CareForCritters"
 TABLE_FILE="create_tables.sql"
 INSERT_DATA_FILE="insert_data.sql"
