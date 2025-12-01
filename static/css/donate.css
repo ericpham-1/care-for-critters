@@ -19,16 +19,17 @@ body {
 
 .donation-box {
     background: white;
-    max-width: 500px;
-    width: 100%;
-    padding: 30px;
+    width: 90%;           
+    max-width: 550px;       
+    max-height: 90vh;    
+    margin: 5% auto;       
+    padding: 20px;  
+    padding-bottom: 60px;    
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    max-height: 80vh;
-    overflow: hidden;
-    justify-content: space-between;
-    flex-direction: column;
+    overflow-y: auto;         
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
 }
+
 
 
 .header {
@@ -38,7 +39,7 @@ body {
 }
 
 .logo {
-    width: 140px;
+    width: 100px;
 }
 
 h1 {
@@ -48,9 +49,6 @@ h1 {
     color: #0047AB;
 }
 
-.donate-subtitle {
-    font-family: "Jua", sans-serif;
-}
 
 .header p {
     color: #555;
@@ -122,9 +120,6 @@ button,
     margin-bottom: 10px;
 }
 
-/* =========================================================
-   DONATE STEP 1 (Amount Selection)
-   ========================================================= */
 .amount-grid {
     display: grid;
     grid-template-columns: repeat(2, 200px);
@@ -137,7 +132,7 @@ button,
     padding: 15px 0;
     font-family: "Jua", sans-serif;
     color: #0A2540;
-    font-size: 20px;
+    font-size: 25px;
     background: white;
     cursor: pointer;
 }
