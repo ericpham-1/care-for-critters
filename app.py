@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # secret key for session management, cookie related
 # Generate a random secret key: python -c "import os; print(os.urandom(24).hex())"
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "the-secret-key-goes-here")
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "your-secret-key-here-change-this")
 
 # -- MySQL Configuration --
 app.config['MYSQL_HOST'] = os.getenv("DB_HOST")
@@ -103,18 +103,18 @@ def index():
     events = cursor.fetchall()
     cursor.execute("""        
         SELECT a.Name, a.Age, m.Species, a.Photo
-        FROM Animal a
-        JOIN Mammal m ON a.PetID = m.PetID""")
+        FROM (Animal a JOIN Mammal m ON a.PetID = m.PetID)
+        WHERE AdoptionStatus IS NULL""")
     mammals = cursor.fetchall()
     cursor.execute("""        
         SELECT a.Name, a.Age, m.Species, a.Photo
-        FROM Animal a
-        JOIN Exotic m ON a.PetID = m.PetID""")
+        FROM (Animal a JOIN Exotic m ON a.PetID = m.PetID)
+        WHERE AdoptionStatus IS NULL""")
     exotics = cursor.fetchall()
     cursor.execute("""        
         SELECT a.Name, a.Age, m.Species, a.Photo
-        FROM Animal a
-        JOIN Fish m ON a.PetID = m.PetID""")
+        FROM (Animal a JOIN Fish m ON a.PetID = m.PetID)
+        WHERE AdoptionStatus IS NULL""")
     fishies = cursor.fetchall()
     cursor.close()
     conn.close()
