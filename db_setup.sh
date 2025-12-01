@@ -12,7 +12,7 @@ fi
 echo "Creating database $DB_NAME"
 mariadb -u"$DB_USER" -p"$DB_PASSWORD" -e "DROP DATABASE IF EXISTS $DB_NAME"
 mariadb -u"$DB_USER" -p"$DB_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
-mariadb -u"$DB_USER" -p"$DB_PASSWORD" -e "GRANT ALL PRIVILEGES ON careforcritters.* TO 'flaskuser'@'localhost'; FLUSH PRIVILEGES;"
+mariadb -u"$DB_USER" -p"$DB_PASSWORD" -e "GRANT ALL PRIVILEGES ON careforcritters.* TO 'root'@'localhost'; FLUSH PRIVILEGES;"
 
 echo "Importing data"
 mariadb -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" < "$TABLE_FILE"

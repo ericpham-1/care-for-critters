@@ -11,20 +11,20 @@ Our project uses mariadb, flask, and python. Ensure an up to date version is ava
 ## Virtual Environment Setup
 A virtual environment is required to run this project. For Windows, this can be done with `python -m venv cpsc471project` and for macOS/Linux, `python3 -m venv cpsc471project`. An isolated setup will be created in the folder. To activate the environment, use the command `source cpsc471project\Scripts\activate` or `source cpsc471project/bin/activate`. Ensure this virtual environment is run every time the project is run. Ensure the environment is setup by noting the (cpsc471project) at the command line prompt.  
 Within the virtual environment, download the following libraries:  
-`pip install flask`
-`pip install flask_mysqldb`
-`pip install python-dotenv`  
+`pip install flask`  
+`pip install flask_mysqldb`  
+`pip install python-dotenv`    
 
 ## Database Setup
 Set up a .env file with the following contents:
 ~~~
 FLASK_ENV=development
 DB_HOST=localhost  
-DB_USER=flaskuser  
-DB_PASSWORD=password
+DB_USER=root  
+DB_PASSWORD=[INSERT ROOT PASSWORD HERE]
 DB_NAME=careforcritters
 ~~~
-Ensure that the .env file is never committed to the repository.
+Replace the DB_PASSWORD field with your own mariadb password at the top of the file. Ensure that the .env file is never committed to the repository.
 
 The db_setup.sh script is necessary to set up an initial configuration of the database and add values to the tables. This script requires the create_tables.sql file and insert_data.sql file. Ensure these are downloaded and in the project directory.  
 At the top of the db_setup.sh file, various DB variables are specified. Change the DB_PASSWORD variable to your mariadb root password.  
