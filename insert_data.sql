@@ -42,26 +42,40 @@ VALUES
     (7, 'Theo', 'Turtle', 1, 'Veggies', 'https://www.weknowpets.com.au/cdn/shop/articles/Untitled_design_48.jpg?v=1682744717', 'Birch Grove Branch'),
     (8, 'Simon', 'Colourful corydoras', 1, 'Fish food', 'https://www.petland.ca/cdn/shop/articles/Bronze-Corydoras.jpg?v=1695136379', 'Birch Grove Branch'),
     (9, 'Frank', '\"Frank the Tank\" toad', 4, 'Fruits and flies', 'https://live.staticflickr.com/65535/53850206471_18d921418e_b.jpg', 'Oak Row Branch'),
-    (10, 'Annie', 'Blue angelfish', 1, 'Fish food', 'https://www.swelluk.com/media/catalog/product/b/l/blue_angelfish.png?store=default&image-type=image', 'Oak Row Branch');
+    (10, 'Annie', 'Blue angelfish', 1, 'Fish food', 'https://www.swelluk.com/media/catalog/product/b/l/blue_angelfish.png?store=default&image-type=image', 'Oak Row Branch'),
+    (11, 'Missy', 'Beautiful Cocker Spaniel', 3, 'Dog food', 'https://thehappypuppysite.com/wp-content/uploads/2019/04/The-English-Cocker-Spaniel-HP-long.jpg', 'Oak Row Branch'),
+    (12, 'Mr. Bennet', 'Friendly old goat', 6, 'Wheat and anything, really', 'https://ogden_images.s3.amazonaws.com/www.iamcountryside.com/images/sites/2/2023/03/13120626/OEGS-2-scaled-e1679940131468.jpg', 'Maple Street Branch'),
+    (13, 'Pirate Roberts', 'Talktative Parrot', 2, 'Seeds and peanut butter', 'https://www.thesprucepets.com/thmb/pD3IuYFkYzZhTtVaxFPtsgdmUSY=/750x0/filters:no_upscale():max_bytes(150000):strip_icc()/parrot--sun-conure--perching-on-blurred-garden-background-515531466-5ace5b40ae9ab8003826c3dd.jpg', 'Birch Grove Branch'),
+    (14, 'Winter', 'Family friendly husky', 5, 'Dog food', 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmf.b37mrtl.ru%2Frbthmedia%2Fimages%2F2023.01%2Foriginal%2F63c54448fa390f007f458924.jpg&f=1&nofb=1&ipt=a687eb86590b7a51e3f9fc2d62d90463d515943f37feaa15bf47a74749c22ca1', 'Oak Row Branch'),
+    (15, 'Shimmer', 'Lively Goldfish with golden scales', 1, 'Fish pellets', 'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fcdn.sheknows.com%2Farticles%2F2014%2F05%2FMike_C%2FChefMom%2FGoldfish2.jpg&f=1&nofb=1&ipt=f950ff534cdedf6bf14b557718490317e0d1100a342d76848ac68ac4b52cedde', 'Maple Street Branch'),
+    (16, 'Maria', 'Pink betafish', 1, 'Fish pellets', 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fanimalia-life.club%2Fdata_images%2Ffish%2Ffish2.jpg&f=1&nofb=1&ipt=ed249fca0c727dc1b99f18305cbf94cabbbb9779e460a4a92c27f16b9358e67e', 'Oak Row Branch'),
+    (17, 'Hank', 'Friendly little turtle', 7, 'Greens and some bugs', 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.thoughtco.com%2Fthmb%2F8_MCVXj2Hi-sSbq_ixH16cqXBG8%3D%2F1920x1279%2Ffilters%3Ano_upscale()%3Amax_bytes(150000)%3Astrip_icc()%2Fturtle-509524_1920-5c429d55c9e77c000127edd2.jpg&f=1&nofb=1&ipt=f5ebd64d619464378af90a47b058990802618e9e896e877cfd0ec2028970728d', 'Maple Street Branch');
 
 INSERT INTO Mammal (PetID, Species, HealthRecords, Weight)
 VALUES 
     (1, 'Golden Retriever', 'All vaccinations up to date', 28.0),
     (2, 'Tabby Cat', 'Healthy, neutered', 4.2),
     (5, 'Sugar Glider', 'Healthy', 1.0),
-    (6, 'Ragdoll Cat', 'Vaccinations up to date', 20.0);
+    (6, 'Ragdoll Cat', 'Vaccinations up to date', 20.0),
+    (11, 'Cocker Spaniel', 'Vaccinations up to date', 15.2),
+    (12, 'Goat', 'Healthy', 25),
+    (14, 'Husky', 'Vaccination up to date', 15.5);
 
 INSERT INTO Fish (PetID, Species, WaterType)
 VALUES 
     (3, 'Clownfish', 'Saltwater'),
     (8, 'Corydoras', 'Freshwater'),
-    (10, 'Angelfish', 'Freshwater');
+    (10, 'Angelfish', 'Freshwater'),
+    (15, 'Goldfish', 'Freshwater'),
+    (16, 'Betafish', 'Freshwater');
 
 INSERT INTO Exotic (PetID, Species, HabitatRequirements, Weight)
 VALUES 
     (4, 'Bearded Dragon', 'Terrarium with heat lamp', 0.4),
     (7, 'Turtle', 'Aquarium', 0.5),
-    (9, 'Toad', 'Terrarium', 3.14);
+    (9, 'Toad', 'Terrarium', 3.14),
+    (13, 'Parrot', 'Cage with nest', 0.35),
+    (17, 'Turtle', 'Terrarium with heat lamp', 3.2);
 
 -- =====================
 -- SPONSORS (More test data)
