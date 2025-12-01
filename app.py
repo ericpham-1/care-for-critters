@@ -811,18 +811,21 @@ def manage_animals():
     # Get all animals with type-specific information using UNION
     cursor.execute("""
         SELECT a.PetID, a.Name, a.Description, a.Age, a.Diet, a.Photo, a.ShelterLocation,
+               a.AdoptionStatus,
                'Mammal' as AnimalType, m.Species, m.Weight, NULL as WaterType, 
                NULL as HabitatRequirements, m.HealthRecords
         FROM Animal a
         JOIN Mammal m ON a.PetID = m.PetID
         UNION
         SELECT a.PetID, a.Name, a.Description, a.Age, a.Diet, a.Photo, a.ShelterLocation,
+               a.AdoptionStatus,
                'Fish' as AnimalType, f.Species, NULL as Weight, f.WaterType, 
                NULL as HabitatRequirements, NULL as HealthRecords
         FROM Animal a
         JOIN Fish f ON a.PetID = f.PetID
         UNION
         SELECT a.PetID, a.Name, a.Description, a.Age, a.Diet, a.Photo, a.ShelterLocation,
+               a.AdoptionStatus,
                'Exotic' as AnimalType, e.Species, e.Weight, NULL as WaterType, 
                e.HabitatRequirements, NULL as HealthRecords
         FROM Animal a
@@ -841,74 +844,6 @@ def manage_animals():
     return render_template('manage_animals.html', 
                          animals=animals, 
                          shelters=shelters)
-
-@app.route('/manage-animals/add', methods=['POST'])
-@login_required
-def add_animal():
-    """Add a new animal to the database"""
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    try:
-        # Get basic animal info
-        name = request.form.get('name')
-        description = request.form.get('description')
-        age = request.form.get('age')
-        diet = request.form.get('diet')
-        photo = request.form.get('photo')
-        shelter = request.form.get('shelter')
-        animal_type = request.form.get('animal_type')
-        
-        # Insert into Animal table
-        cursor.execute("""
-            INSERT INTO Animal (Name, Description, Age, Diet, Photo, ShelterLocation)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (name, description, age, diet, photo, shelter))
-        
-        pet_id = cursor.lastrowid
-        
-        # Insert into type-specific table
-        if animal_type == 'Mammal':
-            species = request.form.get('mammal_species')
-            weight = request.form.get('weight')
-            health_records = request.form.get('health_records', '')
-            
-            cursor.execute("""
-                INSERT INTO Mammal (PetID, Species, Weight, HealthRecords)
-                VALUES (%s, %s, %s, %s)
-            """, (pet_id, species, weight, health_records))
-            
-        elif animal_type == 'Fish':
-            species = request.form.get('fish_species')
-            water_type = request.form.get('water_type')
-            
-            cursor.execute("""
-                INSERT INTO Fish (PetID, Species, WaterType)
-                VALUES (%s, %s, %s)
-            """, (pet_id, species, water_type))
-            
-        elif animal_type == 'Exotic':
-            species = request.form.get('exotic_species')
-            weight = request.form.get('exotic_weight')
-            habitat = request.form.get('habitat')
-            
-            cursor.execute("""
-                INSERT INTO Exotic (PetID, Species, Weight, HabitatRequirements)
-                VALUES (%s, %s, %s, %s)
-            """, (pet_id, species, weight, habitat))
-        
-        conn.commit()
-        print(f"Added new animal: {name} (PetID: {pet_id}, Type: {animal_type})")
-        
-    except Exception as e:
-        conn.rollback()
-        print(f"Error adding animal: {e}")
-    
-    finally:
-        cursor.close()
-        conn.close()
-    
-    return redirect(url_for('manage_animals'))
 
 @app.route('/manage-animals/update', methods=['POST'])
 @login_required
