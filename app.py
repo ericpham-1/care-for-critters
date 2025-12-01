@@ -1147,18 +1147,29 @@ def review_application():
 
     try:
         if action == 'accept':
-            # Update Adoption status to Accepted
+            # Update this adoption status to Accepted
             cursor.execute("""
             UPDATE Adoption
             SET Status = 'Accepted'                           
             WHERE AdoptionID = %s
             """, (adoptionID,))
-            # Update Animal adoption status to Adopted
+            
+            # Update the Animal adoption status to Adopted
             cursor.execute("""
             UPDATE Animal
             SET AdoptionStatus = 'Adopted'
             WHERE PetID = %s           
             """, (petID,))
+            
+            # Reject all OTHER pending applications for this same pet to keep mutual exclusivity**
+            cursor.execute("""
+            UPDATE Adoption
+            SET Status = 'Rejected'
+            WHERE PetID = %s 
+            AND AdoptionID != %s
+            AND Status = 'Pending'
+            """, (petID, adoptionID))
+            
         elif action == 'reject':
             # Update Adoption status to Rejected
             cursor.execute("""
@@ -1167,7 +1178,6 @@ def review_application():
             WHERE AdoptionID = %s
             """, (adoptionID,))
 
-            # Set Animal adoption status to NULL (Just for testing)
             cursor.execute("""
             UPDATE Animal
             SET AdoptionStatus = NULL
