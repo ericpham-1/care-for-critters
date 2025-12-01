@@ -568,8 +568,8 @@ def get_animals():
     all_ages = cursor.fetchall()
     query = ("""SELECT * FROM (
                    SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
-                   UNION SELECT a.PetID, Description, Name, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
-                   UNION SELECT a.PetID, Description, Name, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
+                   UNION SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
+                   UNION SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
                     WHERE AdoptionStatus IS NULL""")
     if selected_location != "None":
         query = query + f" AND ShelterLocation = '{selected_location}'" 
