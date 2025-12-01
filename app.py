@@ -94,23 +94,27 @@ def supervisor_dashboard():
     supervisor_name = session.get('supervisor_name', 'Supervisor')
     return render_template('supervisor_dashboard.html', supervisor_name=supervisor_name)
 
-
+# home page
 @app.route('/')
 def index():
     conn = get_db_connection()
     cursor = conn.cursor()
+    #select events 
     cursor.execute("SELECT EventName, EventLocation, EventDate, DATE_FORMAT(EventTime, '%h:%i %p') AS Time FROM FUNDRAISER WHERE EventDate >= CURDATE() ORDER BY EventDate")
     events = cursor.fetchall()
+    #select the mammals to display
     cursor.execute("""        
         SELECT a.Name, a.Age, m.Species, a.Photo
         FROM (Animal a JOIN Mammal m ON a.PetID = m.PetID)
         WHERE AdoptionStatus IS NULL""")
     mammals = cursor.fetchall()
+    #select the exotics
     cursor.execute("""        
         SELECT a.Name, a.Age, m.Species, a.Photo
         FROM (Animal a JOIN Exotic m ON a.PetID = m.PetID)
         WHERE AdoptionStatus IS NULL""")
     exotics = cursor.fetchall()
+    #select the fish
     cursor.execute("""        
         SELECT a.Name, a.Age, m.Species, a.Photo
         FROM (Animal a JOIN Fish m ON a.PetID = m.PetID)
@@ -251,6 +255,7 @@ def get_sponsors():
 def get_fundraisers():
     conn = get_db_connection()
     cursor = conn.cursor()
+    #get all fundraisers that are today or later
     cursor.execute("SELECT EventName, EventLocation, EventDate, ShelterName, DATE_FORMAT(EventTime, '%h:%i %p') AS Time FROM Fundraiser WHERE EventDate >= CURDATE() ORDER BY EventDate ASC")
     events = cursor.fetchall()
     cursor.execute("SELECT ShelterName FROM Shelter")
@@ -267,6 +272,7 @@ def get_filtered_fundraisers():
     cursor = conn.cursor()
     cursor.execute("SELECT ShelterName FROM Shelter")
     shelters = cursor.fetchall()
+    # apply the filters in the queries 
     if selected_location == "all":
          if len(past_event) == 0 :
              query = ("""SELECT EventName, EventLocation, EventDate, ShelterName, DATE_FORMAT(EventTime, '%h:%i %p') AS Time  
@@ -511,6 +517,7 @@ def get_animals():
     cursor = conn.cursor()
     cursor.execute("SELECT ShelterName FROM Shelter")
     shelters = cursor.fetchall()
+    # get ages of all animals in all shelters 
     cursor.execute("""SELECT DISTINCT Age 
                    FROM (
                    SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
@@ -518,11 +525,13 @@ def get_animals():
                    UNION SELECT a.PetID, Name, Age, Species, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
+    #get info for all animals 
     query = ("""SELECT * FROM (
                    SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID) 
                    UNION SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Fish f ON a.PetID=f.PetID) 
                    UNION SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation, AdoptionStatus FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
                     WHERE AdoptionStatus IS NULL""")
+    #filter by location
     if selected_location != "None":
         query = query + f" AND ShelterLocation = '{selected_location}'" 
         if ages_set != None:
@@ -562,6 +571,7 @@ def get_mammals():
                    SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation FROM (Animal a JOIN Mammal m ON a.PetID=m.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
+    #get animals that with the filters 
     query = get_animal_query("Mammal", selected_location, ages_set)
     cursor.execute(query)
     mammals = cursor.fetchall()
@@ -592,6 +602,7 @@ def get_fish():
                    SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation FROM (Animal a JOIN Fish f ON a.PetID=f.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
+    # get fish that apply to the filters 
     query = get_animal_query("Fish", selected_location, ages_set)
     cursor.execute(query)
     fish = cursor.fetchall()
@@ -622,6 +633,7 @@ def get_exotic():
                    SELECT a.PetID, Name, Description, Age, Species, Photo, Diet, ShelterLocation FROM (Animal a JOIN Exotic e ON a.PetID=e.PetID)) AS allPets
                    ORDER BY Age ASC""")
     all_ages = cursor.fetchall()
+    # get the exotics that apply to the filters 
     query = get_animal_query("Exotic", selected_location, ages_set)
     cursor.execute(query)
     exotic = cursor.fetchall()
