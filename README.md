@@ -1,8 +1,7 @@
-# CPSC 471 Project T04-3
 ## Care For Critters 
-Emma Djukic ~ 30213555 ~ emma.jukic@ucalgary.ca  
-Erica Chow ~ 30205221 ~ erica.chow1@ucalgary.ca  
-Eric Pham ~ 30210437 ~ eric.pham1@ucalgary.ca  
+Emma Djukic 
+Erica Chow  
+Eric Pham 
 
 ## Setup Instructions
 ### Prerequisites 
